@@ -59,7 +59,7 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     public Locale locale() {
-        return new Locale("SE", "sv");
+        return new Locale("sv", "SE");
     }
 
     public String invalidWeekDay(String input) {

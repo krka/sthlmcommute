@@ -3,6 +3,7 @@ package se.krka.travelopt;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import se.krka.travelopt.localization.EnglishLocale;
+import se.krka.travelopt.localization.SwedishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.ArrayList;
@@ -187,6 +188,7 @@ public class TravelOptTest {
 
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
+        System.out.println(travelPlan);
 		System.out.println(result);
 		assertEquals(Money.parse("757.5 SEK"), result.getTotalCost());
 		assertEquals(2, result.getTickets().size());
@@ -215,6 +217,7 @@ public class TravelOptTest {
 				buildExtended("m,w,f,sa");
 		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
+        System.out.println(plan);
 		System.out.println(optimum);
 		assertEquals(Money.parse("690 SEK"), optimum.getTotalCost());
 		assertEquals(1, optimum.getTickets().size());

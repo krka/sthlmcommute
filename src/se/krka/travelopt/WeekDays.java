@@ -82,7 +82,7 @@ public class WeekDays {
 
 		public static WeekDayEnum parse(TravelOptLocale locale, String s) {
             s = s.trim();
-            String upper = s.toUpperCase();
+            String upper = s.toUpperCase(locale.locale());
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
                 String weekDayName = locale.weekDayName(value).toUpperCase(locale.locale());

@@ -59,7 +59,7 @@ public class EnglishLocale implements TravelOptLocale {
     }
 
     public Locale locale() {
-        return new Locale("EN", "gb");
+        return new Locale("en", "GB");
     }
 
     public String invalidWeekDay(String input) {
