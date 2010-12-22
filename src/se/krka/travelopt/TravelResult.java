@@ -19,10 +19,10 @@ public class TravelResult {
 		this.tickets = Collections.unmodifiableList(new ArrayList<Ticket>(tickets));
 	}
 
-	public int getTotalCost() {
-		int sum = 0;
+	public Money getTotalCost() {
+		Money sum = Money.ZERO;
 		for (Ticket ticket : tickets) {
-			sum += ticket.getCost();
+            sum = sum.add(ticket.getCost());
 		}
 		return sum;
 	}
@@ -33,7 +33,7 @@ public class TravelResult {
 
 	@Override
 	public String toString() {
-		return "TravelResult: " + getTotalCost() + " SEK\n" + ticketsToString();
+		return "TravelResult: " + getTotalCost() + "\n" + ticketsToString();
 	}
 
 	private String ticketsToString() {

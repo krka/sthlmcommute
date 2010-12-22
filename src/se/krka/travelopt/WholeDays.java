@@ -9,10 +9,10 @@ package se.krka.travelopt;
  */
 public class WholeDays implements TicketType {
 	private final String name;
-	private final int price;
+	private final Money price;
 	private final int numDays;
 
-	public WholeDays(String name, int price, int numDays) {
+	public WholeDays(String name, Money price, int numDays) {
 		this.name = name;
 		this.price = price;
 		this.numDays = numDays;
@@ -22,14 +22,12 @@ public class WholeDays implements TicketType {
 		return numDays;
 	}
 
-	public int cost(int numTickets) {
+	public Money cost(int numTickets) {
 		return price;
 	}
 
 	@Override
 	public String toString() {
-		return name + " (" + price +
-				" for " + numDays +
-				" days)";
+		return name + " (" + numDays + " days for " + price + ")";
 	}
 }

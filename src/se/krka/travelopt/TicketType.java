@@ -9,5 +9,5 @@ package se.krka.travelopt;
  */
 public interface TicketType {
 	int numberOfDays();
-	int cost(int numTickets);
+	Money cost(int numTickets);
 }

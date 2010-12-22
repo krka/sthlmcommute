@@ -71,7 +71,7 @@ public class TravelOpt {
         while (!stack.isEmpty()) {
             Purchase purchase = stack.pop();
             DateTime startDate = firstDay.plusDays(purchase.startAt);
-            int cost = purchase.totalCost - purchase.parent.totalCost;
+            Money cost = purchase.totalCost.subtract(purchase.parent.totalCost);
             TicketType ticketType = purchase.ticketType;
             tickets.add(new Ticket(cost, ticketType, startDate));
         }
@@ -90,7 +90,7 @@ public class TravelOpt {
 				break;
 			}
 
-			double score = purchase.totalCost / (i + 1);
+			double score = purchase.totalCost.getValue().doubleValue() / (i + 1);
 			if (score <= bestScore) {
 				bestScore = score;
 				bestPurchase = purchase;
@@ -111,8 +111,8 @@ public class TravelOpt {
 
 	private void extendPeriod(List<Purchase> purchases, MutableDateTime looper) {
 		Purchase current = lastPurchase(purchases);
-		int cost = current.totalCost;
-		while (current.totalCost == cost) {
+		Money cost = current.totalCost;
+		while (current.totalCost.equals(cost)) {
 			looper.addDays(1);
 			handle(purchases, 1);
 			current = lastPurchase(purchases);
@@ -129,15 +129,15 @@ public class TravelOpt {
 		Purchase best = null;
 		for (TicketType ticketType : priceStructure.getTicketTypes()) {
 			int days = ticketType.numberOfDays();
-			int cost = ticketType.cost(numTickets);
+			Money cost = ticketType.cost(numTickets);
 
 			Purchase prev = getPurchase(i - days, purchases);
 
 			Purchase newBest;
-			if (cost == 0) {
+			if (cost.equals(Money.ZERO)) {
 				newBest = prev;
 			} else {
-				newBest = new Purchase(1 + i - days, prev, cost + prev.totalCost, ticketType);
+				newBest = new Purchase(1 + i - days, prev, cost.add(prev.totalCost), ticketType);
 			}
 			if (best == null || newBest.isBetterThan(best)) {
 				best = newBest;
@@ -157,14 +157,14 @@ public class TravelOpt {
 	}
 
 	static class Purchase {
-		private final static Purchase EMPTY = new Purchase(0, null, 0, null);
+		private final static Purchase EMPTY = new Purchase(0, null, Money.ZERO, null);
 
 		private int startAt;
 		private final Purchase parent;
-		private final int totalCost;
+		private final Money totalCost;
 		private final TicketType ticketType;
 
-		private Purchase(int startAt, Purchase parent, int totalCost, TicketType ticketType) {
+		private Purchase(int startAt, Purchase parent, Money totalCost, TicketType ticketType) {
 			this.startAt = startAt;
 			this.parent = parent;
 			this.totalCost = totalCost;
@@ -172,12 +172,10 @@ public class TravelOpt {
 		}
 
 		public boolean isBetterThan(Purchase other) {
-			if (totalCost < other.totalCost) {
-				return true;
-			}
-			if (totalCost > other.totalCost) {
-				return false;
-			}
+            int cmp = totalCost.compareTo(other.totalCost);
+            if (cmp != 0) {
+                return cmp < 0;
+            }
 			if (startAt > other.startAt) {
 				return true;
 			}

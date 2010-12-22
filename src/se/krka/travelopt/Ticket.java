@@ -12,15 +12,15 @@ import org.joda.time.DateTime;
 public class Ticket {
 	private final TicketType ticketType;
 	private final DateTime startDate;
-	private final int cost;
+	private final Money cost;
 
-	public Ticket(int cost, TicketType ticketType, DateTime startDate) {
+	public Ticket(Money cost, TicketType ticketType, DateTime startDate) {
 		this.cost = cost;
 		this.ticketType = ticketType;
 		this.startDate = startDate;
 	}
 
-	public int getCost() {
+	public Money getCost() {
 		return cost;
 	}
 
@@ -34,6 +34,6 @@ public class Ticket {
 
 	@Override
 	public String toString() {
-		return startDate.toString("YYYY-MM-dd") + " " + ticketType + ", " + cost + " SEK";
+		return startDate.toString("YYYY-MM-dd") + " " + ticketType + ", " + cost;
 	}
 }

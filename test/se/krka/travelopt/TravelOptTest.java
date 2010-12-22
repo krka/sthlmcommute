@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class TravelOptTest {
 		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelPlan travelPlan = TravelPlan.builder().build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
-		assertEquals(0, result.getTotalCost());
+		assertEquals(Money.ZERO, result.getTotalCost());
 	}
 
 	@Test
@@ -36,7 +37,7 @@ public class TravelOptTest {
 				addDay(new DateTime("2010-12-19")).
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
-		assertEquals(67, result.getTotalCost());
+		assertEquals(Money.parse("67.5 SEK"), result.getTotalCost());
 		assertEquals(1, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-19"), result.getTickets().get(0).getStartDate());
 	}
@@ -52,7 +53,7 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(134, result.getTotalCost());
+		assertEquals(Money.parse("135 SEK"), result.getTotalCost());
 		assertEquals(2, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-19"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2010-12-20"), result.getTickets().get(1).getStartDate());
@@ -72,7 +73,7 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(260, result.getTotalCost());
+		assertEquals(Money.parse("260 SEK"), result.getTotalCost());
 		assertEquals(1, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-19"), result.getTickets().get(0).getStartDate());
 	}
@@ -121,7 +122,7 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(1151, result.getTotalCost());
+		assertEquals(Money.parse("1152.5 SEK"), result.getTotalCost());
 		assertEquals(5, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-18"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2011-01-03"), result.getTickets().get(1).getStartDate());
@@ -141,7 +142,7 @@ public class TravelOptTest {
 				buildExtended(new WeekDays("m-f"));
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(950, result.getTotalCost());
+		assertEquals(Money.parse("950 SEK"), result.getTotalCost());
 		assertEquals(2, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-18"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2011-01-03"), result.getTickets().get(1).getStartDate());
@@ -161,7 +162,7 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(260 + 67, result.getTotalCost());
+		assertEquals(Money.parse("327.5 SEK"), result.getTotalCost());
 		assertEquals(2, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-01"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2010-12-08"), result.getTickets().get(1).getStartDate());
@@ -196,7 +197,7 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(757, result.getTotalCost());
+		assertEquals(Money.parse("757.5 SEK"), result.getTotalCost());
 		assertEquals(2, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-01"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2010-12-31"), result.getTickets().get(1).getStartDate());
@@ -211,7 +212,7 @@ public class TravelOptTest {
 		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
 		System.out.println(optimum);
-		assertEquals(690, optimum.getTotalCost());
+		assertEquals(Money.parse("690 SEK"), optimum.getTotalCost());
 		assertEquals(1, optimum.getTickets().size());
 	}
 
@@ -224,7 +225,7 @@ public class TravelOptTest {
 		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
 		System.out.println(optimum);
-		assertEquals(690, optimum.getTotalCost());
+		assertEquals(Money.parse("690 SEK"), optimum.getTotalCost());
 		assertEquals(1, optimum.getTickets().size());
 	}
 

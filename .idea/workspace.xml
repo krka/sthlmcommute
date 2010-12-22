@@ -103,37 +103,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TravelPlan.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelPlan.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="19" selection-start="2621" selection-end="2621" vertical-scroll-proportion="-5.36">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="TravelOpt.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelOpt.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="0" selection-start="575" selection-end="575" vertical-scroll-proportion="-4.8">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Weeks.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/joda-time-1.6.jar!/org/joda/time/Weeks.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="44" selection-start="2934" selection-end="2934" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Period.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/joda-time-1.6.jar!/org/joda/time/Period.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="19" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
+            <state line="101" column="44" selection-start="3110" selection-end="3110" vertical-scroll-proportion="-11.52">
               <folding />
             </state>
           </provider>
@@ -148,28 +121,55 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TravelPlanDate.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelPlanDate.java">
+      <file leaf-file-name="WholeDays.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/WholeDays.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="11" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0">
+            <state line="30" column="0" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TravelOptTest.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Prices.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Prices.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="0" selection-start="1067" selection-end="1067" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleTicket.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/SimpleTicket.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="42" selection-start="225" selection-end="225" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TravelOptTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/se/krka/travelopt/TravelOptTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="255" column="50" selection-start="9190" selection-end="9190" vertical-scroll-proportion="0.52219874">
+            <state line="124" column="0" selection-start="3963" selection-end="3963" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DateTime.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/joda-time-1.6.jar!/org/joda/time/DateTime.class">
+      <file leaf-file-name="Money.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Money.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="10" selection-start="820" selection-end="820" vertical-scroll-proportion="-5.2">
+            <state line="22" column="23" selection-start="546" selection-end="546" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Ticket.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Ticket.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="0" selection-start="60" selection-end="60" vertical-scroll-proportion="0.12345679">
               <folding />
             </state>
           </provider>
@@ -187,7 +187,7 @@
       <file leaf-file-name="TravelResult.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelResult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="0" selection-start="944" selection-end="944" vertical-scroll-proportion="0.0">
+            <state line="24" column="22" selection-start="596" selection-end="596" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -203,22 +203,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/se/krka/travelopt/TravelOpt.java" />
         <option value="$PROJECT_DIR$/test/se/krka/travelopt/Period.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/Period.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelPlanDate.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/EmptyTicket.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/PriceStructure.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelPlan.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/WeekDays.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelResult.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelOpt.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/TicketType.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/SimpleTicket.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/WholeDays.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/Ticket.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelResult.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/EmptyTicket.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/PriceStructure.java" />
         <option value="$PROJECT_DIR$/src/se/krka/travelopt/Prices.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelOpt.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/TravelPlan.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/Money.java" />
         <option value="$PROJECT_DIR$/test/se/krka/travelopt/TravelOptTest.java" />
-        <option value="$PROJECT_DIR$/src/se/krka/travelopt/WeekDays.java" />
+        <option value="$PROJECT_DIR$/src/se/krka/travelopt/Ticket.java" />
       </list>
     </option>
   </component>
@@ -311,6 +311,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToAction.allIncluded" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="dynamic.classpath" value="false" />
@@ -570,7 +571,7 @@
     <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
-    <configuration useDefault="true">$PROJECT_DIR$/../../../.subversion</configuration>
+    <configuration useDefault="true">$USER_HOME$/.subversion_IDEA</configuration>
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
@@ -587,6 +588,7 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3989899" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Kahlua" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -601,7 +603,6 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3270202" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -642,31 +643,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/WholeDays.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="23" selection-start="653" selection-end="653" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Ticket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="45" selection-start="733" selection-end="733" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/PriceStructure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="13" selection-start="956" selection-end="956" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Prices.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="907" selection-end="907" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/SimpleTicket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="196" selection-end="196" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/joda-time-1.6.jar!/org/joda/time/DateTimeField.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="22" selection-start="160" selection-end="160" vertical-scroll-proportion="0.12244898" />
@@ -684,26 +660,9 @@
         <state line="5" column="19" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TicketType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="17" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelPlanDate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="11" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="944" selection-end="944" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelOpt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="0" selection-start="575" selection-end="575" vertical-scroll-proportion="-4.8">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/joda-time-1.6.jar!/org/joda/time/DateTime.class">
@@ -727,9 +686,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="22" selection-start="596" selection-end="596" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/SimpleTicket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="42" selection-start="225" selection-end="225" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TicketType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="17" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/WholeDays.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="0" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Prices.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="1067" selection-end="1067" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Money.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="23" selection-start="546" selection-end="546" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/TravelOpt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="44" selection-start="3110" selection-end="3110" vertical-scroll-proportion="-11.52">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/se/krka/travelopt/TravelOptTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="255" column="50" selection-start="9190" selection-end="9190" vertical-scroll-proportion="0.52219874">
+        <state line="124" column="0" selection-start="3963" selection-end="3963" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/krka/travelopt/Ticket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="60" selection-end="60" vertical-scroll-proportion="0.12345679">
           <folding />
         </state>
       </provider>
