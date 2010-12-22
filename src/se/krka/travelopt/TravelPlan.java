@@ -60,8 +60,8 @@ public class TravelPlan {
 		}
 
 		public Builder addPeriod(DateTime from, DateTime to, WeekDays days) {
-			Period period1 = new Period(from, to);
-			if (period1.getYears() > 2) {
+			Period period = new Period(from, to);
+			if (period.getYears() > 2) {
 				throw new IllegalArgumentException("date range can not be longer than two years");
 			}
 			addDay(from, days);

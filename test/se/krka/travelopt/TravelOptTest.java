@@ -115,13 +115,11 @@ public class TravelOptTest {
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		System.out.println(result);
-		assertEquals(Money.parse("1152.5 SEK"), result.getTotalCost());
-		assertEquals(5, result.getTickets().size());
+		assertEquals(Money.parse("1150 SEK"), result.getTotalCost());
+		assertEquals(3, result.getTickets().size());
 		assertEquals(new DateTime("2010-12-18"), result.getTickets().get(0).getStartDate());
 		assertEquals(new DateTime("2011-01-03"), result.getTickets().get(1).getStartDate());
 		assertEquals(new DateTime("2011-02-02"), result.getTickets().get(2).getStartDate());
-		assertEquals(new DateTime("2011-02-03"), result.getTickets().get(3).getStartDate());
-		assertEquals(new DateTime("2011-02-04"), result.getTickets().get(4).getStartDate());
 	}
 
 	@Test
