@@ -217,9 +217,23 @@ public class TravelOptTest {
 				buildExtended("m,w,f,sa");
 		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
-        System.out.println(plan);
+        //System.out.println(plan);
 		System.out.println(optimum);
 		assertEquals(Money.parse("690 SEK"), optimum.getTotalCost());
+		assertEquals(1, optimum.getTickets().size());
+	}
+
+	@Test
+	public void testExtend3() {
+		TravelPlan plan = TravelPlan.builder(locale).
+				setTicketsPerDay(6).
+				addDay(new DateTime("2010-12-01")).
+				buildExtended("m");
+		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
+		TravelResult optimum = travelOpt.findOptimum(plan);
+        //System.out.println(plan);
+		System.out.println(optimum);
+		assertEquals(Money.parse("67.5 SEK"), optimum.getTotalCost());
 		assertEquals(1, optimum.getTickets().size());
 	}
 

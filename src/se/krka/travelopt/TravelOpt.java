@@ -84,11 +84,15 @@ public class TravelOpt {
 				break;
 			}
 
-			double score = purchase.totalCost.getValue().doubleValue() / (i + 1);
-			if (score <= bestScore) {
-				bestScore = score;
-				bestPurchase = purchase;
-			}
+            // Don't count purchases made after the extension
+            if (firstDay.plusDays(purchase.startAt).isBefore(extensionStart)) {
+                double score = purchase.totalCost.getValue().doubleValue() / (i + 1);
+                if (score <= bestScore) {
+                    bestScore = score;
+                    bestPurchase = purchase;
+                }
+            }
+
 			i--;
 		}
 		if (bestPurchase == null) {
