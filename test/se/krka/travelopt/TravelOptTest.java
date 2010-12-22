@@ -230,7 +230,10 @@ public class TravelOptTest {
 
 	@Test
 	public void testRange() {
-		TravelPlan plan = TravelPlan.builder().addPeriod(new DateTime("2010-12-01"), new DateTime("2010-12-11"), new WeekDays("m-f")).build();
+		TravelPlan plan = TravelPlan.builder().
+                setTicketsPerDay(1).
+                addPeriod(new DateTime("2010-12-01"), new DateTime("2010-12-11"), new WeekDays("m-f")).
+                build();
 		ArrayList<TravelPlanDate> list = new ArrayList<TravelPlanDate>(plan.getDates());
 		assertEquals(8, list.size());
 		assertEquals(new DateTime("2010-12-01"), list.get(0).getDate());

@@ -21,58 +21,62 @@ public class TravelOpt {
 	}
 
 	public TravelResult findOptimum(TravelPlan travelPlan) {
-		if (travelPlan.getPeriod().getYears() >= 2) {
-			throw new IllegalArgumentException("Can not plan more than 2 years.");
-		}
-		List<Purchase> purchases = new ArrayList<Purchase>();
+        if (travelPlan.getDates().isEmpty()) {
+            return new TravelResult(Collections.EMPTY_LIST);
+        }
 
-		DateTime firstDay = null;
-		DateTime lastDate = null;
+        if (travelPlan.getPeriod().getYears() >= 2) {
+            throw new IllegalArgumentException("Can not plan more than 2 years.");
+        }
+        List<Purchase> purchases = new ArrayList<Purchase>();
 
-		MutableDateTime looper = new MutableDateTime();
+        DateTime firstDay = null;
+        DateTime lastDate = null;
 
-		for (TravelPlanDate travelPlanDate : travelPlan.getDates()) {
-			DateTime date = travelPlanDate.getDate();
+        MutableDateTime looper = new MutableDateTime();
 
-			if (lastDate != null) {
-				looper.setDate(lastDate);
-				looper.addDays(1);
-				while (looper.isBefore(date)) {
-					handle(purchases, 0);
-					looper.addDays(1);
-				}
-			} else {
-				firstDay = date;
-			}
-			handle(purchases, travelPlanDate.getNumTickets());
-			lastDate = date;
-		}
+        for (TravelPlanDate travelPlanDate : travelPlan.getDates()) {
+            DateTime date = travelPlanDate.getDate();
 
-		if (firstDay == null) {
-			return new TravelResult(Collections.EMPTY_LIST);
-		}
+            if (lastDate != null) {
+                looper.setDate(lastDate);
+                looper.addDays(1);
+                while (looper.isBefore(date)) {
+                    handle(purchases, 0);
+                    looper.addDays(1);
+                }
+            } else {
+                firstDay = date;
+            }
+            handle(purchases, travelPlanDate.getNumTickets());
+            lastDate = date;
+        }
 
-		extendPeriod(purchases, looper);
+        if (firstDay == null) {
+            return new TravelResult(Collections.EMPTY_LIST);
+        }
+
+        extendPeriod(purchases, looper);
 
 
-		optimizedExtendPeriod(purchases, travelPlan, firstDay);
+        optimizedExtendPeriod(purchases, travelPlan, firstDay);
 
-		Stack<Purchase> stack = new Stack<Purchase>();
-		Purchase current = lastPurchase(purchases);
-		while (current != Purchase.EMPTY) {
-			stack.add(current);
-			current = current.parent;
-		}
-		List<Ticket> tickets = new ArrayList<Ticket>();
-		while (!stack.isEmpty()) {
-			Purchase purchase = stack.pop();
-			DateTime startDate = firstDay.plusDays(purchase.startAt);
-			int cost = purchase.totalCost - purchase.parent.totalCost;
-			TicketType ticketType = purchase.ticketType;
-			tickets.add(new Ticket(cost, ticketType, startDate));
-		}
-		return new TravelResult(tickets);
-	}
+        Stack<Purchase> stack = new Stack<Purchase>();
+        Purchase current = lastPurchase(purchases);
+        while (current != Purchase.EMPTY) {
+            stack.add(current);
+            current = current.parent;
+        }
+        List<Ticket> tickets = new ArrayList<Ticket>();
+        while (!stack.isEmpty()) {
+            Purchase purchase = stack.pop();
+            DateTime startDate = firstDay.plusDays(purchase.startAt);
+            int cost = purchase.totalCost - purchase.parent.totalCost;
+            TicketType ticketType = purchase.ticketType;
+            tickets.add(new Ticket(cost, ticketType, startDate));
+        }
+        return new TravelResult(tickets);
+    }
 
 	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, DateTime firstDay) {
 		DateTime extensionStart = travelPlan.getExtensionStart();

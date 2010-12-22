@@ -22,7 +22,11 @@ public class TravelPlan {
 	public TravelPlan(Collection<TravelPlanDate> dates, DateTime extensionStart) {
 		this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
-		period = new Period(this.dates.first().getDate(), this.dates.last().getDate());
+        if (dates.isEmpty()) {
+            period = null;
+        } else {
+            period = new Period(this.dates.first().getDate(), this.dates.last().getDate());
+        }
 	}
 
 	public static TravelPlan.Builder builder() {
@@ -46,13 +50,16 @@ public class TravelPlan {
 		private int numTickets;
 
 		public Builder addDay(DateTime date) {
-			addDay(date, numTickets, dates);
+			addDay(date, numTickets);
 			return this;
 		}
 
 		public TravelPlan build() {
-			return new TravelPlan(dates, dates.last().getDate().plusDays(1));
-		}
+            if (dates.isEmpty()) {
+                return new TravelPlan(dates, null);
+            }
+            return new TravelPlan(dates, dates.last().getDate().plusDays(1));
+        }
 
 		public Builder setTicketsPerDay(int numTickets) {
 			this.numTickets = numTickets;
@@ -87,10 +94,10 @@ public class TravelPlan {
 		private void addDay(DateTime dateTime, WeekDays weekDays) {
 			int dayOfWeek = dateTime.getDayOfWeek();
 			int numTickets = weekDays.getNumTickets(dayOfWeek, this.numTickets);
-			addDay(dateTime, numTickets, dates);
+			addDay(dateTime, numTickets);
 		}
 
-		private void addDay(DateTime dateTime, int numTickets, SortedSet<TravelPlanDate> dates) {
+		private void addDay(DateTime dateTime, int numTickets) {
 			if (numTickets > 0) {
 				dates.add(new TravelPlanDate(dateTime, numTickets));
 			}

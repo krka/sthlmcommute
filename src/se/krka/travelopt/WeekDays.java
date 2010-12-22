@@ -35,19 +35,35 @@ public class WeekDays {
 	private void processTerm(String term) {
 		String[] s = term.split(":");
 		if (s.length == 1) {
-			return processRange(s[0], -1);
+			processRange(s[0], -1);
 		} else if (s.length == 2) {
-			int numTickets = Integer.parseInt(s[0].trim());
-			return processRange(s[0], numTickets);
+			int numTickets = Integer.parseInt(s[1].trim());
+			processRange(s[0], numTickets);
 		} else {
 			throw new IllegalArgumentException("Too many : in " + term);
 		}
 	}
 
-	private void processRange(String term, int numTickets) {}
+	private void processRange(String term, int numTickets) {
+        String[] s = term.split("-");
+        if (s.length == 1) {
+            WeekDayEnum weekDayEnum = WeekDayEnum.parse(s[0]);
+            processWeekDay(weekDayEnum, numTickets);
+        } else if (s.length == 2) {
+            WeekDayEnum from = WeekDayEnum.parse(s[0]);
+            WeekDayEnum to = WeekDayEnum.parse(s[1]);
+            processWeekDay(from, numTickets);
+            while (from != to) {
+                from = from.succ();
+                processWeekDay(from, numTickets);
+            }
+        } else {
+            throw new IllegalArgumentException("Too many - in " + term);
+        }
+    }
 
-	private void processWeekDay(WeekDayEnum weekDay) {
-		map.put(weekDay, -1);
+	private void processWeekDay(WeekDayEnum weekDay, int numTickets) {
+		map.put(weekDay, numTickets);
 	}
 
 	private enum WeekDayEnum {
@@ -62,10 +78,11 @@ public class WeekDays {
 		private final static WeekDayEnum[] VALUES = values();
 
 		public static WeekDayEnum parse(String s) {
-			s = s.toUpperCase().trim();
+            s = s.trim();
+            String upper = s.toUpperCase();
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
-				if (value.name().startsWith(s)) {
+				if (value.name().startsWith(upper)) {
 					if (match == null) {
 						match = value;
 					} else {
