@@ -11,13 +11,6 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-17
- * Time: 17:57:25
- * To change this template use File | Settings | File Templates.
- */
 public class TravelOptTest {
 
 	@Test

@@ -6,13 +6,6 @@ import org.joda.time.Period;
 
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-17
- * Time: 17:58:18
- * To change this template use File | Settings | File Templates.
- */
 public class TravelOpt {
 	private final PriceStructure priceStructure;
 

@@ -2,13 +2,6 @@ package se.krka.travelopt;
 
 import org.joda.time.DateTime;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-20
- * Time: 22:05:23
- * To change this template use File | Settings | File Templates.
- */
 public class TravelPlanDate implements Comparable<TravelPlanDate> {
 	private final DateTime date;
 	private final int numTickets;

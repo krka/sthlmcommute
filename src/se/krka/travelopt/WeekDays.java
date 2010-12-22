@@ -3,13 +3,6 @@ package se.krka.travelopt;
 import java.util.EnumMap;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-21
- * Time: 20:50:02
- * To change this template use File | Settings | File Templates.
- */
 public class WeekDays {
 	private final Map<WeekDayEnum, Integer> map = new EnumMap<WeekDayEnum, Integer>(WeekDayEnum.class);
 	public static final WeekDays ALL = new WeekDays("mon-sun");

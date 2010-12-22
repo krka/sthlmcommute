@@ -1,12 +1,5 @@
 package se.krka.travelopt;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-17
- * Time: 18:02:14
- * To change this template use File | Settings | File Templates.
- */
 public class Prices {
 	public static final PriceStructure SL_FULL_PRICE = createSLFullPrice();
 	public static final PriceStructure SL_REDUCED_PRICE = createSLReducedPrice();

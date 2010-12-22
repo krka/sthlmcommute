@@ -5,13 +5,6 @@ import org.joda.time.Period;
 
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: krka
- * Date: 2010-dec-19
- * Time: 13:34:51
- * To change this template use File | Settings | File Templates.
- */
 public class TravelPlan {
 	private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
 	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
