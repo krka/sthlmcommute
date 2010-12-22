@@ -1,15 +1,18 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.TravelOptLocale;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 public class TravelResult {
-	private final List<Ticket> tickets;
+    private final TravelOptLocale locale;
+    private final List<Ticket> tickets;
 
-	public TravelResult(List<Ticket> tickets) {
-		this.tickets = Collections.unmodifiableList(new ArrayList<Ticket>(tickets));
+    public TravelResult(TravelOptLocale locale, List<Ticket> tickets) {
+        this.locale = locale;
+        this.tickets = Collections.unmodifiableList(new ArrayList<Ticket>(tickets));
 	}
 
 	public Money getTotalCost() {
@@ -26,10 +29,10 @@ public class TravelResult {
 
 	@Override
 	public String toString() {
-		return "TravelResult: " + getTotalCost() + "\n" + ticketsToString();
+        return locale.travelResult(this);
 	}
 
-	private String ticketsToString() {
+	public String ticketsToString() {
 		StringBuilder builder = new StringBuilder();
 		for (Ticket ticket : tickets) {
 			builder.append(ticket).append("\n");

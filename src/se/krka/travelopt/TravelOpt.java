@@ -15,12 +15,13 @@ public class TravelOpt {
 
 	public TravelResult findOptimum(TravelPlan travelPlan) {
         if (travelPlan.getDates().isEmpty()) {
-            return new TravelResult(Collections.EMPTY_LIST);
+            return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
         }
 
-        if (travelPlan.getPeriod().getYears() >= 2) {
-            throw new IllegalArgumentException("Can not plan more than 2 years.");
+        if (travelPlan.getPeriod().getYears() > 2) {
+            throw new IllegalArgumentException(travelPlan.getLocale().tooLongPeriodError());
         }
+
         List<Purchase> purchases = new ArrayList<Purchase>();
 
         DateTime firstDay = null;
@@ -46,7 +47,7 @@ public class TravelOpt {
         }
 
         if (firstDay == null) {
-            return new TravelResult(Collections.EMPTY_LIST);
+            return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
         }
 
         extendPeriod(purchases, looper);
@@ -66,9 +67,9 @@ public class TravelOpt {
             DateTime startDate = firstDay.plusDays(purchase.startAt);
             Money cost = purchase.totalCost.subtract(purchase.parent.totalCost);
             TicketType ticketType = purchase.ticketType;
-            tickets.add(new Ticket(cost, ticketType, startDate));
+            tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate));
         }
-        return new TravelResult(tickets);
+        return new TravelResult(travelPlan.getLocale(), tickets);
     }
 
 	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, DateTime firstDay) {

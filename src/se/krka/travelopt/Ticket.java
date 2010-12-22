@@ -1,14 +1,18 @@
 package se.krka.travelopt;
 
 import org.joda.time.DateTime;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 public class Ticket {
-	private final TicketType ticketType;
-	private final DateTime startDate;
-	private final Money cost;
+    private final TravelOptLocale locale;
 
-	public Ticket(Money cost, TicketType ticketType, DateTime startDate) {
-		this.cost = cost;
+    private final TicketType ticketType;
+    private final DateTime startDate;
+    private final Money cost;
+
+	public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, DateTime startDate) {
+        this.locale = locale;
+        this.cost = cost;
 		this.ticketType = ticketType;
 		this.startDate = startDate;
 	}
@@ -27,6 +31,6 @@ public class Ticket {
 
 	@Override
 	public String toString() {
-		return startDate.toString("YYYY-MM-dd") + " " + ticketType + ", " + cost;
+        return locale.ticket(this);
 	}
 }

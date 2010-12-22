@@ -1,12 +1,17 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.TravelOptLocale;
+
 public class SimpleTicket implements TicketType {
-	private final String name;
+    private final TravelOptLocale locale;
+
+    private final String name;
 	private final Money price;
 	private final int numTickets;
 
-    public SimpleTicket(String name, Money price, int numTickets) {
-		this.name = name;
+    public SimpleTicket(TravelOptLocale locale, String name, Money price, int numTickets) {
+        this.locale = locale;
+        this.name = name;
 		this.price = price;
 		this.numTickets = numTickets;
     }
@@ -21,6 +26,6 @@ public class SimpleTicket implements TicketType {
 
 	@Override
 	public String toString() {
-		return name + " (" + numTickets + " tickets for " + price + ")";
+        return locale.simpleTicket(name, numTickets, price);
 	}
 }

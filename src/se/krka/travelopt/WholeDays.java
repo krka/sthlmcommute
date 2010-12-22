@@ -1,12 +1,17 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.TravelOptLocale;
+
 public class WholeDays implements TicketType {
-	private final String name;
+    private final TravelOptLocale locale;
+
+    private final String name;
 	private final Money price;
 	private final int numDays;
 
-	public WholeDays(String name, Money price, int numDays) {
-		this.name = name;
+	public WholeDays(TravelOptLocale locale, String name, Money price, int numDays) {
+        this.locale = locale;
+        this.name = name;
 		this.price = price;
 		this.numDays = numDays;
 	}
@@ -21,6 +26,6 @@ public class WholeDays implements TicketType {
 
 	@Override
 	public String toString() {
-		return name + " (" + numDays + " days for " + price + ")";
+        return locale.wholeDays(name, numDays, price);
 	}
 }

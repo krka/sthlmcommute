@@ -2,18 +2,22 @@ package se.krka.travelopt;
 
 import org.joda.time.*;
 import org.joda.time.Period;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.*;
 
 public class TravelPlan {
+    private final TravelOptLocale locale;
+
 	private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
 	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
-	private final DateTime extensionStart;
+    private final DateTime extensionStart;
 	private final Period period;
 
-	public TravelPlan(Collection<TravelPlanDate> dates, DateTime extensionStart) {
-		this.extensionStart = extensionStart;
+	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, DateTime extensionStart) {
+        this.locale = locale;
+        this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
         if (dates.isEmpty()) {
             period = null;
@@ -22,8 +26,8 @@ public class TravelPlan {
         }
 	}
 
-	public static TravelPlan.Builder builder() {
-		return new Builder();
+	public static TravelPlan.Builder builder(TravelOptLocale locale) {
+		return new Builder(locale);
 	}
 
 	public SortedSet<TravelPlanDate> getDates() {
@@ -38,20 +42,30 @@ public class TravelPlan {
 		return period;
 	}
 
-	public static class Builder {
-		private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
-		private int numTickets;
+    public TravelOptLocale getLocale() {
+        return locale;
+    }
 
-		public Builder addDay(DateTime date) {
+    public static class Builder {
+        private final TravelOptLocale locale;
+
+        private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
+        private int numTickets;
+
+        public Builder(TravelOptLocale locale) {
+            this.locale = locale;
+        }
+
+        public Builder addDay(DateTime date) {
 			addDay(date, numTickets);
 			return this;
 		}
 
 		public TravelPlan build() {
             if (dates.isEmpty()) {
-                return new TravelPlan(dates, null);
+                return new TravelPlan(locale, dates, null);
             }
-            return new TravelPlan(dates, dates.last().getDate().plusDays(1));
+            return new TravelPlan(locale, dates, dates.last().getDate().plusDays(1));
         }
 
 		public Builder setTicketsPerDay(int numTickets) {
@@ -59,44 +73,53 @@ public class TravelPlan {
 			return this;
 		}
 
-		public Builder addPeriod(DateTime from, DateTime to, WeekDays days) {
-			Period period = new Period(from, to);
-			if (period.getYears() > 2) {
-				throw new IllegalArgumentException("date range can not be longer than two years");
-			}
-			addDay(from, days);
-			while (from.isBefore(to)) {
-				from = from.plusDays(1);
-				addDay(from, days);
-			}
-			return this;
+		public Builder addPeriod(DateTime from, DateTime to, String days) {
+            WeekDays weekDays = new WeekDays(locale, days);
+            return addPeriod(from, to, weekDays);
 		}
 
-		public TravelPlan buildExtended(WeekDays days) {
+        private Builder addPeriod(DateTime from, DateTime to, WeekDays weekDays) {
+            Period period = new Period(from, to);
+            if (period.getYears() > 2) {
+                throw new IllegalArgumentException(locale.tooLongPeriodError());
+            }
+            addDay(from, weekDays);
+            while (from.isBefore(to)) {
+                from = from.plusDays(1);
+                addDay(from, weekDays);
+            }
+            return this;
+        }
+
+        public Builder addPeriod(DateTime from, DateTime to) {
+            return addPeriod(from, to, WeekDays.ALL);
+        }
+
+		public TravelPlan buildExtended(String days) {
+            WeekDays weekDays = new WeekDays(locale, days);
 			DateTime lastDate = dates.last().getDate();
 			DateTime extensionStart= lastDate.plusDays(1);
 
 			// Hardcoded number of days = 30, the best ticket type for SL
 			for (int i = 0; i < 30; i++) {
 				lastDate = lastDate.plusDays(1);
-				addDay(lastDate, days);
+				addDay(lastDate, weekDays);
 			}
-			return new TravelPlan(dates, extensionStart);
+			return new TravelPlan(locale, dates, extensionStart);
 		}
 
 		private void addDay(DateTime dateTime, WeekDays weekDays) {
-			int dayOfWeek = dateTime.getDayOfWeek();
-			int numTickets = weekDays.getNumTickets(dayOfWeek, this.numTickets);
+			int numTickets = weekDays.getNumTickets(this.numTickets, dateTime);
 			addDay(dateTime, numTickets);
 		}
 
 		private void addDay(DateTime dateTime, int numTickets) {
 			if (numTickets > 0) {
-				dates.add(new TravelPlanDate(dateTime, numTickets));
+				dates.add(new TravelPlanDate(dateTime, numTickets, locale));
 			}
 		}
 
-	}
+    }
 
 	@Override
 	public String toString() {
