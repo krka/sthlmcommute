@@ -24,7 +24,6 @@ public class DateIntervalPicker implements ValueChangeHandler<Date> {
     }
 
     public void install() {
-
         fromValue = from.getValue();
         toValue = to.getValue();
 
@@ -69,10 +68,12 @@ public class DateIntervalPicker implements ValueChangeHandler<Date> {
         if (source == from) {
             if (date.getTime() > to.getValue().getTime()) {
                 to.setValue(date, false);
+                to.setCurrentMonth(date);
             }
         } else if (source == to) {
             if (date.getTime() < from.getValue().getTime()) {
                 from.setValue(date, false);
+                from.setCurrentMonth(date);
             }
         } else {
             return;
@@ -91,6 +92,14 @@ public class DateIntervalPicker implements ValueChangeHandler<Date> {
             DateInterval interval = new DateInterval(from.getValue(), to.getValue());
             dateSelectionLabel.setText(interval.toString());
         }
+    }
+
+    public DatePicker getFrom() {
+        return from;
+    }
+
+    public DatePicker getTo() {
+        return to;
     }
 }
 

@@ -1,1 +1,4 @@
 .idea/workspace.xml
+*.class
+*.cache.*
+*.gwt.rpc
