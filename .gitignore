@@ -2,3 +2,6 @@
 *.class
 *.cache.*
 *.gwt.rpc
+webservice/SthlmCommute/war/WEB-INF/classes
+webservice/SthlmCommute/war/WEB-INF/lib
+*.nocache.js
