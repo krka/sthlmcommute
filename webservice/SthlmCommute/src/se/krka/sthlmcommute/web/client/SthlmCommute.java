@@ -1,5 +1,10 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.datepicker.client.DatePicker;
 import se.krka.sthlmcommute.web.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -9,139 +14,186 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+
+import java.util.Date;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class SthlmCommute implements EntryPoint {
-  /**
-   * The message displayed to the user when the server cannot be reached or
-   * returns an error.
-   */
-  private static final String SERVER_ERROR = "An error occurred while "
-      + "attempting to contact the server. Please check your network "
-      + "connection and try again.";
 
-  /**
-   * Create a remote service proxy to talk to the server-side Greeting service.
-   */
-  private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+    /**
+     * Create a remote service proxy to talk to the server-side Greeting service.
+     */
+    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
-  /**
-   * This is the entry point method.
-   */
-  public void onModuleLoad() {
-    final Button sendButton = new Button("Send");
-    final TextBox nameField = new TextBox();
-    nameField.setText("GWT User");
-    final Label errorLabel = new Label();
+    private Label errorLabel;
 
-    // We can add style names to widgets
-    sendButton.addStyleName("sendButton");
+    /**
+     * This is the entry point method.
+     */
+    public void onModuleLoad() {
 
-    // Add the nameField and sendButton to the RootPanel
-    // Use RootPanel.get() to get the entire body element
-    RootPanel.get("nameFieldContainer").add(nameField);
-    RootPanel.get("sendButtonContainer").add(sendButton);
-    RootPanel.get("errorLabelContainer").add(errorLabel);
+        final DecoratorPanel tabPanel = new DecoratorPanel();
+        tabPanel.add(createRangeForm());
 
-    // Focus the cursor on the name field when the app loads
-    nameField.setFocus(true);
-    nameField.selectAll();
+        RootPanel.get("addContentContainer").add(tabPanel);
+        errorLabel = new Label();
 
-    // Create the popup dialog box
-    final DialogBox dialogBox = new DialogBox();
-    dialogBox.setText("Remote Procedure Call");
-    dialogBox.setAnimationEnabled(true);
-    final Button closeButton = new Button("Close");
-    // We can set the id of a widget by accessing its Element
-    closeButton.getElement().setId("closeButton");
-    final Label textToServerLabel = new Label();
-    final HTML serverResponseLabel = new HTML();
-    VerticalPanel dialogVPanel = new VerticalPanel();
-    dialogVPanel.addStyleName("dialogVPanel");
-    dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-    dialogVPanel.add(textToServerLabel);
-    dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-    dialogVPanel.add(serverResponseLabel);
-    dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-    dialogVPanel.add(closeButton);
-    dialogBox.setWidget(dialogVPanel);
-
-    // Add a handler to close the DialogBox
-    closeButton.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        dialogBox.hide();
-        sendButton.setEnabled(true);
-        sendButton.setFocus(true);
-      }
-    });
-
-    // Create a handler for the sendButton and nameField
-    class MyHandler implements ClickHandler, KeyUpHandler {
-      /**
-       * Fired when the user clicks on the sendButton.
-       */
-      public void onClick(ClickEvent event) {
-        sendNameToServer();
-      }
-
-      /**
-       * Fired when the user types in the nameField.
-       */
-      public void onKeyUp(KeyUpEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-          sendNameToServer();
-        }
-      }
-
-      /**
-       * Send the name from the nameField to the server and wait for a response.
-       */
-      private void sendNameToServer() {
-        // First, we validate the input.
-        errorLabel.setText("");
-        String textToServer = nameField.getText();
-        if (!FieldVerifier.isValidName(textToServer)) {
-          errorLabel.setText("Please enter at least four characters");
-          return;
-        }
-        
-        // Then, we send the input to the server.
-        sendButton.setEnabled(false);
-        textToServerLabel.setText(textToServer);
-        serverResponseLabel.setText("");
-        greetingService.greetServer(textToServer, new AsyncCallback<String>() {
-          public void onFailure(Throwable caught) {
-            // Show the RPC error message to the user
-            dialogBox.setText("Remote Procedure Call - Failure");
-            serverResponseLabel.addStyleName("serverResponseLabelError");
-            serverResponseLabel.setHTML(SERVER_ERROR);
-            dialogBox.center();
-            closeButton.setFocus(true);
-          }
-
-          public void onSuccess(String result) {
-            dialogBox.setText("Remote Procedure Call");
-            serverResponseLabel.removeStyleName("serverResponseLabelError");
-            serverResponseLabel.setHTML(result);
-            dialogBox.center();
-            closeButton.setFocus(true);
-          }
-        });
-      }
+        RootPanel.get("errorLabelContainer").add(errorLabel);
     }
 
-    // Add a handler to send the name to the server
-    MyHandler handler = new MyHandler();
-    sendButton.addClickHandler(handler);
-    nameField.addKeyUpHandler(handler);
-  }
+    private VerticalPanel createRangeForm() {
+        final Grid dates = new Grid(2, 2);
+        dates.setWidget(0, 0, new Label("From:"));
+        dates.setWidget(0, 1, new Label("To:"));
+        final DatePicker from = new DatePicker();
+        dates.setWidget(1, 0, from);
+        final DatePicker to = new DatePicker();
+        dates.setWidget(1, 1, to);
+
+        final Grid buttons = new Grid(1, 2);
+        Button reset = new Button("Reset");
+        buttons.setWidget(0, 0, reset);
+        Button add = new Button("Add");
+        buttons.setWidget(0, 1, add);
+
+        final VerticalPanel form = new VerticalPanel();
+        form.add(dates);
+        final Label dateSelectionLabel = new Label("");
+        form.add(dateSelectionLabel);
+
+        Grid defaultTickets = new Grid(1, 2);
+        defaultTickets.setWidget(0, 0, new Label("Required number of tickets per day:"));
+        final ListBox ticketListBox = createTicketListBox();
+        defaultTickets.setWidget(0, 1, ticketListBox);
+        form.add(defaultTickets);
+
+        final Grid weekDayForm = createWeekDayForm();
+        form.add(weekDayForm);
+        form.add(buttons);
+
+        Date date = new Date();
+        from.setValue(date, true);
+        from.setCurrentMonth(date);
+        to.setValue(date, true);
+        to.setCurrentMonth(date);
+
+
+        from.addValueChangeHandler(new ValueChangeHandler<Date>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Date> dateValueChangeEvent) {
+                Date date = dateValueChangeEvent.getValue();
+                if (to.getValue() == null || date.after(to.getValue())) {
+                    to.setValue(date);
+                    to.setCurrentMonth(date);
+                }
+                updateDateSelection(dateSelectionLabel, from, to);
+            }
+        });
+        to.addValueChangeHandler(new ValueChangeHandler<Date>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Date> dateValueChangeEvent) {
+                Date date = dateValueChangeEvent.getValue();
+                if (from.getValue() == null || date.before(from.getValue())) {
+                    from.setValue(date);
+                    from.setCurrentMonth(date);
+                }
+                updateDateSelection(dateSelectionLabel, from, to);
+            }
+        });
+
+        reset.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                Date date = new Date();
+
+                from.setValue(date, true);
+                from.setCurrentMonth(date);
+                to.setValue(date, true);
+                to.setCurrentMonth(date);
+                ticketListBox.setSelectedIndex(0);
+                for (int i = 0; i < 7; i++) {
+                    ListBox widget = (ListBox) weekDayForm.getWidget(1, i);
+                    widget.setSelectedIndex(0);
+                }
+            }
+        });
+
+        add.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                errorLabel.setText("");
+                if (from.getValue() == null || to.getValue() == null) {
+                    errorLabel.setText("You need to select a date range.");
+                    return;
+                }
+                int defaultValue = Integer.parseInt(ticketListBox.getValue(ticketListBox.getSelectedIndex()));
+                if (defaultValue == -1) {
+                    errorLabel.setText("You need to select number of tickets.");
+                    return;
+                }
+
+                int[] weekdays = new int[7];
+                for (int i = 0; i < 7; i++) {
+                    ListBox widget = (ListBox) weekDayForm.getWidget(1, i);
+                    int value = Integer.parseInt(widget.getValue(widget.getSelectedIndex()));
+                    if (value == -1) {
+                        value = defaultValue;
+                    }
+                    weekdays[i] = value;
+                }
+
+                ScheduleEntry entry = new ScheduleEntry(from.getValue(), to.getValue(), new Weekdays(weekdays));
+                RootPanel.get("addEntriesContainer").add(entry);
+
+            }
+        });
+
+        reset.click();
+        updateDateSelection(dateSelectionLabel, from, to);
+
+        return form;
+    }
+
+    private void updateDateSelection(Label dateSelectionLabel, DatePicker from, DatePicker to) {
+        if (to.getValue() == null || from.getValue() == null) {
+            dateSelectionLabel.setText("No dates have been selected.");
+        } else {
+            DateInterval interval = new DateInterval(from.getValue(), to.getValue());
+            dateSelectionLabel.setText(interval.toString());
+        }
+    }
+
+    private String pad(char c, int width, int value) {
+        String s = String.valueOf(value);
+        int toAdd = s.length() - width;
+        for (int i = 0; i < toAdd; i++) {
+            s = s + c;
+        }
+        return s;
+    }
+
+    private static final String[] weekdays = new String[]{"mo", "tu", "we", "th", "fr", "sa", "su"};
+    private Grid createWeekDayForm() {
+        Grid grid = new Grid(2, 7);
+        for (int day = 0; day < 7; day++) {
+            grid.setWidget(0, day, new Label(weekdays[day]));
+            ListBox listBox = createTicketListBox();
+            listBox.setSelectedIndex(0);
+            grid.setWidget(1, day, listBox);
+        }
+        return grid;
+
+    }
+
+    private ListBox createTicketListBox() {
+        ListBox listBox = new ListBox();
+        listBox.addItem("--", "-1");
+        listBox.addItem("No", "0");
+        for (int i = 1; i < 10; i++) {
+            listBox.addItem(i + "", "" + i);
+        }
+        return listBox;
+    }
 }
