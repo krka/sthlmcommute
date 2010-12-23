@@ -33,8 +33,14 @@ h1 {
 }
 
 .interval {
-    background-color: #9BC7DE !important;
+    background-color: #8BB7CE !important;
 }
+
+.datePickerDayIsValue {
+    background-color: #ABE7FE !important;
+}
+
+
 
 #main {
 	width: 30em;
