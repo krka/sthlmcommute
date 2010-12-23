@@ -4,7 +4,7 @@
   <property name="gwt.args" value="" />
 
   <!-- Configure path to GWT SDK -->
-  <property name="gwt.sdk" location="/home/krka/Downloads/gwt-2.1.1" />
+  <property name="gwt.sdk" location="/home/krka/downloads/gwt-2.1.1" />
 
   <!-- Configure path to App Engine SDK -->
   <property name="appengine.sdk" location="/home/krka/downloads/appengine-java-sdk-1.4.0" />
