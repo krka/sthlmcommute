@@ -1,5 +1,7 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -29,17 +31,19 @@ public class SthlmCommute implements EntryPoint {
     private CheckBox extend;
     private final String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
     private ClientConstants clientConstants;
+    private ListBox priceCategories;
 
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
+        clientConstants = GWT.create(ClientConstants.class);
 
         addLocaleLinks();
 
+
         addPriceCategories();
 
-        clientConstants = GWT.create(ClientConstants.class);
 
         final DecoratorPanel tabPanel = new DecoratorPanel();
         RangeEditor rangeForm = createRangeForm();
@@ -59,9 +63,15 @@ public class SthlmCommute implements EntryPoint {
     }
 
     private void addPriceCategories() {
-        ListBox priceCategories = new ListBox();
+        priceCategories = new ListBox();
         priceCategories.addItem(clientConstants.fullPrice(), "full");
         priceCategories.addItem(clientConstants.reducedPrice(), "reduced");
+        priceCategories.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent changeEvent) {
+                updateTravelSuggestion();
+            }
+        });
         RootPanel.get("priceCategories").add(priceCategories);
     }
 
@@ -72,7 +82,7 @@ public class SthlmCommute implements EntryPoint {
             scheduleEntryTOs.add(new ScheduleEntryTO(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().toString()));
         }
         result.setText("Waiting for reply...");
-        travelService.optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), localeName, "full", new AsyncCallback<String>() {
+        travelService.optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), localeName, priceCategories.getValue(priceCategories.getSelectedIndex()), new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
                 result.setText("Error: " + throwable.getMessage());
