@@ -1,8 +1,16 @@
-* google analytics
-* adsense
-* gwt localization
+* google analytics DONE
+* set swedish as default locale DONE
+
+* gwt localization WORKING
+
 * no execute without atleast one entry
+
+* calculate maximum number of tickets per day (after more than that it's always better with 24h ticket) and set as limit in dropdowns
+* figure out best terminology.
+
 * explain ticket and overrides
 * explain optimize
 * provide examples
+
+* adsense
 
