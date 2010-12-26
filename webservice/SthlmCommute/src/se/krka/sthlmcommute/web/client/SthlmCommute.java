@@ -37,6 +37,8 @@ public class SthlmCommute implements EntryPoint {
 
         addLocaleLinks();
 
+        addPriceCategories();
+
         clientConstants = GWT.create(ClientConstants.class);
 
         final DecoratorPanel tabPanel = new DecoratorPanel();
@@ -54,6 +56,13 @@ public class SthlmCommute implements EntryPoint {
         RootPanel.get("result").add(result);
 
         RootPanel.get("errorLabelContainer").add(errorLabel);
+    }
+
+    private void addPriceCategories() {
+        ListBox priceCategories = new ListBox();
+        priceCategories.addItem(clientConstants.fullPrice(), "full");
+        priceCategories.addItem(clientConstants.reducedPrice(), "reduced");
+        RootPanel.get("priceCategories").add(priceCategories);
     }
 
     void updateTravelSuggestion() {
