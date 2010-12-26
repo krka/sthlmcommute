@@ -1,16 +1,22 @@
 * google analytics DONE
 * set swedish as default locale DONE
+* calculate maximum number of tickets per day (after more than that it's always better with 24h ticket) and set as limit in dropdowns DONE
+* no execute without atleast one entry DONE
 
-* gwt localization WORKING
+* gwt localization ONGOING
 
-* no execute without atleast one entry
 
-* calculate maximum number of tickets per day (after more than that it's always better with 24h ticket) and set as limit in dropdowns
 * figure out best terminology.
 
+* sort entries by date
+* highlight entry to be used as extended.
+* show price list
+* add contact info
+* create favicon and android icon
 * explain ticket and overrides
 * explain optimize
 * provide examples
+* consider removing jodatime
 
 * adsense
 

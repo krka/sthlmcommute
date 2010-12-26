@@ -14,4 +14,8 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   @DefaultStringValue("ClientConstants")
   @Key("ClassName")
   String ClassName();
+
+  @DefaultStringValue("???")
+  @Key("days")
+  String getDays();
 }

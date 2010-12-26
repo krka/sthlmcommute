@@ -34,4 +34,6 @@ public interface TravelOptLocale {
     String invalidWeekDay(String input);
 
     String travelPlanDate(DateTime date, int numTickets);
+
+    String mustSelectPeriod();
 }

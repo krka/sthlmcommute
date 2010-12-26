@@ -26,8 +26,16 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     public String ticket(Ticket ticket) {
-        return formatDate(ticket.getStartDate()) + " " + ticket.getTicketType() + ", " + ticket.getCost();
+        return formatTicketDate(ticket) + " " + ticket.getTicketType() + ", " + ticket.getCost();
     }
+
+    private String formatTicketDate(Ticket ticket) {
+        if (ticket.getEndDate().equals(ticket.getStartDate())) {
+            return formatDate(ticket.getStartDate());
+        }
+        return formatDate(ticket.getStartDate()) + " till " + formatDate(ticket.getEndDate());
+    }
+
 
     public String priceStructure(String body) {
         return "Biljettprislista:\n" + body;
@@ -68,6 +76,11 @@ public class SwedishLocale implements TravelOptLocale {
 
     public String travelPlanDate(DateTime date, int numTickets) {
         return formatDate(date) + " behöver " + numTickets + " biljetter";
+    }
+
+    @Override
+    public String mustSelectPeriod() {
+        return "Du måste välja en icketom tidsperiod";
     }
 
     private String formatDate(DateTime date) {

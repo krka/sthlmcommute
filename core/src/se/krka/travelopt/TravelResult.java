@@ -35,7 +35,7 @@ public class TravelResult {
 	public String ticketsToString() {
 		StringBuilder builder = new StringBuilder();
 		for (Ticket ticket : tickets) {
-			builder.append(ticket).append("\n");
+			builder.append(ticket.toString(locale)).append("\n");
 		}
 		return builder.toString();
 	}

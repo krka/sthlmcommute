@@ -1,6 +1,5 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,6 +25,10 @@ public class SthlmCommute implements EntryPoint {
     private Label errorLabel;
 
     private final List<ScheduleEntry> entries = new ArrayList<ScheduleEntry>();
+    private Label result;
+    private CheckBox extend;
+    private final String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
+    private ClientConstants clientConstants;
 
     /**
      * This is the entry point method.
@@ -34,44 +37,41 @@ public class SthlmCommute implements EntryPoint {
 
         addLocaleLinks();
 
+        clientConstants = GWT.create(ClientConstants.class);
+
         final DecoratorPanel tabPanel = new DecoratorPanel();
         RangeEditor rangeForm = createRangeForm();
         rangeForm.getIntervalPicker().install();
         tabPanel.add(rangeForm);
 
-        final CheckBox extend = new CheckBox("Optimize for long term travel");
+        extend = new CheckBox("Optimize for long term travel");
         RootPanel.get("extendContainer").add(extend);
 
         RootPanel.get("addContentContainer").add(tabPanel);
         errorLabel = new Label();
 
-        final Label result = new Label();
+        result = new Label();
         RootPanel.get("result").add(result);
 
         RootPanel.get("errorLabelContainer").add(errorLabel);
+    }
 
-        Button execute = new Button("Execute");
-        RootPanel.get("execute").add(execute);
-        execute.addClickHandler(new ClickHandler() {
+    void updateTravelSuggestion() {
+        ArrayList<ScheduleEntryTO> scheduleEntryTOs = new ArrayList<ScheduleEntryTO>();
+        Collections.sort(entries);
+        for (ScheduleEntry entry : entries) {
+            scheduleEntryTOs.add(new ScheduleEntryTO(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().toString()));
+        }
+        result.setText("Waiting for reply...");
+        travelService.optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), localeName, "full", new AsyncCallback<String>() {
             @Override
-            public void onClick(ClickEvent clickEvent) {
-                ArrayList<ScheduleEntryTO> scheduleEntryTOs = new ArrayList<ScheduleEntryTO>();
-                Collections.sort(entries);
-                for (ScheduleEntry entry : entries) {
-                    scheduleEntryTOs.add(new ScheduleEntryTO(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().toString()));
-                }
-                result.setText("Waiting for reply...");
-                travelService.optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), new AsyncCallback<String>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        result.setText("Error: " + throwable.getMessage());
-                    }
+            public void onFailure(Throwable throwable) {
+                result.setText("Error: " + throwable.getMessage());
+            }
 
-                    @Override
-                    public void onSuccess(String s) {
-                        result.setText(s);
-                    }
-                });
+            @Override
+            public void onSuccess(String s) {
+                result.setText(s);
             }
         });
     }
@@ -79,7 +79,6 @@ public class SthlmCommute implements EntryPoint {
     private void addLocaleLinks() {
 
         String[] codes = LocaleInfo.getAvailableLocaleNames();
-        String currentLocale = LocaleInfo.getCurrentLocale().getLocaleName();
 
         String href = Window.Location.getHref().replaceAll("locale=[a-zA-Z_]+", "");
         href = href.replaceAll("#.*", "");
@@ -104,7 +103,7 @@ public class SthlmCommute implements EntryPoint {
             }
 
             String linkName = "[" + name + "]";
-            if (!currentLocale.equals(code)) {
+            if (!localeName.equals(code)) {
                 String link = href + append + code;
                 content += "<a href=\"" + link + "\">" + linkName + "</a>";
             } else {
@@ -154,15 +153,15 @@ public class SthlmCommute implements EntryPoint {
                     errorLabel.setText("You need to select a date range.");
                     return;
                 }
-                Weekdays days = rangeEditor.getWeekdays().getWeekdays();
+                Weekdays days = rangeEditor.getWeekdays().getWeekdays(clientConstants);
                 if (days.countTickets() == 0) {
                     errorLabel.setText("You must require at least one ticket");
                     return;
                 }
-                ScheduleEntry entry = new ScheduleEntry(rangeEditor.getFrom().getValue(), rangeEditor.getTo().getValue(), days, entries);
+                ScheduleEntry entry = new ScheduleEntry(rangeEditor.getFrom().getValue(), rangeEditor.getTo().getValue(), days, entries, SthlmCommute.this);
                 entries.add(entry);
                 RootPanel.get("addEntriesContainer").add(entry);
-
+                updateTravelSuggestion();
             }
         });
 

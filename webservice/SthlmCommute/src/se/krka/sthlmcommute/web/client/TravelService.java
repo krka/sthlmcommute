@@ -11,5 +11,5 @@ import java.util.List;
  */
 @RemoteServiceRelativePath("travel")
 public interface TravelService extends RemoteService {
-  String optimize(List<ScheduleEntryTO> entries, boolean extend);
+  String optimize(List<ScheduleEntryTO> entries, boolean extend, String locale, String priceCategory);
 }

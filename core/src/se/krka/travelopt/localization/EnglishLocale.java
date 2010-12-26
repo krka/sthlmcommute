@@ -26,7 +26,14 @@ public class EnglishLocale implements TravelOptLocale {
     }
 
     public String ticket(Ticket ticket) {
-        return formatDate(ticket.getStartDate()) + " " + ticket.getTicketType() + ", " + ticket.getCost();
+        return formatTicketDate(ticket) + " " + ticket.getTicketType() + ", " + ticket.getCost();
+    }
+
+    private String formatTicketDate(Ticket ticket) {
+        if (ticket.getEndDate().equals(ticket.getStartDate())) {
+            return formatDate(ticket.getStartDate());
+        }
+        return formatDate(ticket.getStartDate()) + " to " + formatDate(ticket.getEndDate());
     }
 
     public String priceStructure(String body) {
@@ -68,6 +75,11 @@ public class EnglishLocale implements TravelOptLocale {
 
     public String travelPlanDate(DateTime date, int numTickets) {
         return formatDate(date) + " needs " + numTickets + " tickets";
+    }
+
+    @Override
+    public String mustSelectPeriod() {
+        return "You must select a non-empty time period.";
     }
 
     private String formatDate(DateTime date) {

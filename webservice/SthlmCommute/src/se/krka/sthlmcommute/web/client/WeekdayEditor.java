@@ -1,7 +1,6 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class WeekdayEditor extends Composite {
     private final ListBox ticketListBox;
@@ -27,9 +26,10 @@ public class WeekdayEditor extends Composite {
         if (includeDefault) {
             listBox.addItem("--", "-1");
         }
-        for (int i = 0; i < 10; i++) {
-            listBox.addItem(i + "", "" + i);
+        for (int i = 0; i < 9; i++) {
+            listBox.addItem("" + i, "" + i);
         }
+        listBox.addItem("9+", "9");
         return listBox;
     }
 
@@ -86,7 +86,7 @@ public class WeekdayEditor extends Composite {
         }
     }
 
-    Weekdays getWeekdays() {
+    Weekdays getWeekdays(ClientConstants clientConstants) {
         int defaultValue = Integer.parseInt(getSelectedTicket());
 
         int[] days = new int[7];
@@ -95,6 +95,6 @@ public class WeekdayEditor extends Composite {
             days[i] = value;
         }
 
-        return new Weekdays(defaultValue, days);
+        return new Weekdays(defaultValue, days, clientConstants);
     }
 }

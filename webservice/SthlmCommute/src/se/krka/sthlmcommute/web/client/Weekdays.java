@@ -1,15 +1,22 @@
 package se.krka.sthlmcommute.web.client;
 
 public class Weekdays {
-    private static final String[] days = new String[]{
-            "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-    };
 
     private final int[] tickets;
     private final String desc;
     private final int defaultValue;
+    private final String[] days;
 
-    public Weekdays(int defaultValue, int[] tickets) {
+    public Weekdays(int defaultValue, int[] tickets, ClientConstants clientConstants) {
+        days = clientConstants.getDays().split(",");
+        for (int i = 0; i < 7; i++) {
+            String s = days[i].trim();
+            if (s.length() > 3) {
+                s = s.substring(0, 3);
+            }
+            days[i] = s;
+        }
+
         this.defaultValue = defaultValue;
         this.tickets = new int[7];
         String desc = "";

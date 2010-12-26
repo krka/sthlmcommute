@@ -29,8 +29,16 @@ public class Ticket {
 		return startDate;
 	}
 
+	public DateTime getEndDate() {
+		return startDate.plus(ticketType.numberOfDays() - 1);
+	}
+
 	@Override
 	public String toString() {
         return locale.ticket(this);
 	}
+
+    public Object toString(TravelOptLocale locale) {
+        return locale.ticket(this);
+    }
 }

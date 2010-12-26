@@ -11,7 +11,7 @@ public class ScheduleEntry extends Composite implements Comparable<ScheduleEntry
     private final DateInterval interval;
     private final Weekdays weekdays;
 
-    public ScheduleEntry(Date from, Date to, Weekdays weekdays, final List<ScheduleEntry> list) {
+    public ScheduleEntry(Date from, Date to, Weekdays weekdays, final List<ScheduleEntry> list, final SthlmCommute sthlmCommute) {
         interval = new DateInterval(from, to);
         this.weekdays = weekdays;
 
@@ -27,6 +27,7 @@ public class ScheduleEntry extends Composite implements Comparable<ScheduleEntry
             public void onClick(ClickEvent clickEvent) {
                 list.remove(ScheduleEntry.this);
                 ScheduleEntry.this.removeFromParent();
+                sthlmCommute.updateTravelSuggestion();
             }
         });
 
