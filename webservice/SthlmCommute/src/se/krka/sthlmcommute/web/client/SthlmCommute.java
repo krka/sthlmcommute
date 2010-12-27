@@ -11,6 +11,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import se.krka.sthlmcommute.web.shared.ScheduleEntryTO;
+import se.krka.travelopt.PriceStructure;
+import se.krka.travelopt.Prices;
+import se.krka.travelopt.TicketType;
+import se.krka.travelopt.localization.Locales;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.*;
 
@@ -41,6 +46,7 @@ public class SthlmCommute implements EntryPoint {
 
         addLocaleLinks();
 
+        addPriceList();
 
         addPriceCategories();
 
@@ -60,6 +66,19 @@ public class SthlmCommute implements EntryPoint {
         RootPanel.get("result").add(result);
 
         RootPanel.get("errorLabelContainer").add(errorLabel);
+    }
+
+    private void addPriceList() {
+        Grid grid = new Grid();
+        TravelOptLocale locale = Locales.getLocale(localeName);
+        PriceStructure priceCategory = Prices.getPriceCategory(priceCategories.getValue(priceCategories.getSelectedIndex()), locale);
+
+        int i = 0;
+        for (TicketType ticket: priceCategory.getTicketTypes()) {
+            grid.setWidget(i, 0, new Label(ticket.toString()));
+            i++;
+        }
+        RootPanel.get("priceList").add(grid);
     }
 
     private void addPriceCategories() {

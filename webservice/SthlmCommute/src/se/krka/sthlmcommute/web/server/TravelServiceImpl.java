@@ -1,14 +1,11 @@
 package se.krka.sthlmcommute.web.server;
 
-import com.google.gwt.core.client.GWT;
 import org.joda.time.DateTime;
 import se.krka.sthlmcommute.web.client.TravelService;
-import se.krka.sthlmcommute.web.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import se.krka.sthlmcommute.web.shared.ScheduleEntryTO;
 import se.krka.travelopt.*;
-import se.krka.travelopt.localization.EnglishLocale;
-import se.krka.travelopt.localization.SwedishLocale;
+import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public class TravelServiceImpl extends RemoteServiceServlet implements
 
   public String optimize(List<ScheduleEntryTO> entries, boolean extend, String locale, String priceCategory) throws IllegalArgumentException {
       try {
-          TravelOptLocale travelOptLocale = getLocale(locale);
+          TravelOptLocale travelOptLocale = Locales.getLocale(locale);
           TravelPlan.Builder builder = TravelPlan.builder(travelOptLocale);
           String lastWeekdays = null;
           for (ScheduleEntryTO entry : entries) {
@@ -41,7 +38,7 @@ public class TravelServiceImpl extends RemoteServiceServlet implements
           }
           ;
 
-          TravelOpt travelOpt = new TravelOpt(getPriceCategory(priceCategory));
+          TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, travelOptLocale));
           TravelResult result = travelOpt.findOptimum(travelPlan);
           return result.toString();
       } catch (Exception e) {
@@ -49,17 +46,4 @@ public class TravelServiceImpl extends RemoteServiceServlet implements
       }
   }
 
-    private PriceStructure getPriceCategory(String priceCategory) {
-        if (priceCategory.equals("reduced")) {
-            return Prices.SL_REDUCED_PRICE;
-        }
-        return Prices.SL_FULL_PRICE;
-    }
-
-    private TravelOptLocale getLocale(String locale) {
-        if (locale.equals("sv")) {
-            return new SwedishLocale();
-        }
-        return new EnglishLocale();
-    }
 }

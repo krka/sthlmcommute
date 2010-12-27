@@ -13,10 +13,10 @@ import static org.junit.Assert.assertEquals;
 public class TravelOptTest {
 
     TravelOptLocale locale = new EnglishLocale();
+    private TravelOpt travelOpt = new TravelOpt(Prices.createSLFullPrice(locale));
 
-	@Test
+    @Test
 	public void testEmpty() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelPlan travelPlan = TravelPlan.builder(locale).build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
 		assertEquals(Money.ZERO, result.getTotalCost());
@@ -24,8 +24,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testSingleDay() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-19")).
@@ -38,8 +36,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testTwoDays() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-19")).
@@ -56,8 +52,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testFourDays() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-19")).
@@ -74,8 +68,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testWithGap() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-18")).
@@ -125,8 +117,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testWithGapExtended() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addPeriod(new DateTime("2010-12-18"), new DateTime("2010-12-23")).
@@ -142,8 +132,6 @@ public class TravelOptTest {
 
 	@Test
 	public void testSevenDaysGap() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-01")).
@@ -162,8 +150,6 @@ public class TravelOptTest {
 
 	@Test
 	public void test16DaysWithGap() {
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
-
 		TravelPlan travelPlan = TravelPlan.builder(locale).
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-01")).
@@ -202,7 +188,6 @@ public class TravelOptTest {
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-01")).
 				buildExtended("m-f");
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
 		System.out.println(optimum);
 		assertEquals(Money.parse("690 SEK"), optimum.getTotalCost());
@@ -215,7 +200,6 @@ public class TravelOptTest {
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-01")).
 				buildExtended("m,w,f,sa");
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
         //System.out.println(plan);
 		System.out.println(optimum);
@@ -229,7 +213,6 @@ public class TravelOptTest {
 				setTicketsPerDay(6).
 				addDay(new DateTime("2010-12-01")).
 				buildExtended("m");
-		TravelOpt travelOpt = new TravelOpt(Prices.SL_FULL_PRICE);
 		TravelResult optimum = travelOpt.findOptimum(plan);
         //System.out.println(plan);
 		System.out.println(optimum);
