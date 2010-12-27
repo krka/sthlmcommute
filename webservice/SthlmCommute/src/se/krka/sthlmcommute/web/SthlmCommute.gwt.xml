@@ -20,9 +20,9 @@
   <source path='client'/>
   <source path='shared'/>
 
+  <extend-property name="locale" values="sv" />
+  <extend-property name="locale" values="en" />
 
-
-  <extend-property name="locale" values="sv"/>
-  <extend-property name="locale" values="en"/>
+  <set-property-fallback name="locale" value="sv"/>
 
 </module>

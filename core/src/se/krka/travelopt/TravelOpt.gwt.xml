@@ -2,6 +2,7 @@
 <module rename-to='travelopt'>
 
   <!-- Other module inherits                                      -->
+  <inherits name="org.gwttime.Time" />
 
   <!-- Specify the paths for translatable code                    -->
   <source path=''/>

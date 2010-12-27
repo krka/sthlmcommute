@@ -1,12 +1,10 @@
 package se.krka.travelopt.localization;
 
-import org.joda.time.DateTime;
+import org.gwttime.time.DateTime;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Ticket;
 import se.krka.travelopt.TravelResult;
 import se.krka.travelopt.WeekDays;
-
-import java.util.Locale;
 
 public class EnglishLocale implements TravelOptLocale {
     public String tooLongPeriodError() {
@@ -63,10 +61,6 @@ public class EnglishLocale implements TravelOptLocale {
             case SUNDAY: return "Sunday";
             default: throw new IllegalStateException("Can not occur.");
         }
-    }
-
-    public Locale locale() {
-        return new Locale("en", "GB");
     }
 
     public String invalidWeekDay(String input) {

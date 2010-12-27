@@ -1,8 +1,8 @@
 package se.krka.travelopt;
 
-import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
-import org.joda.time.Period;
+
+import org.gwttime.time.DateTime;
+import org.gwttime.time.MutableDateTime;
 
 import java.util.*;
 

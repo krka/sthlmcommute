@@ -4,16 +4,14 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import org.gwttime.time.DateTime;
 import se.krka.sthlmcommute.web.shared.ScheduleEntryTO;
-import se.krka.travelopt.PriceStructure;
-import se.krka.travelopt.Prices;
-import se.krka.travelopt.TicketType;
+import se.krka.travelopt.*;
 import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
 
@@ -24,19 +22,49 @@ import java.util.*;
  */
 public class SthlmCommute implements EntryPoint {
 
-    /**
-     * Create a remote service proxy to talk to the server-side Greeting service.
-     */
-    private final TravelServiceAsync travelService = GWT.create(TravelService.class);
-
     private Label errorLabel;
 
     private final List<ScheduleEntry> entries = new ArrayList<ScheduleEntry>();
     private Label result;
     private CheckBox extend;
-    private final String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
+    private final String localeName = getLocaleName();
+
+    private static String getLocaleName() {
+        String s = LocaleInfo.getCurrentLocale().getLocaleName();
+        return s;
+    }
+
     private ClientConstants clientConstants;
     private ListBox priceCategories;
+
+    public static String optimize(List<ScheduleEntryTO> entries, boolean extend, String locale, String priceCategory) throws IllegalArgumentException {
+        try {
+            TravelOptLocale travelOptLocale = Locales.getLocale(locale);
+            TravelPlan.Builder builder = TravelPlan.builder(travelOptLocale);
+            String lastWeekdays = null;
+            for (ScheduleEntryTO entry : entries) {
+
+                lastWeekdays = entry.getWeekDays();
+                builder.addPeriod(new DateTime(entry.getFrom()), new DateTime(entry.getTo()), lastWeekdays);
+            }
+            TravelPlan travelPlan;
+            if (extend && lastWeekdays != null) {
+                travelPlan = builder.buildExtended(lastWeekdays);
+            } else {
+                travelPlan = builder.build();
+            }
+            if (travelPlan.getPeriod() == null) {
+                return travelOptLocale.mustSelectPeriod();
+            }
+            ;
+
+            TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, travelOptLocale));
+            TravelResult result = travelOpt.findOptimum(travelPlan);
+            return result.toString();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
 
     /**
      * This is the entry point method.
@@ -46,9 +74,10 @@ public class SthlmCommute implements EntryPoint {
 
         addLocaleLinks();
 
+        addPriceCategories();
+
         addPriceList();
 
-        addPriceCategories();
 
 
         final DecoratorPanel tabPanel = new DecoratorPanel();
@@ -69,26 +98,37 @@ public class SthlmCommute implements EntryPoint {
     }
 
     private void addPriceList() {
-        Grid grid = new Grid();
+        RootPanel panel = RootPanel.get("priceList");
+        for (Widget widget : panel) {
+            widget.removeFromParent();
+        }
+
         TravelOptLocale locale = Locales.getLocale(localeName);
-        PriceStructure priceCategory = Prices.getPriceCategory(priceCategories.getValue(priceCategories.getSelectedIndex()), locale);
+        int index = priceCategories.getSelectedIndex();
+        String value = priceCategories.getValue(index);
+        PriceStructure priceCategory = Prices.getPriceCategory(value, locale);
 
         int i = 0;
-        for (TicketType ticket: priceCategory.getTicketTypes()) {
+        List<TicketType> ticketTypes = priceCategory.getTicketTypes();
+        Grid grid = new Grid(ticketTypes.size(), 1);
+        for (TicketType ticket: ticketTypes) {
             grid.setWidget(i, 0, new Label(ticket.toString()));
             i++;
         }
-        RootPanel.get("priceList").add(grid);
+        panel.add(grid);
     }
 
     private void addPriceCategories() {
         priceCategories = new ListBox();
         priceCategories.addItem(clientConstants.fullPrice(), "full");
         priceCategories.addItem(clientConstants.reducedPrice(), "reduced");
+        priceCategories.setSelectedIndex(0);
+
         priceCategories.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent changeEvent) {
                 updateTravelSuggestion();
+                addPriceList();
             }
         });
         RootPanel.get("priceCategories").add(priceCategories);
@@ -101,23 +141,13 @@ public class SthlmCommute implements EntryPoint {
             scheduleEntryTOs.add(new ScheduleEntryTO(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().toString()));
         }
         result.setText("Waiting for reply...");
-        travelService.optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), localeName, priceCategories.getValue(priceCategories.getSelectedIndex()), new AsyncCallback<String>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                result.setText("Error: " + throwable.getMessage());
-            }
-
-            @Override
-            public void onSuccess(String s) {
-                result.setText(s);
-            }
-        });
+        String s = optimize(scheduleEntryTOs, getBoolValue(extend.getValue()), localeName, priceCategories.getValue(priceCategories.getSelectedIndex()));
+        SthlmCommute.this.result.setText(s);
     }
 
+    private final String[] locales = new String[]{"sv", "en"};
+
     private void addLocaleLinks() {
-
-        String[] codes = LocaleInfo.getAvailableLocaleNames();
-
         String href = Window.Location.getHref().replaceAll("locale=[a-zA-Z_]+", "");
         href = href.replaceAll("#.*", "");
 
@@ -129,11 +159,11 @@ public class SthlmCommute implements EntryPoint {
         }
 
         String content = "";
-        for (String code : codes) {
+        for (String code : locales) {
             String name = LocaleInfo.getLocaleNativeDisplayName(code);
 
             if (name == null) {
-                continue;
+                name = "svenska";
             }
 
             if (content.length() > 0) {

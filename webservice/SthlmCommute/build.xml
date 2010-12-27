@@ -16,7 +16,8 @@
     <fileset dir="${gwt.sdk}" includes="gwt-dev*.jar"/>
     <!-- Add any additional non-server libs (such as JUnit) -->
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
-    <fileset dir="../../core/lib/" includes="**/*.jar"/>
+    <fileset dir="../../core/lib" includes="**/*.jar"/>
+    <pathelement location="../../core/lib/gwttime-alpha.jar"/>
   </path>
 
   <path id="tools.class.path">

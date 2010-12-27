@@ -1,12 +1,10 @@
 package se.krka.travelopt.localization;
 
-import org.joda.time.DateTime;
+import org.gwttime.time.DateTime;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Ticket;
 import se.krka.travelopt.TravelResult;
 import se.krka.travelopt.WeekDays;
-
-import java.util.Locale;
 
 public interface TravelOptLocale {
     String tooLongPeriodError();
@@ -28,8 +26,6 @@ public interface TravelOptLocale {
     String ambiguousWeekDay(String input, WeekDays.WeekDayEnum match1, WeekDays.WeekDayEnum match2);
 
     String weekDayName(WeekDays.WeekDayEnum value);
-
-    Locale locale();
 
     String invalidWeekDay(String input);
 

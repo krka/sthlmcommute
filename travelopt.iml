@@ -17,16 +17,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="lib">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/core/lib" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/core/lib" recursive="false" />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="core-lib" level="project" />
   </component>
 </module>
 

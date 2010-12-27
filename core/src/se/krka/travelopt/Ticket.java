@@ -1,6 +1,6 @@
 package se.krka.travelopt;
 
-import org.joda.time.DateTime;
+import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class Ticket {

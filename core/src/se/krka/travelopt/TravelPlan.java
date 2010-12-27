@@ -1,7 +1,7 @@
 package se.krka.travelopt;
 
-import org.joda.time.*;
-import org.joda.time.Period;
+import org.gwttime.time.DateTime;
+import org.gwttime.time.Period;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.*;

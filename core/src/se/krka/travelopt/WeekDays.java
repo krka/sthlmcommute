@@ -1,6 +1,6 @@
 package se.krka.travelopt;
 
-import org.joda.time.DateTime;
+import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.EnumMap;
@@ -82,10 +82,10 @@ public class WeekDays {
 
 		public static WeekDayEnum parse(TravelOptLocale locale, String s) {
             s = s.trim();
-            String upper = s.toUpperCase(locale.locale());
+            String upper = s.toUpperCase();
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
-                String weekDayName = locale.weekDayName(value).toUpperCase(locale.locale());
+                String weekDayName = locale.weekDayName(value).toUpperCase();
 				if (weekDayName.startsWith(upper)) {
 					if (match == null) {
 						match = value;
