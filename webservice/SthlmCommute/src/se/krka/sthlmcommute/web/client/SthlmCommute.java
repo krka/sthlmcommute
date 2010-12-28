@@ -1,21 +1,23 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import org.gwttime.time.DateTime;
 import se.krka.sthlmcommute.web.shared.ScheduleEntryTO;
 import se.krka.travelopt.*;
 import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -45,7 +47,7 @@ public class SthlmCommute implements EntryPoint {
             for (ScheduleEntryTO entry : entries) {
 
                 lastWeekdays = entry.getWeekDays();
-                builder.addPeriod(new DateTime(entry.getFrom()), new DateTime(entry.getTo()), lastWeekdays);
+                builder.addPeriod(entry.getFrom(), entry.getTo(), lastWeekdays);
             }
             TravelPlan travelPlan;
             if (extend && lastWeekdays != null) {

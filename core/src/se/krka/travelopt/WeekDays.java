@@ -1,10 +1,8 @@
 package se.krka.travelopt;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.Date;
 
 public class WeekDays {
     private final int[] tickets = new int[7];
@@ -24,7 +22,7 @@ public class WeekDays {
 		}
 	}
 
-	public int getNumTickets(int defaultNumTickets, DateTime date) {
+	public int getNumTickets(int defaultNumTickets, Date date) {
         int integer = tickets[WeekDayEnum.get(date)];
 		if (integer == -1) {
 			return defaultNumTickets;
@@ -101,8 +99,8 @@ public class WeekDays {
 			return VALUES[(ordinal() + 1) % 7];
 		}
 
-        public static int get(DateTime date) {
-            return date.getDayOfWeek() - 1;
+        public static int get(Date date) {
+            return Util.getDayOfWeek(date);
         }
 
 	}

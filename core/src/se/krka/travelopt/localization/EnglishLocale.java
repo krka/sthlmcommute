@@ -1,7 +1,8 @@
 package se.krka.travelopt.localization;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.*;
+
+import java.util.Date;
 
 public class EnglishLocale implements TravelOptLocale {
     public String tooLongPeriodError() {
@@ -64,7 +65,7 @@ public class EnglishLocale implements TravelOptLocale {
         return input + " is not a valid weekday";
     }
 
-    public String travelPlanDate(DateTime date, int numTickets) {
+    public String travelPlanDate(Date date, int numTickets) {
         return formatDate(date) + " needs " + numTickets + " tickets";
     }
 
@@ -73,18 +74,12 @@ public class EnglishLocale implements TravelOptLocale {
         return "You must select a non-empty time period.";
     }
 
-    private String formatDate(DateTime date) {
-        int year = date.getYear();
-        int month = date.getMonthOfYear();
-        int day = date.getDayOfMonth();
-        String dateString = Util.pad('0', 4, "" + year) + "-" +
-                Util.pad('0', 2, "" + month) + "-" +
-                Util.pad('0', 2, "" + day);
-        return weekDay(date).substring(0, 3) + " " + dateString;
+    private String formatDate(Date date) {
+        return weekDay(date).substring(0, 3) + " " + Util.format(date);
     }
 
-    private String weekDay(DateTime date) {
-        return weekDayName(WeekDays.WeekDayEnum.get(date));
+    private String weekDay(Date date) {
+        return weekDayName(Util.getDayOfWeek(date));
     }
 
 }

@@ -1,12 +1,8 @@
 package se.krka.travelopt;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TravelPlan {
     private final TravelOptLocale locale;
@@ -14,9 +10,9 @@ public class TravelPlan {
 	private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
 	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
-    private final DateTime extensionStart;
+    private final Date extensionStart;
 
-	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, DateTime extensionStart) {
+	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, Date extensionStart) {
         this.locale = locale;
         this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
@@ -30,7 +26,7 @@ public class TravelPlan {
 		return immutableDates;
 	}
 
-	public DateTime getExtensionStart() {
+	public Date getExtensionStart() {
 		return extensionStart;
 	}
 
@@ -52,7 +48,7 @@ public class TravelPlan {
             this.locale = locale;
         }
 
-        public Builder addDay(DateTime date) {
+        public Builder addDay(Date date) {
 			addDay(date, numTickets);
 			return this;
 		}
@@ -61,7 +57,8 @@ public class TravelPlan {
             if (dates.isEmpty()) {
                 return new TravelPlan(locale, dates, null);
             }
-            return new TravelPlan(locale, dates, dates.last().getDate().plusDays(1));
+            Date ext = Util.plusDays(dates.last().getDate(), 1);
+            return new TravelPlan(locale, dates, ext);
         }
 
 		public Builder setTicketsPerDay(int numTickets) {
@@ -69,48 +66,48 @@ public class TravelPlan {
 			return this;
 		}
 
-		public Builder addPeriod(DateTime from, DateTime to, String days) {
+		public Builder addPeriod(Date from, Date to, String days) {
             WeekDays weekDays = new WeekDays(locale, days);
             return addPeriod(from, to, weekDays);
 		}
 
-        private Builder addPeriod(DateTime from, DateTime to, WeekDays weekDays) {
+        private Builder addPeriod(Date from, Date to, WeekDays weekDays) {
             if (Util.numDays(from, to) > 2*365) {
                 throw new IllegalArgumentException(locale.tooLongPeriodError());
             }
             addDay(from, weekDays);
-            while (from.isBefore(to)) {
-                from = from.plusDays(1);
+            while (from.before(to)) {
+                from = Util.plusDays(from, 1);
                 addDay(from, weekDays);
             }
             return this;
         }
 
-        public Builder addPeriod(DateTime from, DateTime to) {
+        public Builder addPeriod(Date from, Date to) {
             return addPeriod(from, to, WeekDays.ALL);
         }
 
 		public TravelPlan buildExtended(String days) {
             WeekDays weekDays = new WeekDays(locale, days);
-			DateTime lastDate = dates.last().getDate();
-			DateTime extensionStart= lastDate.plusDays(1);
+			Date lastDate = dates.last().getDate();
+			Date extensionStart = Util.plusDays(lastDate, 1);
 
 			// Hardcoded number of days = 30, the best ticket type for SL
 			for (int i = 0; i < 30; i++) {
-				lastDate = lastDate.plusDays(1);
+				lastDate = Util.plusDays(lastDate, 1);
 				addDay(lastDate, weekDays);
 			}
 			return new TravelPlan(locale, dates, extensionStart);
 		}
 
-		private void addDay(DateTime dateTime, WeekDays weekDays) {
-			int numTickets = weekDays.getNumTickets(this.numTickets, dateTime);
-			addDay(dateTime, numTickets);
+		private void addDay(Date Date, WeekDays weekDays) {
+			int numTickets = weekDays.getNumTickets(this.numTickets, Date);
+			addDay(Date, numTickets);
 		}
 
-		private void addDay(DateTime dateTime, int numTickets) {
+		private void addDay(Date date, int numTickets) {
 			if (numTickets > 0) {
-				dates.add(new TravelPlanDate(dateTime, numTickets, locale));
+				dates.add(new TravelPlanDate(date, numTickets, locale));
 			}
 		}
 

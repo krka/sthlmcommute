@@ -1,16 +1,17 @@
 package se.krka.travelopt;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
+
+import java.util.Date;
 
 public class Ticket {
     private final TravelOptLocale locale;
 
     private final TicketType ticketType;
-    private final DateTime startDate;
+    private final Date startDate;
     private final Money cost;
 
-	public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, DateTime startDate) {
+	public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, Date startDate) {
         this.locale = locale;
         this.cost = cost;
 		this.ticketType = ticketType;
@@ -25,15 +26,15 @@ public class Ticket {
 		return ticketType;
 	}
 
-	public DateTime getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public DateTime getEndDate() {
-		return startDate.plus(ticketType.numberOfDays() - 1);
-	}
+	public Date getEndDate() {
+        return Util.plusDays(startDate, ticketType.numberOfDays() - 1);
+    }
 
-	@Override
+    @Override
 	public String toString() {
         return locale.ticket(this);
 	}

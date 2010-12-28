@@ -1,7 +1,8 @@
 package se.krka.travelopt.localization;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.*;
+
+import java.util.Date;
 
 public class SwedishLocale implements TravelOptLocale {
     public String tooLongPeriodError() {
@@ -65,7 +66,7 @@ public class SwedishLocale implements TravelOptLocale {
         return input + " är inte en giltig veckodag.";
     }
 
-    public String travelPlanDate(DateTime date, int numTickets) {
+    public String travelPlanDate(Date date, int numTickets) {
         return formatDate(date) + " behöver " + numTickets + " biljetter";
     }
 
@@ -74,17 +75,11 @@ public class SwedishLocale implements TravelOptLocale {
         return "Du måste välja en icketom tidsperiod";
     }
 
-    private String formatDate(DateTime date) {
-        int year = date.getYear();
-        int month = date.getMonthOfYear();
-        int day = date.getDayOfMonth();
-        String dateString = Util.pad('0', 4, "" + year) + "-" +
-                Util.pad('0', 2, "" + month) + "-" +
-                Util.pad('0', 2, "" + day);
-        return weekDay(date).substring(0, 3) + " " + dateString;
+    private String formatDate(Date date) {
+        return weekDay(date).substring(0, 3) + " " + Util.format(date);
     }
 
-    private String weekDay(DateTime date) {
+    private String weekDay(Date date) {
         return weekDayName(WeekDays.WeekDayEnum.get(date));
     }
 

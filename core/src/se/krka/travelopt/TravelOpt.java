@@ -1,13 +1,7 @@
 package se.krka.travelopt;
 
 
-import org.gwttime.time.DateTime;
-import org.gwttime.time.MutableDateTime;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class TravelOpt {
 	private final PriceStructure priceStructure;
@@ -27,20 +21,20 @@ public class TravelOpt {
 
         List<Purchase> purchases = new ArrayList<Purchase>();
 
-        DateTime firstDay = null;
-        DateTime lastDate = null;
+        Date firstDay = null;
+        Date lastDate = null;
 
-        MutableDateTime looper = new MutableDateTime();
+        Date looper = null;
 
         for (TravelPlanDate travelPlanDate : travelPlan.getDates()) {
-            DateTime date = travelPlanDate.getDate();
+            Date date =  travelPlanDate.getDate();
 
             if (lastDate != null) {
-                looper.setDate(lastDate);
-                looper.addDays(1);
-                while (looper.isBefore(date)) {
+                looper = lastDate;
+                looper = Util.plusDays(looper, 1);
+                while (looper.before(date)) {
                     handle(purchases, 0);
-                    looper.addDays(1);
+                    looper = Util.plusDays(looper, 1);
                 }
             } else {
                 firstDay = date;
@@ -53,7 +47,10 @@ public class TravelOpt {
             return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
         }
 
-        extendPeriod(purchases, looper);
+        looper = lastDate;
+        looper = Util.plusDays(looper, 1);
+
+        looper = extendPeriod(purchases, looper);
 
 
         optimizedExtendPeriod(purchases, travelPlan, firstDay);
@@ -67,7 +64,7 @@ public class TravelOpt {
         List<Ticket> tickets = new ArrayList<Ticket>();
         while (!stack.isEmpty()) {
             Purchase purchase = stack.pop();
-            DateTime startDate = firstDay.plusDays(purchase.startAt);
+            Date startDate = Util.plusDays(firstDay, purchase.startAt);
             Money cost = purchase.totalCost.subtract(purchase.parent.totalCost);
             TicketType ticketType = purchase.ticketType;
             tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate));
@@ -75,20 +72,20 @@ public class TravelOpt {
         return new TravelResult(travelPlan.getLocale(), tickets);
     }
 
-	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, DateTime firstDay) {
-		DateTime extensionStart = travelPlan.getExtensionStart();
+	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, Date firstDay) {
+		Date extensionStart = travelPlan.getExtensionStart();
 		int i = purchases.size() - 1;
 		double bestScore = Double.MAX_VALUE;
 		Purchase bestPurchase = null;
 		while (true) {
 			Purchase purchase = getPurchase(i, purchases);
-			DateTime startDate = firstDay.plusDays(i);
-			if (startDate.isBefore(extensionStart)) {
+			Date startDate = Util.plusDays(firstDay, i);
+			if (startDate.before(extensionStart)) {
 				break;
 			}
 
             // Don't count purchases made after the extension
-            if (firstDay.plusDays(purchase.startAt).isBefore(extensionStart)) {
+            if (Util.plusDays(firstDay, purchase.startAt).before(extensionStart)) {
                 double score = purchase.totalCost.getValue().doubleValue() / (i + 1);
                 if (score <= bestScore) {
                     bestScore = score;
@@ -110,15 +107,16 @@ public class TravelOpt {
 		}
 	}
 
-	private void extendPeriod(List<Purchase> purchases, MutableDateTime looper) {
+	private Date extendPeriod(List<Purchase> purchases, Date looper) {
 		Purchase current = lastPurchase(purchases);
 		Money cost = current.totalCost;
 		while (current.totalCost.equals(cost)) {
-			looper.addDays(1);
+            looper = Util.plusDays(looper, 1);
 			handle(purchases, 1);
 			current = lastPurchase(purchases);
 		}
 		purchases.remove(purchases.size() - 1);
+        return looper;
 	}
 
 	private Purchase lastPurchase(List<Purchase> purchases) {

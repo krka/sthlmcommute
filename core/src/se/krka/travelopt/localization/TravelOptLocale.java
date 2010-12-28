@@ -1,10 +1,11 @@
 package se.krka.travelopt.localization;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Ticket;
 import se.krka.travelopt.TravelResult;
 import se.krka.travelopt.WeekDays;
+
+import java.util.Date;
 
 public interface TravelOptLocale {
     String tooLongPeriodError();
@@ -29,7 +30,7 @@ public interface TravelOptLocale {
 
     String invalidWeekDay(String input);
 
-    String travelPlanDate(DateTime date, int numTickets);
+    String travelPlanDate(Date date, int numTickets);
 
     String mustSelectPeriod();
 }

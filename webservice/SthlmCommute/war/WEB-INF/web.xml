@@ -4,8 +4,9 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  
+
   <!-- Servlets -->
+    <!--
   <servlet>
     <servlet-name>travelServlet</servlet-name>
     <servlet-class>se.krka.sthlmcommute.web.server.TravelServiceImpl</servlet-class>
@@ -15,6 +16,7 @@
     <servlet-name>travelServlet</servlet-name>
     <url-pattern>/sthlmcommute/travel</url-pattern>
   </servlet-mapping>
+  -->
   
   <!-- Default page to serve -->
   <welcome-file-list>

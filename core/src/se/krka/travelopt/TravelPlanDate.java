@@ -1,15 +1,16 @@
 package se.krka.travelopt;
 
-import org.gwttime.time.DateTime;
 import se.krka.travelopt.localization.TravelOptLocale;
+
+import java.util.Date;
 
 public class TravelPlanDate implements Comparable<TravelPlanDate> {
     private final TravelOptLocale locale;
 
-	private final DateTime date;
+	private final Date date;
 	private final int numTickets;
 
-	public TravelPlanDate(DateTime date, int numTickets, TravelOptLocale locale) {
+	public TravelPlanDate(Date date, int numTickets, TravelOptLocale locale) {
 		this.date = date;
 		this.numTickets = numTickets;
         this.locale = locale;
@@ -19,7 +20,7 @@ public class TravelPlanDate implements Comparable<TravelPlanDate> {
 		return date.compareTo(travelPlanDate.date);
 	}
 
-	public DateTime getDate() {
+	public Date getDate() {
 		return date;
 	}
 

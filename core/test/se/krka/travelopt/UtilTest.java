@@ -48,4 +48,14 @@ public class UtilTest {
         assertEquals(11, date.getMonth());
         assertEquals(30, date.getDay());
     }
+
+    @Test
+    public void testFormat() {
+        Date date = Util.parse("2010-12-10");
+        for (int i = 0; i < 10; i++) {
+            date = Util.plusDays(date, 1);
+            String s = Util.format(date);
+            System.out.println(s);
+        }
+    }
 }
