@@ -1,20 +1,14 @@
 package se.krka.travelopt;
 
-import java.math.BigDecimal;
-
 public class Money {
-    public static final Money ZERO = new Money("", new BigDecimal("0"));
+    public static final Money ZERO = new Money("", 0L);
 
     private final String currency;
-    private final BigDecimal value;
+    private final long cents;
 
-    public Money(String currency, BigDecimal value) {
+    public Money(String currency, long cents) {
         this.currency = currency;
-        this.value = value;
-    }
-
-    public Money(String currency, long value) {
-        this(currency, BigDecimal.valueOf(value));
+        this.cents = cents;
     }
 
     @Override
@@ -22,11 +16,13 @@ public class Money {
         if (isZero()) {
             return "0";
         }
-        return value + " " + currency;
+        long big = cents / 100;
+        long small = cents - big * 100;
+        return big + (small != 0 ?  "." + small : "") + " " + currency;
     }
 
     public boolean isZero() {
-        return this.value.equals(BigDecimal.ZERO);
+        return cents == 0;
     }
 
     public Money add(Money other) {
@@ -37,7 +33,7 @@ public class Money {
             return this;
         }
         assertSameCurrency(other);
-        return new Money(this.currency, this.value.add(other.value));
+        return new Money(this.currency, cents + other.cents);
     }
 
     public void assertSameCurrency(Money other) {
@@ -67,25 +63,25 @@ public class Money {
     }
 
     public Money negate() {
-        return new Money(currency, value.negate());
+        return new Money(currency, -cents);
     }
 
     public int compareTo(Money other) {
         assertSameCurrency(other);
-        return value.compareTo(other.value);
+        return Long.signum(cents - other.cents);
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public long getValue() {
+        return cents;
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return (int) cents;
     }
 
     @Override
@@ -100,24 +96,44 @@ public class Money {
     }
 
     public Money multiply(long x) {
-        return new Money(currency, this.value.multiply(BigDecimal.valueOf(x)));
+        return new Money(currency, cents * x);
     }
 
     public Money divideBy(long x) {
-        return new Money(currency, this.value.divide(BigDecimal.valueOf(x)));
+        return new Money(currency, cents / x);
     }
 
     public static Money parse(String s) {
         String[] split = s.trim().split(" ");
         if (split.length == 2) {
             try {
-                BigDecimal value = new BigDecimal(split[0].trim());
+                long value = parseMoney(split[0].trim());
                 return new Money(split[1], value);
             } catch (NumberFormatException e) {
-                BigDecimal value = new BigDecimal(split[1].trim());
+                long value = parseMoney(split[1].trim());
                 return new Money(split[0], value);
             }
         }
         throw new IllegalArgumentException("Too many whitespaces in " + s);
+    }
+
+    private static long parseMoney(String s) {
+        int i = s.indexOf('.');
+        if (i < 0) {
+            return 100L * Long.parseLong(s);
+        }
+
+        int decimals = s.length() - i - 1;
+        s = s.replace(".", "");
+        return 100L * Long.parseLong(s) / getDiv(decimals);
+    }
+
+    private static long getDiv(int decimals) {
+        long div = 1;
+        while (decimals > 0) {
+            div *= 10;
+            decimals--;
+        }
+        return div;
     }
 }

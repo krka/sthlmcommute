@@ -68,7 +68,7 @@
       <arg line="-war"/>
       <arg value="war"/>
       <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-      <arg line="-style pretty" />
+      <!--arg line="-style pretty" /-->
       <arg line="-compileReport" />
       <arg line="${gwt.args}"/>
       <arg value="se.krka.sthlmcommute.web.SthlmCommute"/>

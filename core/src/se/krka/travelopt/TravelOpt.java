@@ -86,7 +86,7 @@ public class TravelOpt {
 
             // Don't count purchases made after the extension
             if (Util.plusDays(firstDay, purchase.startAt).before(extensionStart)) {
-                double score = purchase.totalCost.getValue().doubleValue() / (i + 1);
+                double score = purchase.totalCost.getValue() / (i + 1);
                 if (score <= bestScore) {
                     bestScore = score;
                     bestPurchase = purchase;
