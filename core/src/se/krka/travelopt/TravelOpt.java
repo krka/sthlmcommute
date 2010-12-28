@@ -4,7 +4,10 @@ package se.krka.travelopt;
 import org.gwttime.time.DateTime;
 import org.gwttime.time.MutableDateTime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 
 public class TravelOpt {
 	private final PriceStructure priceStructure;
@@ -18,7 +21,7 @@ public class TravelOpt {
             return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
         }
 
-        if (travelPlan.getPeriod().getYears() > 2) {
+        if (travelPlan.getNumDays() > 2*365) {
             throw new IllegalArgumentException(travelPlan.getLocale().tooLongPeriodError());
         }
 

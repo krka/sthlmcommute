@@ -5,3 +5,5 @@
 webservice/SthlmCommute/war/WEB-INF/classes
 webservice/SthlmCommute/war/WEB-INF/lib
 *.nocache.js
+webservice/SthlmCommute/extras/
+webservice/SthlmCommute/war/sthlmcommute/

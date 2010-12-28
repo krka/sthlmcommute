@@ -53,7 +53,7 @@ public class SthlmCommute implements EntryPoint {
             } else {
                 travelPlan = builder.build();
             }
-            if (travelPlan.getPeriod() == null) {
+            if (travelPlan.getDates().isEmpty()) {
                 return travelOptLocale.mustSelectPeriod();
             }
             ;

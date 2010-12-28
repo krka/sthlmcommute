@@ -7,13 +7,13 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class WeekDays {
-    private final Map<WeekDayEnum, Integer> map = new EnumMap<WeekDayEnum, Integer>(WeekDayEnum.class);
+    private final int[] tickets = new int[7];
 
     public static WeekDays ALL = new WeekDays();
 
     private WeekDays() {
-        for (WeekDayEnum weekDayEnum : WeekDayEnum.values()) {
-            map.put(weekDayEnum, -1);
+        for (int i = 0; i < 7; i++) {
+            tickets[i] = -1;
         }
     }
 
@@ -25,10 +25,7 @@ public class WeekDays {
 	}
 
 	public int getNumTickets(int defaultNumTickets, DateTime date) {
-        Integer integer = map.get(WeekDayEnum.get(date));
-		if (integer == null) {
-			return 0;
-		}
+        int integer = tickets[WeekDayEnum.get(date)];
 		if (integer == -1) {
 			return defaultNumTickets;
 		}
@@ -66,7 +63,7 @@ public class WeekDays {
     }
 
 	private void processWeekDay(WeekDayEnum weekDay, int numTickets) {
-		map.put(weekDay, numTickets);
+        tickets[weekDay.ordinal()] = numTickets;
 	}
 
 	public enum WeekDayEnum {
@@ -85,7 +82,7 @@ public class WeekDays {
             String upper = s.toUpperCase();
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
-                String weekDayName = locale.weekDayName(value).toUpperCase();
+                String weekDayName = locale.weekDayName(value.ordinal()).toUpperCase();
 				if (weekDayName.startsWith(upper)) {
 					if (match == null) {
 						match = value;
@@ -104,8 +101,8 @@ public class WeekDays {
 			return VALUES[(ordinal() + 1) % 7];
 		}
 
-        public static WeekDayEnum get(DateTime date) {
-            return VALUES[date.getDayOfWeek() - 1];
+        public static int get(DateTime date) {
+            return date.getDayOfWeek() - 1;
         }
 
 	}

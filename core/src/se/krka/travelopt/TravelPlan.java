@@ -1,10 +1,12 @@
 package se.krka.travelopt;
 
 import org.gwttime.time.DateTime;
-import org.gwttime.time.Period;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class TravelPlan {
     private final TravelOptLocale locale;
@@ -13,17 +15,11 @@ public class TravelPlan {
 	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
     private final DateTime extensionStart;
-	private final Period period;
 
 	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, DateTime extensionStart) {
         this.locale = locale;
         this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
-        if (dates.isEmpty()) {
-            period = null;
-        } else {
-            period = new Period(this.dates.first().getDate(), this.dates.last().getDate());
-        }
 	}
 
 	public static TravelPlan.Builder builder(TravelOptLocale locale) {
@@ -38,12 +34,12 @@ public class TravelPlan {
 		return extensionStart;
 	}
 
-	public Period getPeriod() {
-		return period;
-	}
-
     public TravelOptLocale getLocale() {
         return locale;
+    }
+
+    public int getNumDays() {
+        return Util.numDays(dates.first().getDate(), dates.last().getDate());
     }
 
     public static class Builder {
@@ -79,8 +75,7 @@ public class TravelPlan {
 		}
 
         private Builder addPeriod(DateTime from, DateTime to, WeekDays weekDays) {
-            Period period = new Period(from, to);
-            if (period.getYears() > 2) {
+            if (Util.numDays(from, to) > 2*365) {
                 throw new IllegalArgumentException(locale.tooLongPeriodError());
             }
             addDay(from, weekDays);

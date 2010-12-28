@@ -1,10 +1,7 @@
 package se.krka.travelopt.localization;
 
 import org.gwttime.time.DateTime;
-import se.krka.travelopt.Money;
-import se.krka.travelopt.Ticket;
-import se.krka.travelopt.TravelResult;
-import se.krka.travelopt.WeekDays;
+import se.krka.travelopt.*;
 
 public class SwedishLocale implements TravelOptLocale {
     public String tooLongPeriodError() {
@@ -51,15 +48,15 @@ public class SwedishLocale implements TravelOptLocale {
         return "Veckodagen " + input + " är tvetydig, kan betyda både " + match1 + " och " + match2;
     }
 
-    public String weekDayName(WeekDays.WeekDayEnum value) {
+    public String weekDayName(int value) {
         switch (value) {
-            case MONDAY: return "Måndag";
-            case TUESDAY: return "Tisdag";
-            case WEDNESDAY: return "Onsdag";
-            case THURSDAY: return "Torsdag";
-            case FRIDAY: return "Fredag";
-            case SATURDAY: return "Lördag";
-            case SUNDAY: return "Söndag";
+            case 0: return "Måndag";
+            case 1: return "Tisdag";
+            case 2: return "Onsdag";
+            case 3: return "Torsdag";
+            case 4: return "Fredag";
+            case 5: return "Lördag";
+            case 6: return "Söndag";
             default: throw new IllegalStateException("Can not occur.");
         }
     }
@@ -78,7 +75,13 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     private String formatDate(DateTime date) {
-        return weekDay(date).substring(0, 3) + " " + date.toString("YYYY-MM-dd");
+        int year = date.getYear();
+        int month = date.getMonthOfYear();
+        int day = date.getDayOfMonth();
+        String dateString = Util.pad('0', 4, "" + year) + "-" +
+                Util.pad('0', 2, "" + month) + "-" +
+                Util.pad('0', 2, "" + day);
+        return weekDay(date).substring(0, 3) + " " + dateString;
     }
 
     private String weekDay(DateTime date) {

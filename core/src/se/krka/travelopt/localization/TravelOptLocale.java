@@ -25,7 +25,7 @@ public interface TravelOptLocale {
 
     String ambiguousWeekDay(String input, WeekDays.WeekDayEnum match1, WeekDays.WeekDayEnum match2);
 
-    String weekDayName(WeekDays.WeekDayEnum value);
+    String weekDayName(int value);
 
     String invalidWeekDay(String input);
 
