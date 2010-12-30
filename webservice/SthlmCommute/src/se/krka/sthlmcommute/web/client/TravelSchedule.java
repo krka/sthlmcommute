@@ -1,8 +1,10 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelSchedule extends Composite {
@@ -32,9 +34,14 @@ public class TravelSchedule extends Composite {
 
     private Widget createList() {
         VerticalPanel panel = new VerticalPanel();
+
         panel.add(helpInfo);
 
         Button newButton = new Button("New entry");
+        final Button deleteButton = new Button("Delete");
+        deleteButton.setEnabled(false);
+
+
         newButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -42,7 +49,23 @@ public class TravelSchedule extends Composite {
                 travelScheduleList.createNew();
             }
         });
-        panel.add(newButton);
+        deleteButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                travelScheduleList.getList().remove(travelScheduleList.getSelectionModel().getSelectedObject());
+                travelScheduleEditor.setActive(null);
+                deleteButton.setEnabled(false);
+            }
+        });
+
+        travelScheduleList.getSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent selectionChangeEvent) {
+                ScheduleEntry obj = travelScheduleList.getSelectionModel().getSelectedObject();
+                deleteButton.setEnabled(obj != null);
+            }
+        });
+        panel.add(UIUtil.wrapFlow(newButton, deleteButton));
         panel.add(travelScheduleList);
         return panel;
     }

@@ -1,10 +1,12 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.i18n.client.HasDirection;
-import com.google.gwt.safehtml.shared.OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.cellview.client.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -15,60 +17,40 @@ import java.util.List;
 
 public class TravelScheduleList extends Composite {
     private final List<ScheduleEntry> list;
-    private final CellTable<ScheduleEntry> scheduleEntryCellTable;
+    private final CellList<ScheduleEntry> scheduleEntryCellList;
+
     private final SingleSelectionModel<ScheduleEntry> selectionModel;
     private final TravelScheduleEditor travelScheduleEditor;
     private final ListDataProvider<ScheduleEntry> listDataProvider;
 
     public TravelScheduleList(ClientConstants clientConstants, final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
         this.travelScheduleEditor = travelScheduleEditor;
-        scheduleEntryCellTable = new CellTable<ScheduleEntry>(10);
+
+        Cell<ScheduleEntry> cell = new AbstractCell<ScheduleEntry>() {
+            @Override
+            public void render(Context context, ScheduleEntry scheduleEntry, SafeHtmlBuilder safeHtmlBuilder) {
+                Date from = scheduleEntry.getInterval().getFrom();
+                if (from == null || scheduleEntry.getInterval().getTo() == null) {
+                    safeHtmlBuilder.appendHtmlConstant("<div style='text-align:center;width:10em;margin-left:auto;margin-right:auto'>Incomplete</div>");
+                    return;
+                }
+                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDate(from) + "</span>");
+                safeHtmlBuilder.appendEscaped(" ");
+                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:5em;text-align:right;padding-right:2em'>" + scheduleEntry.getInterval().getDays() + " days</span>");
+
+                int ticketsPerWeek = scheduleEntry.getWeekdays().countTickets();
+                safeHtmlBuilder.appendHtmlConstant("<span>" + ticketsPerWeek + " ticket/week</span>");
+            }
+        };
+        scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
+
         selectionModel = new SingleSelectionModel<ScheduleEntry>();
-        scheduleEntryCellTable.setSelectionModel(selectionModel);
+        scheduleEntryCellList.setSelectionModel(selectionModel);
 
-        Header header = new TextHeader(clientConstants.when());
-
-        TextColumn<ScheduleEntry> from = new TextColumn<ScheduleEntry>() {
-            @Override
-            public String getValue(ScheduleEntry scheduleEntry) {
-                Date date = scheduleEntry.getInterval().getFrom();
-                if (date == null) {
-                    return "";
-                }
-                return locale.formatDate(date);
-            }
-        };
-        scheduleEntryCellTable.addColumn(from, header);
-
-        TextColumn<ScheduleEntry> days = new TextColumn<ScheduleEntry>() {
-            @Override
-            public String getValue(ScheduleEntry scheduleEntry) {
-                return scheduleEntry.getInterval().getDays() + "";
-            }
-        };
-        scheduleEntryCellTable.addColumn(days, clientConstants.days());
-
-        for (int i = 0; i < 7; i++) {
-            final int finalI = i;
-            TextColumn<ScheduleEntry> weekdayColumn = new TextColumn<ScheduleEntry>() {
-                @Override
-                public String getValue(ScheduleEntry scheduleEntry) {
-                    int tickets = scheduleEntry.getWeekdays().calcValue(finalI);
-                    switch (tickets) {
-                        case 0: return "";
-                        case 9: return "9+";
-                        default: return "" + tickets;
-                    }
-                }
-            };
-            weekdayColumn.setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant.endOf(HasDirection.Direction.DEFAULT));
-            SafeHtml html = new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(locale.weekDayName(i).substring(0, 1));
-            scheduleEntryCellTable.addColumn(weekdayColumn, new SafeHtmlHeader(html));
-        }
-        scheduleEntryCellTable.setWidth("1px");
+        scheduleEntryCellList.setWidth("22em");
         listDataProvider = new ListDataProvider<ScheduleEntry>();
         list = this.listDataProvider.getList();
-        listDataProvider.addDataDisplay(scheduleEntryCellTable);
+        listDataProvider.addDataDisplay(scheduleEntryCellList);
 
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
@@ -78,9 +60,11 @@ public class TravelScheduleList extends Composite {
         });
 
         Panel root = new VerticalPanel();
-        root.add(scheduleEntryCellTable);
-        initWidget(root);
+        root.add(scheduleEntryCellList);
+
+        initWidget(UIUtil.wrapCaption("Entries:", root));
         setVisible(false);
+
     }
 
     public void createNew() {
@@ -100,6 +84,14 @@ public class TravelScheduleList extends Composite {
 
     public void update() {
         listDataProvider.refresh();
+    }
+
+    public List<ScheduleEntry> getList() {
+        return list;
+    }
+
+    public SingleSelectionModel<ScheduleEntry> getSelectionModel() {
+        return selectionModel;
     }
 
 }

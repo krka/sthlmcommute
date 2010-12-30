@@ -35,25 +35,30 @@ public class DateIntervalPicker {
                     return;
                 }
 
+                boolean fire = true;
                 Object source = dateValueChangeEvent.getSource();
                 Date fromValue = from.getValue();
                 Date toValue = to.getValue();
                 if (source == from) {
                     if (toValue == null || date.getTime() > toValue.getTime()) {
-                        to.setValue(date, false);
+                        to.setValue(date, true);
                         to.setCurrentMonth(date);
+                        fire = false;
                     }
                 } else if (source == to) {
                     if (fromValue == null || date.getTime() < fromValue.getTime()) {
-                        from.setValue(date, false);
+                        from.setValue(date, true);
                         from.setCurrentMonth(date);
+                        fire = false;
                     }
                 } else {
                     return;
                 }
 
-                applyHighlight();
-                reportIntervalChange(fromValue, toValue);
+                if (fire) {
+                    applyHighlight();
+                    reportIntervalChange(fromValue, toValue);
+                }
             }
         };
         ValueChangeHandler<Date> handler = valueChangeHandler;
