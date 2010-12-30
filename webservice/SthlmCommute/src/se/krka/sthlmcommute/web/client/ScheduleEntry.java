@@ -7,38 +7,13 @@ import com.google.gwt.user.client.ui.*;
 import java.util.Date;
 import java.util.List;
 
-public class ScheduleEntry extends Composite implements Comparable<ScheduleEntry> {
+public class ScheduleEntry implements Comparable<ScheduleEntry> {
     private final DateInterval interval;
-    private final Weekdays weekdays;
+    private Weekdays weekdays;
 
-    public ScheduleEntry(Date from, Date to, Weekdays weekdays, final List<ScheduleEntry> list, final SthlmCommute sthlmCommute) {
+    public ScheduleEntry(Date from, Date to, Weekdays weekdays) {
         interval = new DateInterval(from, to);
         this.weekdays = weekdays;
-
-        final Button remove = new Button("Remove");
-
-        final HorizontalPanel shortView = new HorizontalPanel();
-
-        shortView.add(remove);
-        shortView.add(new Label(this.toString()));
-
-        remove.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                list.remove(ScheduleEntry.this);
-                ScheduleEntry.this.removeFromParent();
-                sthlmCommute.updateTravelSuggestion();
-            }
-        });
-
-
-
-        final HorizontalPanel mainPanel = new HorizontalPanel();
-        mainPanel.add(shortView);
-
-        DecoratorPanel root = new DecoratorPanel();
-        root.add(mainPanel);
-        initWidget(root);
 
     }
 
@@ -58,5 +33,9 @@ public class ScheduleEntry extends Composite implements Comparable<ScheduleEntry
     @Override
     public int compareTo(ScheduleEntry scheduleEntry) {
         return this.interval.compareTo(scheduleEntry.interval);
+    }
+
+    public void setWeekdays(Weekdays weekdays) {
+        this.weekdays = weekdays;
     }
 }

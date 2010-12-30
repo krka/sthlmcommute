@@ -1,100 +1,69 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
 
 public class WeekdayEditor extends Composite {
-    private final ListBox ticketListBox;
+    private final HelpInfo weekdayHelpInfo;
+
     private final Grid weekDayForm;
+    private final UpdateListener listener;
 
-    public WeekdayEditor() {
-        VerticalPanel root = new VerticalPanel();
-
-        Grid defaultTickets = new Grid(1, 2);
-        defaultTickets.setWidget(0, 0, new Label("Required number of tickets per day:"));
-        ticketListBox = createTicketListBox(false);
-        defaultTickets.setWidget(0, 1, ticketListBox);
-
-        root.add(defaultTickets);
+    public WeekdayEditor(UpdateListener listener) {
+        this.listener = listener;
         weekDayForm = createWeekDayForm();
-        root.add(weekDayForm);
+        weekdayHelpInfo = new HelpInfo("You may change the number of tickets for individual days of the week.");
 
+        Panel root = new VerticalPanel();
+        root.add(weekdayHelpInfo);
+        root.add(new Label("Exceptions:"));
+        root.add(weekDayForm);
         initWidget(root);
     }
 
-    public static ListBox createTicketListBox(boolean includeDefault) {
-        ListBox listBox = new ListBox();
-        if (includeDefault) {
-            listBox.addItem("--", "-1");
-        }
-        for (int i = 0; i < 9; i++) {
-            listBox.addItem("" + i, "" + i);
-        }
-        listBox.addItem("9+", "9");
-        return listBox;
-    }
-
-
     private static final String[] weekdays = new String[]{"mo", "tu", "we", "th", "fr", "sa", "su"};
 
-    public static Grid createWeekDayForm() {
+    public Grid createWeekDayForm() {
         Grid grid = new Grid(2, 7);
         for (int day = 0; day < 7; day++) {
             grid.setWidget(0, day, new Label(weekdays[day]));
-            ListBox listBox = createTicketListBox(true);
-            listBox.setSelectedIndex(0);
+            final TicketListBox listBox = new TicketListBox(true);
+            listBox.addChangeHandler(new ChangeHandler() {
+                @Override
+                public void onChange(ChangeEvent changeEvent) {
+                    weekdayHelpInfo.setVisible(false);
+                    listener.updated();
+                }
+            });
+
             grid.setWidget(1, day, listBox);
         }
         return grid;
 
     }
 
-    public ListBox getTicket() {
-        return ticketListBox;
+    public int getWeekday(int i) {
+        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, i);
+        return listBox.getSelectedTicket();
     }
 
-    public String  getWeekday(int i) {
-        ListBox listBox = (ListBox) weekDayForm.getWidget(1, i);
-        int selectedIndex = listBox.getSelectedIndex();
-        return listBox.getValue(selectedIndex);
+    public void setWeekDay(int index, int value) {
+        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, index);
+        listBox.setSelectedTicket(value);
     }
 
-    public void setWeekDay(int index, String value) {
-        ListBox listBox = (ListBox) weekDayForm.getWidget(1, index);
-        int n = listBox.getItemCount();
-        for (int i = 0; i < n; i++) {
-            String s = listBox.getValue(i);
-            if (s.equals(value)) {
-                listBox.setSelectedIndex(i);
-                return;
-            }
-        }
-    }
-
-    public String getSelectedTicket() {
-        int index = ticketListBox.getSelectedIndex();
-        return ticketListBox.getValue(index);
-    }
-
-    public void setSelectedTicket(String value) {
-        int n = ticketListBox.getItemCount();
-        for (int i = 0; i < n; i++) {
-            String s = ticketListBox.getValue(i);
-            if (s.equals(value)) {
-                ticketListBox.setSelectedIndex(i);
-                return;
-            }
-        }
-    }
-
-    Weekdays getWeekdays(ClientConstants clientConstants) {
-        int defaultValue = Integer.parseInt(getSelectedTicket());
-
-        int[] days = new int[7];
+    public int[] getTickets() {
+        int[] res = new int[7];
         for (int i = 0; i < 7; i++) {
-            int value = Integer.parseInt(getWeekday(i));
-            days[i] = value;
+            res[i] = getWeekday(i);
         }
+        return res;
+    }
 
-        return new Weekdays(defaultValue, days, clientConstants);
+    public void setWeekDays(int[] tickets) {
+        for (int i = 0; i < 7; i++) {
+            setWeekDay(i, tickets[i]);
+        }
     }
 }

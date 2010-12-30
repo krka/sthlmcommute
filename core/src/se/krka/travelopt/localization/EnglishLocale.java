@@ -74,7 +74,7 @@ public class EnglishLocale implements TravelOptLocale {
         return "You must select a non-empty time period.";
     }
 
-    private String formatDate(Date date) {
+    public String formatDate(Date date) {
         return weekDay(date).substring(0, 3) + " " + Util.format(date);
     }
 

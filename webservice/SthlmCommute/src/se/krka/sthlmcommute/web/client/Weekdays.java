@@ -3,39 +3,14 @@ package se.krka.sthlmcommute.web.client;
 public class Weekdays {
 
     private final int[] tickets;
-    private final String desc;
     private final int defaultValue;
-    private final String[] days;
 
-    public Weekdays(int defaultValue, int[] tickets, ClientConstants clientConstants) {
-        days = clientConstants.getDays().split(",");
-        for (int i = 0; i < 7; i++) {
-            String s = days[i].trim();
-            if (s.length() > 3) {
-                s = s.substring(0, 3);
-            }
-            days[i] = s;
-        }
-
+    public Weekdays(int defaultValue, int[] tickets) {
         this.defaultValue = defaultValue;
         this.tickets = new int[7];
-        String desc = "";
-
-        int prevValue = -1;
-        int prevStart = 0;
         for (int i = 0; i < 7; i++) {
             this.tickets[i] = tickets[i];
-            int actual = actualValue(tickets[i]);
-            if (actual != prevValue) {
-                if (prevValue != -1) {
-                    desc = addToDesc(desc, prevValue, prevStart, i - 1);
-                }
-                prevStart = i;
-                prevValue = actual;
-            }
         }
-        desc = addToDesc(desc, prevValue, prevStart, 6);
-        this.desc = desc;
     }
 
     private int actualValue(int value) {
@@ -61,32 +36,27 @@ public class Weekdays {
         return defaultValue;
     }
 
-    private String addToDesc(String desc, int value, int from, int to) {
-        if (value <= 0) {
-            return desc;
-        }
-
-        if (!desc.equals("")) {
-            desc += ", ";
-        }
-        desc += days[from];
-        if (from < to) {
-            desc += "-" + days[to];
-        }
-        desc += ": " + value;
-        return desc;
-    }
-
-    @Override
-    public String toString() {
-        return desc;
-    }
-
     public int countTickets() {
         int sum = 0;
         for (int i = 0; i < 7; i++) {
             sum += calcValue(i);
         }
         return sum;
+    }
+
+    public int[] getTickets() {
+        int[] res = new int[7];
+        for (int i = 0; i < 7; i++) {
+            res[i] = calcValue(i);
+        }
+        return res;
+    }
+
+    public int[] getRawTickets() {
+        int[] res = new int[7];
+        for (int i = 0; i < 7; i++) {
+            res[i] = getValue(i);
+        }
+        return res;
     }
 }

@@ -75,7 +75,8 @@ public class SwedishLocale implements TravelOptLocale {
         return "Du måste välja en icketom tidsperiod";
     }
 
-    private String formatDate(Date date) {
+    @Override
+    public String formatDate(Date date) {
         return weekDay(date).substring(0, 3) + " " + Util.format(date);
     }
 

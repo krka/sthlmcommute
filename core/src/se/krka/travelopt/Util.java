@@ -14,6 +14,9 @@ public class Util {
     }
 
     public static String format(Date date) {
+        if (date == null) {
+            return "";
+        }
         int year = date.getYear() + 1900;
         int month = date.getMonth() + 1;
         int day = date.getDate();

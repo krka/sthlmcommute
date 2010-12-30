@@ -40,9 +40,31 @@ h1 {
     background-color: #ABE7FE !important;
 }
 
-
+body {
+    margin: 10em;
+    width: 90em;
+}
 
 #main {
 	width: 30em;
+	padding-left: 2em;
 	margin: 0px auto;
+}
+
+#left {
+	width: 20em;
+	margin: 0px auto;
+}
+
+#right {
+	width: 20em;
+	margin: 0px auto;
+}
+
+.latest {
+    background-color: blue;
+}
+
+h3, h4 {
+    border-bottom: 1px black solid;
 }

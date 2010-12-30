@@ -33,4 +33,6 @@ public interface TravelOptLocale {
     String travelPlanDate(Date date, int numTickets);
 
     String mustSelectPeriod();
+
+    String formatDate(Date date);
 }

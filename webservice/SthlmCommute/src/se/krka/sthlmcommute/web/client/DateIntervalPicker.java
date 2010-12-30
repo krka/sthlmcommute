@@ -2,55 +2,107 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class DateIntervalPicker implements ValueChangeHandler<Date> {
+public class DateIntervalPicker {
     private final DatePicker from;
     private final DatePicker to;
-    private final Label dateSelectionLabel;
 
-    private Date fromValue;
-    private Date toValue;
+    private Date highlightStart;
+    private Date highlightEnd;
 
-    public DateIntervalPicker(DatePicker from, DatePicker to, Label dateSelectionLabel) {
+    private final List<DateIntervalUpdateListener> listeners = new ArrayList<DateIntervalUpdateListener>();
+
+    public DateIntervalPicker(DatePicker from, DatePicker to) {
         this.from = from;
         this.to = to;
-        this.dateSelectionLabel = dateSelectionLabel;
 
         install();
     }
 
     public void install() {
-        fromValue = from.getValue();
-        toValue = to.getValue();
+        ValueChangeHandler<Date> valueChangeHandler = new ValueChangeHandler<Date>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Date> dateValueChangeEvent) {
+                Date date = dateValueChangeEvent.getValue();
 
-        applyHighlight();
+                if (date == null) {
+                    removeHighlight();
+                    return;
+                }
 
-        from.addValueChangeHandler(this);
-        to.addValueChangeHandler(this);
+                Object source = dateValueChangeEvent.getSource();
+                Date fromValue = from.getValue();
+                Date toValue = to.getValue();
+                if (source == from) {
+                    if (toValue == null || date.getTime() > toValue.getTime()) {
+                        to.setValue(date, false);
+                        to.setCurrentMonth(date);
+                    }
+                } else if (source == to) {
+                    if (fromValue == null || date.getTime() < fromValue.getTime()) {
+                        from.setValue(date, false);
+                        from.setCurrentMonth(date);
+                    }
+                } else {
+                    return;
+                }
+
+                applyHighlight();
+                reportIntervalChange(fromValue, toValue);
+            }
+        };
+        ValueChangeHandler<Date> handler = valueChangeHandler;
+        from.addValueChangeHandler(handler);
+        to.addValueChangeHandler(handler);
     }
 
-    private void applyHighlight() {
-        long time = fromValue.getTime();
-        Date date = new Date(time);
-        while (date.before(toValue)) {
-            from.addStyleToDates("interval", date);
-            to.addStyleToDates("interval", date);
-            time += 86400000;
-            date.setTime(time);
+    private boolean eq(Date x, Date y) {
+        if (x == null) {
+            return y == null;
         }
-        from.addStyleToDates("interval", date);
-        to.addStyleToDates("interval", date);
-        updateDateSelection();
+        return x.equals(y);
+    }
+
+    private boolean isHighlighted() {
+        return highlightStart != null;
+    }
+
+    public void applyHighlight() {
+        if (isHighlighted()) {
+            removeHighlight();
+        }
+        Date from = this.from.getValue();
+        Date to = this.to.getValue();
+        if (from != null && to != null && !to.before(from)) {
+            highlightStart = from;
+            highlightEnd = to;
+
+            long time = highlightStart.getTime();
+            Date date = new Date(time);
+            while (date.before(highlightEnd)) {
+                this.from.addStyleToDates("interval", date);
+                this.to.addStyleToDates("interval", date);
+                time += 86400000;
+                date.setTime(time);
+            }
+            this.from.addStyleToDates("interval", date);
+            this.to.addStyleToDates("interval", date);
+        }
     }
 
     private void removeHighlight() {
-        long time = fromValue.getTime();
+        if (!isHighlighted()) {
+            return;
+        }
+
+        long time = highlightStart.getTime();
         Date date = new Date(time);
-        while (date.before(toValue)) {
+        while (date.before(highlightEnd)) {
             from.removeStyleFromDates("interval", date);
             to.removeStyleFromDates("interval", date);
             time += 86400000;
@@ -58,39 +110,18 @@ public class DateIntervalPicker implements ValueChangeHandler<Date> {
         }
         from.removeStyleFromDates("interval", date);
         to.removeStyleFromDates("interval", date);
+
+        highlightStart = null;
+        highlightEnd = null;
     }
 
-    @Override
-    public void onValueChange(ValueChangeEvent<Date> dateValueChangeEvent) {
-        Date date = dateValueChangeEvent.getValue();
-
-        Object source = dateValueChangeEvent.getSource();
-        if (source == from) {
-            if (date.getTime() > to.getValue().getTime()) {
-                to.setValue(date, false);
-                to.setCurrentMonth(date);
-            }
-        } else if (source == to) {
-            if (date.getTime() < from.getValue().getTime()) {
-                from.setValue(date, false);
-                from.setCurrentMonth(date);
-            }
-        } else {
-            return;
-        }
-
-        removeHighlight();
-        fromValue = from.getValue();
-        toValue = to.getValue();
-        applyHighlight();
+    public void addListener(DateIntervalUpdateListener listener) {
+        listeners.add(listener);
     }
 
-    private void updateDateSelection() {
-        if (to.getValue() == null || from.getValue() == null) {
-            dateSelectionLabel.setText("No dates have been selected.");
-        } else {
-            DateInterval interval = new DateInterval(from.getValue(), to.getValue());
-            dateSelectionLabel.setText(interval.toString());
+    private void reportIntervalChange(Date fromValue, Date toValue) {
+        for (DateIntervalUpdateListener listener : listeners) {
+            listener.intervalChanged(this, fromValue, toValue);
         }
     }
 

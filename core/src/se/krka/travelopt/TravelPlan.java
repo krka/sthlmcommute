@@ -66,8 +66,13 @@ public class TravelPlan {
 			return this;
 		}
 
-		public Builder addPeriod(Date from, Date to, String days) {
+        public Builder addPeriod(Date from, Date to, String days) {
             WeekDays weekDays = new WeekDays(locale, days);
+            return addPeriod(from, to, weekDays);
+        }
+
+		public Builder addPeriod(Date from, Date to, int[] tickets) {
+            WeekDays weekDays = new WeekDays(tickets);
             return addPeriod(from, to, weekDays);
 		}
 
@@ -87,20 +92,27 @@ public class TravelPlan {
             return addPeriod(from, to, WeekDays.ALL);
         }
 
-		public TravelPlan buildExtended(String days) {
-            WeekDays weekDays = new WeekDays(locale, days);
-			Date lastDate = dates.last().getDate();
-			Date extensionStart = Util.plusDays(lastDate, 1);
+        public TravelPlan buildExtended(int[] tickets) {
+            return buildExtended(new WeekDays(tickets));
+        }
 
-			// Hardcoded number of days = 30, the best ticket type for SL
-			for (int i = 0; i < 30; i++) {
-				lastDate = Util.plusDays(lastDate, 1);
-				addDay(lastDate, weekDays);
-			}
-			return new TravelPlan(locale, dates, extensionStart);
+		public TravelPlan buildExtended(String days) {
+            return buildExtended(new WeekDays(locale, days));
 		}
 
-		private void addDay(Date Date, WeekDays weekDays) {
+        private TravelPlan buildExtended(WeekDays weekDays) {
+            Date lastDate = dates.last().getDate();
+            Date extensionStart = Util.plusDays(lastDate, 1);
+
+            // Hardcoded number of days = 30, the best ticket type for SL
+            for (int i = 0; i < 30; i++) {
+                lastDate = Util.plusDays(lastDate, 1);
+                addDay(lastDate, weekDays);
+            }
+            return new TravelPlan(locale, dates, extensionStart);
+        }
+
+        private void addDay(Date Date, WeekDays weekDays) {
 			int numTickets = weekDays.getNumTickets(this.numTickets, Date);
 			addDay(Date, numTickets);
 		}
