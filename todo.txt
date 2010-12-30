@@ -1,11 +1,13 @@
 * google analytics DONE
 * set swedish as default locale DONE
-* no execute without atleast one entry DONE
-* optimize TravelOpt for better JS performance DONE
 
 * gwt localization ONGOING
 * show price list ONGOING
 
+
+* optimize TravelOpt for better JS performance by removing dates from the solver
+* no execute without atleast one entry DONE
+* flag entries are red if they overlap
 
 * figure out best terminology.
 
