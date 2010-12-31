@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.*;
 public class PriceCategories extends Composite {
     private final TravelInterface travelInterface;
     private final HelpInfo helpInfo;
+    private final RadioButton fullPrice;
+    private final RadioButton reducedPrice;
 
     public PriceCategories(TravelInterface travelInterface, ClientConstants clientConstants) {
         this.travelInterface = travelInterface;
@@ -15,8 +17,10 @@ public class PriceCategories extends Composite {
         root.add(panel);
         helpInfo = new HelpInfo("Are you paying full price or do you get a discount for being young or being a senior citizen?");
         panel.add(helpInfo);
-        panel.add(createButton(clientConstants.fullPrice()));
-        panel.add(createButton(clientConstants.reducedPrice()));
+        fullPrice = createButton(clientConstants.fullPrice());
+        panel.add(fullPrice);
+        reducedPrice = createButton(clientConstants.reducedPrice());
+        panel.add(reducedPrice);
         initWidget(root);
     }
 
@@ -30,5 +34,15 @@ public class PriceCategories extends Composite {
             }
         });
         return button;
+    }
+
+    public String getSelected() {
+        if (fullPrice.getValue()) {
+            return "full";
+        }
+        if (reducedPrice.getValue()) {
+            return "reduced";
+        }
+        return null;
     }
 }

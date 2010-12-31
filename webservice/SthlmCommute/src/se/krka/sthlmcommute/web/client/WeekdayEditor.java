@@ -9,6 +9,7 @@ public class WeekdayEditor extends Composite {
 
     private final Grid weekDayForm;
     private final UpdateListener listener;
+    private DelayedWork worker;
 
     public WeekdayEditor(UpdateListener listener) {
         this.listener = listener;
@@ -34,6 +35,7 @@ public class WeekdayEditor extends Composite {
                 public void onChange(ChangeEvent changeEvent) {
                     weekdayHelpInfo.setVisible(false);
                     listener.updated();
+                    worker.requestWork();
                 }
             });
 
@@ -65,5 +67,9 @@ public class WeekdayEditor extends Composite {
         for (int i = 0; i < 7; i++) {
             setWeekDay(i, tickets[i]);
         }
+    }
+
+    public void setWorker(DelayedWork worker) {
+        this.worker = worker;
     }
 }

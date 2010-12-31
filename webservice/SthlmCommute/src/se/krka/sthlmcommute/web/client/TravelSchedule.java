@@ -15,6 +15,8 @@ public class TravelSchedule extends Composite {
     private final TravelScheduleList travelScheduleList;
     private final TravelScheduleEditor travelScheduleEditor;
 
+    private DelayedWork worker;
+
     public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale) {
         this.clientConstants = clientConstants;
         this.locale = locale;
@@ -55,6 +57,7 @@ public class TravelSchedule extends Composite {
                 travelScheduleList.getList().remove(travelScheduleList.getSelectionModel().getSelectedObject());
                 travelScheduleEditor.setActive(null);
                 deleteButton.setEnabled(false);
+                worker.requestWork();
             }
         });
 
@@ -68,5 +71,14 @@ public class TravelSchedule extends Composite {
         panel.add(UIUtil.wrapFlow(newButton, deleteButton));
         panel.add(travelScheduleList);
         return panel;
+    }
+
+    public TravelScheduleList getList() {
+        return travelScheduleList;
+    }
+
+    public void setWorker(DelayedWork worker) {
+        this.worker = worker;
+        this.travelScheduleEditor.setWorker(worker);
     }
 }

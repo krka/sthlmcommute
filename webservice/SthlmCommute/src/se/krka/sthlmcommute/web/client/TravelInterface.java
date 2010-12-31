@@ -29,8 +29,7 @@ public class TravelInterface {
     private final TravelSchedule travelSchedule;
 
     private List<ScheduleEntry> entries;
-    private ScheduleEntry lastEntry;
-    private Label errorLabel;
+    private final TextArea result;
 
     public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants) {
         this.locale = locale;
@@ -39,33 +38,15 @@ public class TravelInterface {
 
         priceCategories = new PriceCategories(this, clientConstants);
         travelSchedule = new TravelSchedule(clientConstants, locale);
-    }
 
-    public String optimize(List<ScheduleEntry> entries, boolean extend, String priceCategory) throws IllegalArgumentException {
-        try {
-            TravelPlan.Builder builder = TravelPlan.builder(locale);
-            int[] lastWeekdays = null;
-            for (ScheduleEntry entry : entries) {
-                lastWeekdays = entry.getWeekdays().getTickets();
-                builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), lastWeekdays);
-            }
-            TravelPlan travelPlan;
-            if (extend && lastWeekdays != null) {
-                travelPlan = builder.buildExtended(lastWeekdays);
-            } else {
-                travelPlan = builder.build();
-            }
-            if (travelPlan.getDates().isEmpty()) {
-                return locale.mustSelectPeriod();
-            }
-            ;
+        result = new TextArea();
+        result.setWidth("40em");
+        result.setHeight("40em");
+        TravelOptRunner travelOptRunner = new TravelOptRunner(locale, travelSchedule.getList().getList(), priceCategories, result);
+        DelayedWork worker = new DelayedWork(travelOptRunner);
+        travelSchedule.setWorker(worker);
 
-            TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
-            TravelResult result = travelOpt.findOptimum(travelPlan);
-            return result.toString();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        RootPanel.get("result").add(result);
     }
 
     private boolean getBoolValue(Boolean value) {

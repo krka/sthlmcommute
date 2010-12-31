@@ -15,6 +15,7 @@ public class TravelScheduleEditor extends Composite {
     private boolean isReady;
     private ScheduleEntry active;
     private TravelScheduleList travelScheduleList;
+    private DelayedWork worker;
 
     public TravelScheduleEditor() {
         VerticalPanel root = new VerticalPanel();
@@ -62,6 +63,7 @@ public class TravelScheduleEditor extends Composite {
                 if (ready) {
                     active.getInterval().set(fromValue, toValue);
                     travelScheduleList.update();
+                    worker.requestWork();
                 }
                 if (ready && !isReady) {
                     isReady = true;
@@ -100,5 +102,10 @@ public class TravelScheduleEditor extends Composite {
         ticketEditor.getTicket().setSelectedTicket(defaultValue);
         ticketEditor.getWeekdayEditor().setWeekDays(entry.getWeekdays().getRawTickets());
         setVisible(true);
+    }
+
+    public void setWorker(DelayedWork worker) {
+        this.worker = worker;
+        ticketEditor.setWorker(worker);
     }
 }
