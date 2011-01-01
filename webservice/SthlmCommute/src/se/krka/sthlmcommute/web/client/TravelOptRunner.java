@@ -84,14 +84,14 @@ public class TravelOptRunner implements Runnable {
         panel.add(errorLabel);
         panel.add(UIUtil.wrapScroll(ticketCellTable, "57em", "10em"));
         RootPanel.get("result").add(UIUtil.wrapCaption("Result", panel));
-
-        clear();
     }
 
     public void setup(List<ScheduleEntry> entries, PriceCategories priceCategories, OptimizeOptions optimizeOptions) {
         this.entries = entries;
         this.priceCategories = priceCategories;
         this.optimizeOptions = optimizeOptions;
+
+        run();
     }
 
     @Override
@@ -102,6 +102,7 @@ public class TravelOptRunner implements Runnable {
         if (s != null) {
             errorLabel.setText(s);
             errorLabel.setVisible(true);
+            ticketCellTable.setVisible(false);
         }
     }
 
@@ -111,12 +112,19 @@ public class TravelOptRunner implements Runnable {
         ArrayList<Ticket> list = new ArrayList<Ticket>();
         addTotal(list, Money.ZERO);
         ticketCellTable.setRowData(list);
+        ticketCellTable.setVisible(true);
     }
 
     public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
         try {
             TravelPlan.Builder builder = TravelPlan.builder(locale);
+            if (entries.isEmpty()) {
+                return "Begin by creating an entry.";
+            }
             for (ScheduleEntry entry : entries) {
+                if (!entry.valid()) {
+                    return "All entries must have a start and end date, as well as at least one required ticket.";
+                }
                 builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().getTickets());
             }
             TravelPlan travelPlan;
@@ -126,7 +134,7 @@ public class TravelOptRunner implements Runnable {
                 travelPlan = builder.build();
             }
             if (travelPlan.getDates().isEmpty()) {
-                return null;
+                return "You did not specify any dates which required tickets, so there is no result.";
             }
 
             TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
@@ -145,7 +153,9 @@ public class TravelOptRunner implements Runnable {
     }
 
     private void addTotal(List<Ticket> tickets, Money totalCost) {
-        tickets.add(0, new Ticket(locale, totalCost, null, null, null));
+        if (tickets.size() != 1) {
+            tickets.add(0, new Ticket(locale, totalCost, null, null, null));
+        }
     }
 
     private List<Ticket> summarize(List<Ticket> tickets) {
