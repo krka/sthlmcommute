@@ -3,10 +3,10 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.user.client.ui.*;
 
 public class UIUtil {
-    public static Widget wrapScroll(Widget widget) {
+    public static Widget wrapScroll(Widget widget, String width, String height) {
         ScrollPanel panel = new ScrollPanel(widget);
-        panel.setAlwaysShowScrollBars(true);
-        panel.setSize("25em", "20em");
+        panel.setWidth(width);
+        panel.setHeight(height);
         return panel;
     }
 
@@ -24,6 +24,14 @@ public class UIUtil {
 
     public static Widget wrapFlow(Widget... widgets) {
         Panel p = new FlowPanel();
+        for (Widget widget : widgets) {
+            p.add(widget);
+        }
+        return p;
+    }
+
+    public static Widget wrapHorizontal(Widget... widgets) {
+        Panel p = new HorizontalPanel();
         for (Widget widget : widgets) {
             p.add(widget);
         }

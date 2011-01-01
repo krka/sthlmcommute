@@ -30,8 +30,18 @@ public class SimpleTicket implements TicketType {
     }
 
     @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String description() {
+        return locale.simpleTicketDesc(numTickets, price);
+    }
+
+    @Override
 	public String toString() {
-        return locale.simpleTicket(name, numTickets, price);
+        return name + " (" + description() + ")";
 	}
 
     @Override

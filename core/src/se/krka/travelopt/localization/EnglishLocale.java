@@ -14,11 +14,11 @@ public class EnglishLocale implements TravelOptLocale {
     }
 
     public String wholeDays(String name, int numDays, Money price) {
-        return name + " (" + numDays + " days for " + price + ")";
+        return numDays + " days for " + price;
     }
 
-    public String simpleTicket(String name, int numTickets, Money price) {
-        return name + " (" + numTickets + " tickets for " + price + ")";
+    public String simpleTicketDesc(int numTickets, Money price) {
+        return numTickets + " tickets for " + price;
     }
 
     public String travelResult(TravelResult travelResult) {

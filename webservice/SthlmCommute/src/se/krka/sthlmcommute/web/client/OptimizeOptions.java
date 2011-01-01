@@ -2,7 +2,9 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -23,6 +25,7 @@ public class OptimizeOptions extends Composite {
         ticketEditor.hideHelp();
 
         Panel root = new VerticalPanel();
+        root.setWidth("60em");
 
         ClickHandler handler = new ClickHandler() {
             @Override
@@ -37,7 +40,9 @@ public class OptimizeOptions extends Composite {
 
         VerticalPanel extendPanel = new VerticalPanel();
         extendPanel.add(extend);
-        extendPanel.add(ticketEditor);
+        VerticalPanel hidden = new VerticalPanel();
+        hidden.setWidth("4em");
+        extendPanel.add(UIUtil.wrapHorizontal(hidden, ticketEditor));
 
         only.setValue(true);
 

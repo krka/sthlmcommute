@@ -14,11 +14,11 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     public String wholeDays(String name, int numDays, Money price) {
-        return name + " (" + numDays + " dagar för " + price + ")";
+        return numDays + " dagar för " + price;
     }
 
-    public String simpleTicket(String name, int numTickets, Money price) {
-        return name + " (" + numTickets + " biljetter för " + price + ")";
+    public String simpleTicketDesc(int numTickets, Money price) {
+        return numTickets + " biljetter för " + price;
     }
 
     public String travelResult(TravelResult travelResult) {

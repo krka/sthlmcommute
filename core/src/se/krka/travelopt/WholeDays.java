@@ -30,8 +30,18 @@ public class WholeDays implements TicketType {
     }
 
     @Override
-	public String toString() {
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String description() {
         return locale.wholeDays(name, numDays, price);
+    }
+
+    @Override
+	public String toString() {
+        return name + " (" + description() + ")";
 	}
 
     @Override

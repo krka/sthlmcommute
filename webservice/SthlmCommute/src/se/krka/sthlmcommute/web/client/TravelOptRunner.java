@@ -1,9 +1,11 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.Ticket;
@@ -31,8 +33,8 @@ public class TravelOptRunner implements Runnable {
         this.locale = locale;
         errorLabel = new Label("error");
 
-        ticketCellTable = new CellTable<Ticket>(10000);
-        ticketCellTable.setWidth("60em");
+        ticketCellTable = new CellTable<Ticket>(5);
+        ticketCellTable.setWidth("55em");
 
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
@@ -60,7 +62,7 @@ public class TravelOptRunner implements Runnable {
                 }
                 return String.valueOf(ticket.getNumberOfTickets());
             }
-        }, "Number of tickets");
+        }, "Tickets");
 
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
@@ -68,7 +70,7 @@ public class TravelOptRunner implements Runnable {
                 if (ticket.getTicketType() == null) {
                     return "Total";
                 }
-                return ticket.getTicketType().toString();
+                return ticket.getTicketType().name();
             }
         }, "Type");
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
@@ -78,11 +80,12 @@ public class TravelOptRunner implements Runnable {
             }
         }, "Cost");
 
-        errorLabel.setVisible(false);
-        ticketCellTable.setVisible(false);
+        VerticalPanel panel = new VerticalPanel();
+        panel.add(errorLabel);
+        panel.add(UIUtil.wrapScroll(ticketCellTable, "57em", "10em"));
+        RootPanel.get("result").add(UIUtil.wrapCaption("Result", panel));
 
-        RootPanel.get("result").add(errorLabel);
-        RootPanel.get("result").add(ticketCellTable);
+        clear();
     }
 
     public void setup(List<ScheduleEntry> entries, PriceCategories priceCategories, OptimizeOptions optimizeOptions) {
@@ -93,18 +96,21 @@ public class TravelOptRunner implements Runnable {
 
     @Override
     public void run() {
-        errorLabel.setText("");
-        errorLabel.setVisible(false);
-        ticketCellTable.setRowData(Collections.EMPTY_LIST);
-        ticketCellTable.setVisible(false);
+        clear();
 
         String s = optimize(entries, optimizeOptions, priceCategories.getSelected());
         if (s != null) {
             errorLabel.setText(s);
             errorLabel.setVisible(true);
-        } else {
-            ticketCellTable.setVisible(true);
         }
+    }
+
+    private void clear() {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
+        ArrayList<Ticket> list = new ArrayList<Ticket>();
+        addTotal(list, Money.ZERO);
+        ticketCellTable.setRowData(list);
     }
 
     public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
@@ -120,7 +126,7 @@ public class TravelOptRunner implements Runnable {
                 travelPlan = builder.build();
             }
             if (travelPlan.getDates().isEmpty()) {
-                return locale.mustSelectPeriod();
+                return null;
             }
 
             TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
@@ -134,8 +140,12 @@ public class TravelOptRunner implements Runnable {
 
     private void renderResult(TravelResult result) {
         List<Ticket> tickets = summarize(result.getTickets());
-        tickets.add(0, new Ticket(locale, result.getTotalCost(), null, null, null));
+        addTotal(tickets, result.getTotalCost());
         ticketCellTable.setRowData(tickets);
+    }
+
+    private void addTotal(List<Ticket> tickets, Money totalCost) {
+        tickets.add(0, new Ticket(locale, totalCost, null, null, null));
     }
 
     private List<Ticket> summarize(List<Ticket> tickets) {
@@ -145,7 +155,7 @@ public class TravelOptRunner implements Runnable {
         for (Ticket ticket : tickets) {
             if (prev != null) {
                 boolean sameType = ticket.getTicketType().equals(prev.getTicketType());
-                boolean adjacent = Util.dayDifference(ticket.getEndDate(), prev.getStartDate()) == 1;
+                boolean adjacent = Util.dayDifference(ticket.getStartDate(), prev.getEndDate()) == 1;
                 if (sameType && adjacent) {
                     Money newCost = prev.getCost().add(ticket.getCost());
                     int numberOfTickets = prev.getNumberOfTickets() + ticket.getNumberOfTickets();
