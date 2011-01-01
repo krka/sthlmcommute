@@ -8,10 +8,8 @@ import java.util.Date;
 public class TravelScheduleEditor extends Composite {
     private final RangeEditor rangeEditor;
 
-    private final HelpInfo helpInfo;
     private final TicketEditor ticketEditor;
 
-    private boolean isReady;
     private ScheduleEntry active;
     private TravelScheduleList travelScheduleList;
     private final DelayedWork worker;
@@ -21,7 +19,7 @@ public class TravelScheduleEditor extends Composite {
         VerticalPanel root = new VerticalPanel();
         rangeEditor = new RangeEditor();
 
-        helpInfo = new HelpInfo("Choose the time period for when you need to travel.");
+        //helpInfo = new HelpInfo("Choose the time period for when you need to travel.");
         ticketEditor = new TicketEditor(new UpdateListener() {
             @Override
             public void updated() {
@@ -30,46 +28,18 @@ public class TravelScheduleEditor extends Composite {
             }
         }, this.worker, locale);
 
-        root.add(helpInfo);
-        root.add(rangeEditor.getDates());
+        root.add(rangeEditor);
         root.add(ticketEditor);
         initWidget(root);
         setVisible(false);
 
-        ticketEditor.setVisible(false);
-        /*
-        ticket.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent changeEvent) {
-                if (ticket.getSelectedIndex() > 0) {
-                    ticketHelpInfo.setVisible(false);
-                    weekDayForm.setVisible(true);
-                    weekdayHelpInfo.setVisible(true);
-                    weekdayLabel.setVisible(true);
-                } else {
-                    ticketHelpInfo.setVisible(true);
-                    weekDayForm.setVisible(false);
-                    weekdayHelpInfo.setVisible(false);
-                    weekdayLabel.setVisible(false);
-                }
-            }
-        });
-        */
-
         rangeEditor.getIntervalPicker().addListener(new DateIntervalUpdateListener() {
             @Override
             public void intervalChanged(DateIntervalPicker picker, Date fromValue, Date toValue) {
-                boolean ready = fromValue != null && toValue != null;
-                if (ready) {
+                if (fromValue != null && toValue != null) {
                     active.getInterval().set(fromValue, toValue);
                     travelScheduleList.update();
                     TravelScheduleEditor.this.worker.requestWork();
-                }
-                if (ready && !isReady) {
-                    isReady = true;
-
-                    ticketEditor.setVisible(true);
-                    helpInfo.setVisible(false);
                 }
             }
         });
@@ -102,5 +72,9 @@ public class TravelScheduleEditor extends Composite {
         ticketEditor.getTicket().setSelectedTicket(defaultValue);
         ticketEditor.getWeekdayEditor().setWeekDays(entry.getWeekdays().getRawTickets());
         setVisible(true);
+    }
+
+    public RangeEditor getRangeEditor() {
+        return rangeEditor;
     }
 }

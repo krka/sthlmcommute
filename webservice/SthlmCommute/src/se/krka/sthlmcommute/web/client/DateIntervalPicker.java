@@ -41,13 +41,13 @@ public class DateIntervalPicker {
                 Date fromValue = from.getValue();
                 Date toValue = to.getValue();
                 if (source == from) {
-                    if (toValue == null || date.getTime() > toValue.getTime()) {
+                    if (toValue != null && date.getTime() > toValue.getTime()) {
                         to.setValue(date, true);
                         to.setCurrentMonth(date);
                         fire = false;
                     }
                 } else if (source == to) {
-                    if (fromValue == null || date.getTime() < fromValue.getTime()) {
+                    if (fromValue != null && date.getTime() < fromValue.getTime()) {
                         from.setValue(date, true);
                         from.setCurrentMonth(date);
                         fire = false;

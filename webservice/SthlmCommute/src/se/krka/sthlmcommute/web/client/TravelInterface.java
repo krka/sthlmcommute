@@ -8,6 +8,7 @@ public class TravelInterface {
     private final PriceCategories priceCategories;
     private final TravelSchedule travelSchedule;
     private final OptimizeOptions optimizeOptions;
+    private final HelpSection helpSection;
 
     public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants) {
         help = new Help();
@@ -20,9 +21,12 @@ public class TravelInterface {
 
         optimizeOptions = new OptimizeOptions(worker, locale);
         travelOptRunner.setup(travelSchedule.getList().getList(), priceCategories, optimizeOptions);
+
+        helpSection = new HelpSection(priceCategories, travelSchedule, travelSchedule.getRangeEditor());
     }
 
     public void setup() {
+        RootPanel.get("helpsection").add(helpSection);
         RootPanel.get("priceCategories").add(priceCategories);
         RootPanel.get("travelSchedule").add(travelSchedule);
         RootPanel.get("extendContainer").add(optimizeOptions);
@@ -32,12 +36,9 @@ public class TravelInterface {
 
     private void start() {
         help.choosePriceCategory();
-        travelSchedule.setVisible(false);
-        //optimizeOptions.setVisible(false);
     }
 
     public void doneWithPriceCategory() {
         help.createNewEntry();
-        travelSchedule.setVisible(true);
     }
 }

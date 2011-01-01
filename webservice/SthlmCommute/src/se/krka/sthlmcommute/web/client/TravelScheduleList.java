@@ -62,12 +62,10 @@ public class TravelScheduleList extends Composite {
         root.add(scheduleEntryCellList);
 
         initWidget(UIUtil.wrapCaption("Entries:", root));
-        setVisible(false);
 
     }
 
     public void createNew() {
-        setVisible(true);
         ScheduleEntry entry = new ScheduleEntry(new Weekdays(0, createDefaultWeekdays()));
         list.add(entry);
         selectionModel.setSelected(entry, true);

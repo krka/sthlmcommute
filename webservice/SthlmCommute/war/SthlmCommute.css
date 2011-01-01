@@ -7,13 +7,28 @@
 }
 
 #main {
-    margin-left: auto;
-    margin-right: auto;
+    float: left;
+    margin-left: 2em;
     width: 60em;
 	padding-left: 2em;
 	margin: 0px auto;
 }
 
+#help {
+    float: left;
+    padding-left: 2em;
+    width: 20em;
+}
+
 h3, h4 {
     border-bottom: 1px black solid;
+}
+
+
+.highlighted {
+    background-color: #ffffaa;
+}
+
+button.highlighted {
+    background-color: #ffffaa;
 }

@@ -20,7 +20,6 @@ public class OptimizeOptions extends Composite {
                 delayedWork.requestWork();
             }
         }, delayedWork, locale);
-        ticketEditor.setVisible(false);
         ticketEditor.hideHelp();
 
         Panel root = new VerticalPanel();

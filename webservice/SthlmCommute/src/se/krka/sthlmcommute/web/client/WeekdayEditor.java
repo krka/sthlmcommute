@@ -6,8 +6,6 @@ import com.google.gwt.user.client.ui.*;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekdayEditor extends Composite {
-    private final HelpInfo weekdayHelpInfo;
-
     private final Grid weekDayForm;
     private final UpdateListener listener;
     private final DelayedWork worker;
@@ -18,10 +16,9 @@ public class WeekdayEditor extends Composite {
         this.worker = worker;
         this.locale = locale;
         weekDayForm = createWeekDayForm();
-        weekdayHelpInfo = new HelpInfo("You may change the number of tickets for individual days of the week.");
+        //weekdayHelpInfo = new HelpInfo("You may change the number of tickets for individual days of the week.");
 
         Panel root = new VerticalPanel();
-        root.add(weekdayHelpInfo);
         root.add(new Label("Exceptions:"));
         root.add(weekDayForm);
         initWidget(root);
@@ -35,7 +32,7 @@ public class WeekdayEditor extends Composite {
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override
                 public void onChange(ChangeEvent changeEvent) {
-                    weekdayHelpInfo.setVisible(false);
+                    //weekdayHelpInfo.setVisible(false);
                     listener.updated();
                     worker.requestWork();
                 }
@@ -72,6 +69,6 @@ public class WeekdayEditor extends Composite {
     }
 
     public void hideHelp() {
-        weekdayHelpInfo.setVisible(false);
+        //weekdayHelpInfo.setVisible(false);
     }
 }

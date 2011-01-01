@@ -7,11 +7,11 @@ import com.google.gwt.user.client.ui.*;
 public class PriceCategories extends Composite {
     private final TravelInterface travelInterface;
     private final DelayedWork delayedWork;
-    private final HelpInfo helpInfo;
     private final RadioButton fullPrice;
     private final RadioButton reducedPrice;
 
     private RadioButton selected;
+    private HelpSection helpSection;
 
     public PriceCategories(TravelInterface travelInterface, ClientConstants clientConstants, DelayedWork delayedWork) {
         this.travelInterface = travelInterface;
@@ -19,8 +19,6 @@ public class PriceCategories extends Composite {
         CaptionPanel root = new CaptionPanel(clientConstants.priceCategories());
         VerticalPanel panel = new VerticalPanel();
         root.add(panel);
-        helpInfo = new HelpInfo("Are you paying full price or do you get a discount for being young or being a senior citizen?");
-        panel.add(helpInfo);
         fullPrice = createButton(clientConstants.fullPrice());
         panel.add(fullPrice);
         reducedPrice = createButton(clientConstants.reducedPrice());
@@ -33,8 +31,10 @@ public class PriceCategories extends Composite {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                helpInfo.setVisible(false);
                 travelInterface.doneWithPriceCategory();
+                if (helpSection != null) {
+                    helpSection.selectedPriceCategory();
+                }
                 if (selected != button) {
                     delayedWork.requestWork();
                 }
@@ -52,5 +52,9 @@ public class PriceCategories extends Composite {
             return "reduced";
         }
         return null;
+    }
+
+    public void addListener(HelpSection helpSection) {
+        this.helpSection = helpSection;
     }
 }

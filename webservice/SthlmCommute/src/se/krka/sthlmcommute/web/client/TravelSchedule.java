@@ -8,18 +8,20 @@ import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelSchedule extends Composite {
 
-    private final HelpInfo helpInfo;
     private final TravelScheduleList travelScheduleList;
     private final TravelScheduleEditor travelScheduleEditor;
 
     private final DelayedWork worker;
+    private final Button newButton;
+    private HelpSection helpSection;
 
     public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale, DelayedWork worker) {
         this.worker = worker;
-        helpInfo = new HelpInfo("Begin by creating an entry in the travel schedule.");
         travelScheduleEditor = new TravelScheduleEditor(worker, locale);
         travelScheduleList = new TravelScheduleList(locale, travelScheduleEditor);
         travelScheduleEditor.setTravelScheduleList(travelScheduleList);
+
+        newButton = new Button("New entry");
 
         HorizontalPanel panel = new HorizontalPanel();
         panel.add(createList());
@@ -33,9 +35,6 @@ public class TravelSchedule extends Composite {
     private Widget createList() {
         VerticalPanel panel = new VerticalPanel();
 
-        panel.add(helpInfo);
-
-        Button newButton = new Button("New entry");
         final Button deleteButton = new Button("Delete");
         deleteButton.setEnabled(false);
 
@@ -43,8 +42,10 @@ public class TravelSchedule extends Composite {
         newButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                helpInfo.setVisible(false);
                 travelScheduleList.createNew();
+                if (helpSection != null) {
+                    helpSection.createdAnEntry();
+                }
             }
         });
         deleteButton.addClickHandler(new ClickHandler() {
@@ -71,5 +72,18 @@ public class TravelSchedule extends Composite {
 
     public TravelScheduleList getList() {
         return travelScheduleList;
+    }
+
+    public Button getNewButton() {
+        return newButton;
+    }
+
+    public void addListener(HelpSection helpSection) {
+
+        this.helpSection = helpSection;
+    }
+
+    public RangeEditor getRangeEditor() {
+        return travelScheduleEditor.getRangeEditor();
     }
 }
