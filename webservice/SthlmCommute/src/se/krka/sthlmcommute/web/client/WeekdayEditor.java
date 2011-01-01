@@ -3,16 +3,20 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekdayEditor extends Composite {
     private final HelpInfo weekdayHelpInfo;
 
     private final Grid weekDayForm;
     private final UpdateListener listener;
-    private DelayedWork worker;
+    private final DelayedWork worker;
+    private final TravelOptLocale locale;
 
-    public WeekdayEditor(UpdateListener listener) {
+    public WeekdayEditor(UpdateListener listener, DelayedWork worker, TravelOptLocale locale) {
         this.listener = listener;
+        this.worker = worker;
+        this.locale = locale;
         weekDayForm = createWeekDayForm();
         weekdayHelpInfo = new HelpInfo("You may change the number of tickets for individual days of the week.");
 
@@ -23,12 +27,10 @@ public class WeekdayEditor extends Composite {
         initWidget(root);
     }
 
-    private static final String[] weekdays = new String[]{"mo", "tu", "we", "th", "fr", "sa", "su"};
-
     public Grid createWeekDayForm() {
         Grid grid = new Grid(2, 7);
         for (int day = 0; day < 7; day++) {
-            grid.setWidget(0, day, new Label(weekdays[day]));
+            grid.setWidget(0, day, new Label(locale.weekDayName(day).substring(0, 1)));
             final TicketListBox listBox = new TicketListBox(true);
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override
@@ -69,7 +71,7 @@ public class WeekdayEditor extends Composite {
         }
     }
 
-    public void setWorker(DelayedWork worker) {
-        this.worker = worker;
+    public void hideHelp() {
+        weekdayHelpInfo.setVisible(false);
     }
 }

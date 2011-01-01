@@ -8,11 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 public class ScheduleEntry implements Comparable<ScheduleEntry> {
-    private final DateInterval interval;
+    private final DateInterval interval = new DateInterval(null, null);
     private Weekdays weekdays;
 
-    public ScheduleEntry(Date from, Date to, Weekdays weekdays) {
-        interval = new DateInterval(from, to);
+    public ScheduleEntry(Weekdays weekdays) {
         this.weekdays = weekdays;
 
     }

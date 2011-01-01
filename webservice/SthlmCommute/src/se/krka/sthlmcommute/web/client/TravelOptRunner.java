@@ -4,7 +4,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.Ticket;
@@ -25,13 +24,12 @@ public class TravelOptRunner implements Runnable {
 
     private List<ScheduleEntry> entries;
     private PriceCategories priceCategories;
-    private final Label totalCostLabel;
+    private OptimizeOptions optimizeOptions;
 
 
     public TravelOptRunner(final TravelOptLocale locale) {
         this.locale = locale;
         errorLabel = new Label("error");
-        totalCostLabel = new Label();
 
         ticketCellTable = new CellTable<Ticket>(10000);
         ticketCellTable.setWidth("60em");
@@ -39,18 +37,27 @@ public class TravelOptRunner implements Runnable {
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
+                if (ticket.getStartDate() == null) {
+                    return "";
+                }
                 return locale.formatDate(ticket.getStartDate());
             }
         }, "From");
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
+                if (ticket.getEndDate() == null) {
+                    return "";
+                }
                 return locale.formatDate(ticket.getEndDate());
             }
         }, "To");
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
+                if (ticket.getStartDate() == null) {
+                    return "";
+                }
                 return String.valueOf(ticket.getNumberOfTickets());
             }
         }, "Number of tickets");
@@ -58,6 +65,9 @@ public class TravelOptRunner implements Runnable {
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
+                if (ticket.getTicketType() == null) {
+                    return "Total";
+                }
                 return ticket.getTicketType().toString();
             }
         }, "Type");
@@ -72,25 +82,23 @@ public class TravelOptRunner implements Runnable {
         ticketCellTable.setVisible(false);
 
         RootPanel.get("result").add(errorLabel);
-        RootPanel.get("result").add(totalCostLabel);
         RootPanel.get("result").add(ticketCellTable);
     }
 
-    public void setup(List<ScheduleEntry> entries, PriceCategories priceCategories) {
+    public void setup(List<ScheduleEntry> entries, PriceCategories priceCategories, OptimizeOptions optimizeOptions) {
         this.entries = entries;
         this.priceCategories = priceCategories;
+        this.optimizeOptions = optimizeOptions;
     }
 
     @Override
     public void run() {
         errorLabel.setText("");
         errorLabel.setVisible(false);
-        totalCostLabel.setText("");
-        totalCostLabel.setVisible(false);
         ticketCellTable.setRowData(Collections.EMPTY_LIST);
         ticketCellTable.setVisible(false);
 
-        String s = optimize(entries, false, priceCategories.getSelected());
+        String s = optimize(entries, optimizeOptions, priceCategories.getSelected());
         if (s != null) {
             errorLabel.setText(s);
             errorLabel.setVisible(true);
@@ -99,24 +107,21 @@ public class TravelOptRunner implements Runnable {
         }
     }
 
-    public String optimize(List<ScheduleEntry> entries, boolean extend, String priceCategory) throws IllegalArgumentException {
+    public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
         try {
             TravelPlan.Builder builder = TravelPlan.builder(locale);
-            int[] lastWeekdays = null;
             for (ScheduleEntry entry : entries) {
-                lastWeekdays = entry.getWeekdays().getTickets();
-                builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), lastWeekdays);
+                builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().getTickets());
             }
             TravelPlan travelPlan;
-            if (extend && lastWeekdays != null) {
-                travelPlan = builder.buildExtended(lastWeekdays);
+            if (optimizeOptions.isEnabled()) {
+                travelPlan = builder.buildExtended(optimizeOptions.getTickets());
             } else {
                 travelPlan = builder.build();
             }
             if (travelPlan.getDates().isEmpty()) {
                 return locale.mustSelectPeriod();
             }
-            ;
 
             TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
             TravelResult result = travelOpt.findOptimum(travelPlan);
@@ -129,9 +134,8 @@ public class TravelOptRunner implements Runnable {
 
     private void renderResult(TravelResult result) {
         List<Ticket> tickets = summarize(result.getTickets());
+        tickets.add(0, new Ticket(locale, result.getTotalCost(), null, null, null));
         ticketCellTable.setRowData(tickets);
-        totalCostLabel.setText("Total cost: " + result.getTotalCost());
-        totalCostLabel.setVisible(true);
     }
 
     private List<Ticket> summarize(List<Ticket> tickets) {
@@ -141,7 +145,7 @@ public class TravelOptRunner implements Runnable {
         for (Ticket ticket : tickets) {
             if (prev != null) {
                 boolean sameType = ticket.getTicketType().equals(prev.getTicketType());
-                boolean adjacent = Util.numDays(prev.getEndDate(), ticket.getStartDate()) == 2;
+                boolean adjacent = Util.dayDifference(ticket.getEndDate(), prev.getStartDate()) == 1;
                 if (sameType && adjacent) {
                     Money newCost = prev.getCost().add(ticket.getCost());
                     int numberOfTickets = prev.getNumberOfTickets() + ticket.getNumberOfTickets();

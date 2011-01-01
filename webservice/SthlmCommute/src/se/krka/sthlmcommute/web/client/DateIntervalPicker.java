@@ -3,6 +3,7 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.datepicker.client.DatePicker;
+import se.krka.travelopt.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class DateIntervalPicker {
     }
 
     public void install() {
-        ValueChangeHandler<Date> valueChangeHandler = new ValueChangeHandler<Date>() {
+        ValueChangeHandler<Date> handler = new ValueChangeHandler<Date>() {
             @Override
             public void onValueChange(ValueChangeEvent<Date> dateValueChangeEvent) {
                 Date date = dateValueChangeEvent.getValue();
@@ -61,7 +62,6 @@ public class DateIntervalPicker {
                 }
             }
         };
-        ValueChangeHandler<Date> handler = valueChangeHandler;
         from.addValueChangeHandler(handler);
         to.addValueChangeHandler(handler);
     }
@@ -83,13 +83,13 @@ public class DateIntervalPicker {
         }
         Date from = this.from.getValue();
         Date to = this.to.getValue();
-        if (from != null && to != null && !to.before(from)) {
+        if (from != null && to != null && !Util.before(to, from)) {
             highlightStart = from;
             highlightEnd = to;
 
             long time = highlightStart.getTime();
             Date date = new Date(time);
-            while (date.before(highlightEnd)) {
+            while (Util.before(date, highlightEnd)) {
                 this.from.addStyleToDates("interval", date);
                 this.to.addStyleToDates("interval", date);
                 time += 86400000;
@@ -107,7 +107,7 @@ public class DateIntervalPicker {
 
         long time = highlightStart.getTime();
         Date date = new Date(time);
-        while (date.before(highlightEnd)) {
+        while (Util.before(date, highlightEnd)) {
             from.removeStyleFromDates("interval", date);
             to.removeStyleFromDates("interval", date);
             time += 86400000;

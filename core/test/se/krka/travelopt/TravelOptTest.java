@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TravelOptTest {
 
-    TravelOptLocale locale = new EnglishLocale();
+    TravelOptLocale locale = EnglishLocale.INSTANCE;
     private TravelOpt travelOpt = new TravelOpt(Prices.createSLFullPrice(locale));
 
     @Test
@@ -257,4 +257,22 @@ public class TravelOptTest {
 		assertEquals(2, list.get(3).getNumTickets());
 		assertEquals(Util.parse("2010-12-18"), list.get(3).getDate());
 	}
+
+    @Test
+    public void testExtend4() {
+        TravelPlan plan1 = TravelPlan.builder(locale).
+                setTicketsPerDay(4).
+                addPeriod(Util.parse("2011-01-05"), Util.parse("2011-01-15")).
+                build();
+
+        TravelPlan plan2 = TravelPlan.builder(locale).
+                setTicketsPerDay(4).
+                addPeriod(Util.parse("2011-01-05"), Util.parse("2011-01-15")).
+                buildExtended("mon-sun:1");
+
+        TravelResult result1 = travelOpt.findOptimum(plan1);
+        TravelResult result2 = travelOpt.findOptimum(plan2);
+        assertEquals(result1, result2);
+    }
+
 }

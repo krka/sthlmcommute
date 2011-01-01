@@ -70,8 +70,7 @@ public class SthlmCommute implements EntryPoint {
                 content += linkName;
             }
         }
-        HTML html = new HTML(content);
-        return html;
+        return new HTML(content);
     }
 
 }

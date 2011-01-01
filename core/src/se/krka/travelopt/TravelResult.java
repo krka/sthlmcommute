@@ -39,4 +39,24 @@ public class TravelResult {
 		}
 		return builder.toString();
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TravelResult that = (TravelResult) o;
+
+        if (!locale.equals(that.locale)) return false;
+        if (!tickets.equals(that.tickets)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = locale.hashCode();
+        result = 31 * result + tickets.hashCode();
+        return result;
+    }
 }

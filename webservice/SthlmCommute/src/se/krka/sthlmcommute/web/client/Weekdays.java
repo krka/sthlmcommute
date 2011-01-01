@@ -8,16 +8,7 @@ public class Weekdays {
     public Weekdays(int defaultValue, int[] tickets) {
         this.defaultValue = defaultValue;
         this.tickets = new int[7];
-        for (int i = 0; i < 7; i++) {
-            this.tickets[i] = tickets[i];
-        }
-    }
-
-    private int actualValue(int value) {
-        if (value == -1) {
-            return defaultValue;
-        }
-        return value;
+        System.arraycopy(tickets, 0, this.tickets, 0, 7);
     }
 
     public int calcValue(int day) {

@@ -33,4 +33,28 @@ public class WholeDays implements TicketType {
 	public String toString() {
         return locale.wholeDays(name, numDays, price);
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WholeDays wholeDays = (WholeDays) o;
+
+        if (numDays != wholeDays.numDays) return false;
+        if (!locale.equals(wholeDays.locale)) return false;
+        if (!name.equals(wholeDays.name)) return false;
+        if (!price.equals(wholeDays.price)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = locale.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + numDays;
+        return result;
+    }
 }

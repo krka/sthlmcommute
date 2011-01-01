@@ -17,13 +17,12 @@ import java.util.List;
 
 public class TravelScheduleList extends Composite {
     private final List<ScheduleEntry> list;
-    private final CellList<ScheduleEntry> scheduleEntryCellList;
 
     private final SingleSelectionModel<ScheduleEntry> selectionModel;
     private final TravelScheduleEditor travelScheduleEditor;
     private final ListDataProvider<ScheduleEntry> listDataProvider;
 
-    public TravelScheduleList(ClientConstants clientConstants, final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
+    public TravelScheduleList(final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
         this.travelScheduleEditor = travelScheduleEditor;
 
         Cell<ScheduleEntry> cell = new AbstractCell<ScheduleEntry>() {
@@ -42,7 +41,7 @@ public class TravelScheduleList extends Composite {
                 safeHtmlBuilder.appendHtmlConstant("<span>" + ticketsPerWeek + " ticket/week</span>");
             }
         };
-        scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
+        CellList<ScheduleEntry> scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
 
         selectionModel = new SingleSelectionModel<ScheduleEntry>();
         scheduleEntryCellList.setSelectionModel(selectionModel);
@@ -69,7 +68,7 @@ public class TravelScheduleList extends Composite {
 
     public void createNew() {
         setVisible(true);
-        ScheduleEntry entry = new ScheduleEntry(null, null, new Weekdays(0, createDefaultWeekdays()));
+        ScheduleEntry entry = new ScheduleEntry(new Weekdays(0, createDefaultWeekdays()));
         list.add(entry);
         selectionModel.setSelected(entry, true);
     }

@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UtilTest {
     @Test
@@ -57,5 +59,36 @@ public class UtilTest {
             assertEquals(s, "2011-01-0" + i);
             date = Util.plusDays(date, 1);
         }
+    }
+
+    @Test
+    public void testDayDifference() {
+        Date x = Util.parse("2010-01-01");
+        Date y = Util.parse("2010-01-01");
+        y.setHours(4);
+        assertEquals(0, Util.dayDifference(x, y));
+    }
+
+    @Test
+    public void testDayDifference2() {
+        Date x = Util.parse("2010-01-01");
+        Date y = Util.parse("2010-01-02");
+        assertEquals(-1, Util.dayDifference(x, y));
+    }
+
+    @Test
+    public void testDayDifference3() {
+        Date x = Util.parse("2010-01-01");
+        Date y = Util.parse("2010-01-02");
+        assertEquals(1, Util.dayDifference(y, x));
+    }
+
+    @Test
+    public void testBefore() {
+        Date x = Util.parse("2010-01-01");
+        Date y = Util.parse("2010-01-02");
+        assertTrue(Util.before(x, y));
+        assertFalse(Util.before(x, x));
+        assertFalse(Util.before(y, x));
     }
 }

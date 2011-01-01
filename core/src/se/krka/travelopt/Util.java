@@ -34,11 +34,21 @@ public class Util {
         return s;
     }
 
-    public static int numDays(Date from, Date to) {
-        long millis = to.getTime() - from.getTime();
-        return (int) (1 + divideCeil(millis, DAY_IN_MILLIS));
+    public static long numDays(Date from, Date to) {
+        return dayDifference(to, from) + 1;
     }
 
+    private static final long KNOWN_OFFSET = parse("2000-01-01").getTime() % DAY_IN_MILLIS;
+
+    public static long dayDifference(Date x, Date y) {
+        long x1 = (x.getTime() - KNOWN_OFFSET) / DAY_IN_MILLIS;
+        long y1 = (y.getTime() - KNOWN_OFFSET) / DAY_IN_MILLIS;
+        return x1 - y1;
+    }
+
+    public static boolean before(Date x, Date y) {
+        return dayDifference(y, x) > 0;
+    }
     private static long divideCeil(long x, long y) {
         return (x + y - 1)/ y;
     }

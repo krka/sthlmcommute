@@ -33,4 +33,28 @@ public class SimpleTicket implements TicketType {
 	public String toString() {
         return locale.simpleTicket(name, numTickets, price);
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleTicket that = (SimpleTicket) o;
+
+        if (numTickets != that.numTickets) return false;
+        if (!locale.equals(that.locale)) return false;
+        if (!name.equals(that.name)) return false;
+        if (!price.equals(that.price)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = locale.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + numTickets;
+        return result;
+    }
 }

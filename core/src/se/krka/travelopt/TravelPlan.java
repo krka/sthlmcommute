@@ -34,7 +34,7 @@ public class TravelPlan {
         return locale;
     }
 
-    public int getNumDays() {
+    public long getNumDays() {
         return Util.numDays(dates.first().getDate(), dates.last().getDate());
     }
 
@@ -81,7 +81,7 @@ public class TravelPlan {
                 throw new IllegalArgumentException(locale.tooLongPeriodError());
             }
             addDay(from, weekDays);
-            while (from.before(to)) {
+            while (Util.before(from, to)) {
                 from = Util.plusDays(from, 1);
                 addDay(from, weekDays);
             }

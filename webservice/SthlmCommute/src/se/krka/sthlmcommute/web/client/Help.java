@@ -4,10 +4,8 @@ import com.google.gwt.user.client.ui.*;
 
 public class Help extends Composite {
     private final CaptionPanel root = new CaptionPanel("Help");
-    private final ClientConstants clientConstants;
 
-    public Help(ClientConstants clientConstants) {
-        this.clientConstants = clientConstants;
+    public Help() {
         initWidget(root);
         clear();
     }

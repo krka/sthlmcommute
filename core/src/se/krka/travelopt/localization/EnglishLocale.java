@@ -5,6 +5,10 @@ import se.krka.travelopt.*;
 import java.util.Date;
 
 public class EnglishLocale implements TravelOptLocale {
+    public static final EnglishLocale INSTANCE = new EnglishLocale();
+    private EnglishLocale() {
+    }
+
     public String tooLongPeriodError() {
         return "Travel plan can not be longer than two years.";
     }

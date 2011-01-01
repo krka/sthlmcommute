@@ -24,7 +24,7 @@ public class TravelOpt {
         Date firstDay = null;
         Date lastDate = null;
 
-        Date looper = null;
+        Date looper;
 
         for (TravelPlanDate travelPlanDate : travelPlan.getDates()) {
             Date date =  travelPlanDate.getDate();
@@ -32,7 +32,7 @@ public class TravelOpt {
             if (lastDate != null) {
                 looper = lastDate;
                 looper = Util.plusDays(looper, 1);
-                while (looper.before(date)) {
+                while (Util.before(looper, date)) {
                     handle(purchases, 0);
                     looper = Util.plusDays(looper, 1);
                 }
@@ -50,7 +50,7 @@ public class TravelOpt {
         looper = lastDate;
         looper = Util.plusDays(looper, 1);
 
-        looper = extendPeriod(purchases, looper);
+        extendPeriod(purchases, looper);
 
 
         optimizedExtendPeriod(purchases, travelPlan, firstDay);
@@ -82,17 +82,18 @@ public class TravelOpt {
 		while (true) {
 			Purchase purchase = getPurchase(i, purchases);
 			Date startDate = Util.plusDays(firstDay, i);
-			if (startDate.before(extensionStart)) {
-				break;
-			}
 
             // Don't count purchases made after the extension
-            if (Util.plusDays(firstDay, purchase.startAt).before(extensionStart)) {
+            if (Util.before(Util.plusDays(firstDay, purchase.startAt), extensionStart)) {
                 double score = purchase.totalCost.getValue() / (i + 1);
                 if (score <= bestScore) {
                     bestScore = score;
                     bestPurchase = purchase;
                 }
+            }
+
+            if (Util.before(startDate, extensionStart)) {
+                break;
             }
 
 			i--;
@@ -109,7 +110,7 @@ public class TravelOpt {
 		}
 	}
 
-	private Date extendPeriod(List<Purchase> purchases, Date looper) {
+	private void extendPeriod(List<Purchase> purchases, Date looper) {
 		Purchase current = lastPurchase(purchases);
 		Money cost = current.totalCost;
 		while (current.totalCost.equals(cost)) {
@@ -118,7 +119,6 @@ public class TravelOpt {
 			current = lastPurchase(purchases);
 		}
 		purchases.remove(purchases.size() - 1);
-        return looper;
 	}
 
 	private Purchase lastPurchase(List<Purchase> purchases) {
@@ -161,7 +161,7 @@ public class TravelOpt {
 	static class Purchase {
 		private final static Purchase EMPTY = new Purchase(0, null, Money.ZERO, null, 0);
 
-		private int startAt;
+		private final int startAt;
 		private final Purchase parent;
 		private final Money totalCost;
 		private final TicketType ticketType;

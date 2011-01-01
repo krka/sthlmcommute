@@ -1,6 +1,7 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class TravelScheduleEditor extends Composite {
     private TravelScheduleList travelScheduleList;
     private final DelayedWork worker;
 
-    public TravelScheduleEditor(DelayedWork worker) {
+    public TravelScheduleEditor(DelayedWork worker, TravelOptLocale locale) {
         this.worker = worker;
         VerticalPanel root = new VerticalPanel();
         rangeEditor = new RangeEditor();
@@ -27,7 +28,7 @@ public class TravelScheduleEditor extends Composite {
                 active.setWeekdays(ticketEditor.getWeekdays());
                 travelScheduleList.update();
             }
-        }, this.worker);
+        }, this.worker, locale);
 
         root.add(helpInfo);
         root.add(rangeEditor.getDates());

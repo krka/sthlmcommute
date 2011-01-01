@@ -9,20 +9,16 @@ import se.krka.travelopt.localization.TravelOptLocale;
 public class TravelSchedule extends Composite {
 
     private final HelpInfo helpInfo;
-    private final ClientConstants clientConstants;
-    private final TravelOptLocale locale;
     private final TravelScheduleList travelScheduleList;
     private final TravelScheduleEditor travelScheduleEditor;
 
     private final DelayedWork worker;
 
     public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale, DelayedWork worker) {
-        this.clientConstants = clientConstants;
-        this.locale = locale;
         this.worker = worker;
         helpInfo = new HelpInfo("Begin by creating an entry in the travel schedule.");
-        travelScheduleEditor = new TravelScheduleEditor(worker);
-        travelScheduleList = new TravelScheduleList(clientConstants, locale, travelScheduleEditor);
+        travelScheduleEditor = new TravelScheduleEditor(worker, locale);
+        travelScheduleList = new TravelScheduleList(locale, travelScheduleEditor);
         travelScheduleEditor.setTravelScheduleList(travelScheduleList);
 
         HorizontalPanel panel = new HorizontalPanel();

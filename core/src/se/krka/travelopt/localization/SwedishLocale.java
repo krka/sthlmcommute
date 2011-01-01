@@ -5,6 +5,10 @@ import se.krka.travelopt.*;
 import java.util.Date;
 
 public class SwedishLocale implements TravelOptLocale {
+    public static final SwedishLocale INSTANCE = new SwedishLocale();
+    private SwedishLocale() {
+    }
+
     public String tooLongPeriodError() {
         return "Reseplanering kan inte göras för mer än två år.";
     }
