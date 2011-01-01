@@ -37,4 +37,8 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
     public void setWeekdays(Weekdays weekdays) {
         this.weekdays = weekdays;
     }
+
+    public boolean valid() {
+        return interval.getFrom() != null && interval.getTo() != null && weekdays.countTickets() > 0;
+    }
 }

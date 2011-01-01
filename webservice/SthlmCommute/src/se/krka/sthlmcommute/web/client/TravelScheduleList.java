@@ -30,7 +30,11 @@ public class TravelScheduleList extends Composite {
             public void render(Context context, ScheduleEntry scheduleEntry, SafeHtmlBuilder safeHtmlBuilder) {
                 Date from = scheduleEntry.getInterval().getFrom();
                 if (from == null || scheduleEntry.getInterval().getTo() == null) {
-                    safeHtmlBuilder.appendHtmlConstant("<div style='text-align:center;width:10em;margin-left:auto;margin-right:auto'>Incomplete</div>");
+                    setError(safeHtmlBuilder, "Incomplete time period");
+                    return;
+                }
+                if (scheduleEntry.getWeekdays().countTickets() == 0) {
+                    setError(safeHtmlBuilder, "Incomplete tickets");
                     return;
                 }
                 safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDate(from) + "</span>");
@@ -63,6 +67,10 @@ public class TravelScheduleList extends Composite {
 
         initWidget(UIUtil.wrapCaption("Entries:", root));
 
+    }
+
+    private void setError(SafeHtmlBuilder safeHtmlBuilder, String reason) {
+        safeHtmlBuilder.appendHtmlConstant("<div style='text-align:center;width:10em;margin-left:auto;margin-right:auto'>" + reason + "</div>");
     }
 
     public void createNew() {
