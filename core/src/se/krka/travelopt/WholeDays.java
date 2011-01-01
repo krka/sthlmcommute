@@ -24,7 +24,12 @@ public class WholeDays implements TicketType {
 		return price;
 	}
 
-	@Override
+    @Override
+    public int getCount(int numTickets) {
+        return 1;
+    }
+
+    @Override
 	public String toString() {
         return locale.wholeDays(name, numDays, price);
 	}

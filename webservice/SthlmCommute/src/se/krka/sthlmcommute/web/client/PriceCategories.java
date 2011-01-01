@@ -6,12 +6,16 @@ import com.google.gwt.user.client.ui.*;
 
 public class PriceCategories extends Composite {
     private final TravelInterface travelInterface;
+    private final DelayedWork delayedWork;
     private final HelpInfo helpInfo;
     private final RadioButton fullPrice;
     private final RadioButton reducedPrice;
 
-    public PriceCategories(TravelInterface travelInterface, ClientConstants clientConstants) {
+    private RadioButton selected;
+
+    public PriceCategories(TravelInterface travelInterface, ClientConstants clientConstants, DelayedWork delayedWork) {
         this.travelInterface = travelInterface;
+        this.delayedWork = delayedWork;
         CaptionPanel root = new CaptionPanel(clientConstants.priceCategories());
         VerticalPanel panel = new VerticalPanel();
         root.add(panel);
@@ -25,12 +29,16 @@ public class PriceCategories extends Composite {
     }
 
     private RadioButton createButton(String name) {
-        RadioButton button = new RadioButton("priceCategories", name);
+        final RadioButton button = new RadioButton("priceCategories", name);
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 helpInfo.setVisible(false);
                 travelInterface.doneWithPriceCategory();
+                if (selected != button) {
+                    delayedWork.requestWork();
+                }
+                selected = button;
             }
         });
         return button;

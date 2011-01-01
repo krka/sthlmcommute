@@ -51,11 +51,11 @@ public class UtilTest {
 
     @Test
     public void testFormat() {
-        Date date = Util.parse("2010-12-10");
-        for (int i = 0; i < 10; i++) {
-            date = Util.plusDays(date, 1);
+        Date date = Util.parse("2011-01-01");
+        for (int i = 1; i < 10; i++) {
             String s = Util.format(date);
-            System.out.println(s);
+            assertEquals(s, "2011-01-0" + i);
+            date = Util.plusDays(date, 1);
         }
     }
 }

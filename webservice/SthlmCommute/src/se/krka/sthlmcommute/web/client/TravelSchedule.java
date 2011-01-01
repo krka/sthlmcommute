@@ -1,6 +1,5 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
@@ -15,13 +14,14 @@ public class TravelSchedule extends Composite {
     private final TravelScheduleList travelScheduleList;
     private final TravelScheduleEditor travelScheduleEditor;
 
-    private DelayedWork worker;
+    private final DelayedWork worker;
 
-    public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale) {
+    public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale, DelayedWork worker) {
         this.clientConstants = clientConstants;
         this.locale = locale;
+        this.worker = worker;
         helpInfo = new HelpInfo("Begin by creating an entry in the travel schedule.");
-        travelScheduleEditor = new TravelScheduleEditor();
+        travelScheduleEditor = new TravelScheduleEditor(worker);
         travelScheduleList = new TravelScheduleList(clientConstants, locale, travelScheduleEditor);
         travelScheduleEditor.setTravelScheduleList(travelScheduleList);
 
@@ -75,10 +75,5 @@ public class TravelSchedule extends Composite {
 
     public TravelScheduleList getList() {
         return travelScheduleList;
-    }
-
-    public void setWorker(DelayedWork worker) {
-        this.worker = worker;
-        this.travelScheduleEditor.setWorker(worker);
     }
 }

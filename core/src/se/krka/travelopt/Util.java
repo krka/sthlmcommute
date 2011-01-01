@@ -27,9 +27,9 @@ public class Util {
     }
 
     public static String pad(char pad, int width, String s) {
-        int toAdd = s.length() - width;
+        int toAdd = width - s.length();
         for (int i = 0; i < toAdd; i++) {
-            s += pad;
+            s = pad + s;
         }
         return s;
     }
@@ -54,4 +54,5 @@ public class Util {
     public static int getDayOfWeek(Date date) {
         return (date.getDay() + 7 - 1) % 7;
     }
+
 }

@@ -1,7 +1,5 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Header;
@@ -10,14 +8,9 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
-import se.krka.travelopt.Prices;
-import se.krka.travelopt.TravelOpt;
-import se.krka.travelopt.TravelPlan;
-import se.krka.travelopt.TravelResult;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class TravelInterface {
@@ -29,24 +22,19 @@ public class TravelInterface {
     private final TravelSchedule travelSchedule;
 
     private List<ScheduleEntry> entries;
-    private final TextArea result;
 
     public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants) {
         this.locale = locale;
         this.clientConstants = clientConstants;
         help = new Help(clientConstants);
 
-        priceCategories = new PriceCategories(this, clientConstants);
-        travelSchedule = new TravelSchedule(clientConstants, locale);
-
-        result = new TextArea();
-        result.setWidth("40em");
-        result.setHeight("40em");
-        TravelOptRunner travelOptRunner = new TravelOptRunner(locale, travelSchedule.getList().getList(), priceCategories, result);
+        TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
         DelayedWork worker = new DelayedWork(travelOptRunner);
-        travelSchedule.setWorker(worker);
 
-        RootPanel.get("result").add(result);
+        priceCategories = new PriceCategories(this, clientConstants, worker);
+        travelSchedule = new TravelSchedule(clientConstants, locale, worker);
+
+        travelOptRunner.setup(travelSchedule.getList().getList(), priceCategories);
     }
 
     private boolean getBoolValue(Boolean value) {

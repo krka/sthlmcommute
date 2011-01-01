@@ -24,7 +24,12 @@ public class SimpleTicket implements TicketType {
         return price.multiply(numTickets).divideBy(this.numTickets);
 	}
 
-	@Override
+    @Override
+    public int getCount(int numTickets) {
+        return numTickets;
+    }
+
+    @Override
 	public String toString() {
         return locale.simpleTicket(name, numTickets, price);
 	}

@@ -67,7 +67,9 @@ public class TravelOpt {
             Date startDate = Util.plusDays(firstDay, purchase.startAt);
             Money cost = purchase.totalCost.subtract(purchase.parent.totalCost);
             TicketType ticketType = purchase.ticketType;
-            tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate));
+            Date endDate = Util.plusDays(startDate, ticketType.numberOfDays() - 1);
+            int count = purchase.count;
+            tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate, endDate, count));
         }
         return new TravelResult(travelPlan.getLocale(), tickets);
     }
@@ -129,14 +131,15 @@ public class TravelOpt {
 		for (TicketType ticketType : priceStructure.getTicketTypes()) {
 			int days = ticketType.numberOfDays();
 			Money cost = ticketType.cost(numTickets);
+            int count = ticketType.getCount(numTickets);
 
-			Purchase prev = getPurchase(i - days, purchases);
+            Purchase prev = getPurchase(i - days, purchases);
 
 			Purchase newBest;
 			if (cost.equals(Money.ZERO)) {
 				newBest = prev;
 			} else {
-				newBest = new Purchase(1 + i - days, prev, cost.add(prev.totalCost), ticketType);
+				newBest = new Purchase(1 + i - days, prev, cost.add(prev.totalCost), ticketType, count);
 			}
 			if (best == null || newBest.isBetterThan(best)) {
 				best = newBest;
@@ -156,19 +159,21 @@ public class TravelOpt {
 	}
 
 	static class Purchase {
-		private final static Purchase EMPTY = new Purchase(0, null, Money.ZERO, null);
+		private final static Purchase EMPTY = new Purchase(0, null, Money.ZERO, null, 0);
 
 		private int startAt;
 		private final Purchase parent;
 		private final Money totalCost;
 		private final TicketType ticketType;
+        private final int count;
 
-		private Purchase(int startAt, Purchase parent, Money totalCost, TicketType ticketType) {
+        private Purchase(int startAt, Purchase parent, Money totalCost, TicketType ticketType, int count) {
 			this.startAt = startAt;
 			this.parent = parent;
 			this.totalCost = totalCost;
 			this.ticketType = ticketType;
-		}
+            this.count = count;
+        }
 
 		public boolean isBetterThan(Purchase other) {
             int cmp = totalCost.compareTo(other.totalCost);

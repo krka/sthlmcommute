@@ -9,16 +9,24 @@ public class Ticket {
 
     private final TicketType ticketType;
     private final Date startDate;
+    private final Date endDate;
     private final Money cost;
+    private final int numberOfTickets;
 
-	public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, Date startDate) {
+    public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, Date startDate, Date endDate) {
+        this(locale, cost, ticketType, startDate, endDate, 1);
+    }
+
+    public Ticket(TravelOptLocale locale, Money cost, TicketType ticketType, Date startDate, Date endDate, int numberOfTickets) {
         this.locale = locale;
         this.cost = cost;
 		this.ticketType = ticketType;
 		this.startDate = startDate;
-	}
+        this.endDate = endDate;
+        this.numberOfTickets = numberOfTickets;
+    }
 
-	public Money getCost() {
+    public Money getCost() {
 		return cost;
 	}
 
@@ -31,7 +39,7 @@ public class Ticket {
 	}
 
 	public Date getEndDate() {
-        return Util.plusDays(startDate, ticketType.numberOfDays() - 1);
+        return endDate;
     }
 
     @Override
@@ -41,5 +49,9 @@ public class Ticket {
 
     public Object toString(TravelOptLocale locale) {
         return locale.ticket(this);
+    }
+
+    public int getNumberOfTickets() {
+        return numberOfTickets;
     }
 }

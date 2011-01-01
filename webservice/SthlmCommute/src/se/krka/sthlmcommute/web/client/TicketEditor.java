@@ -11,9 +11,10 @@ public class TicketEditor extends Composite {
 
     private final TicketListBox ticket;
     private final WeekdayEditor weekdays;
-    private DelayedWork worker;
+    private final DelayedWork worker;
 
-    public TicketEditor(final UpdateListener listener) {
+    public TicketEditor(final UpdateListener listener, DelayedWork worker) {
+        this.worker = worker;
         ticket = new TicketListBox(false);
         ticketHelpInfo = new HelpInfo("Determine the number of tickets you need to use per day.");
 
@@ -33,7 +34,7 @@ public class TicketEditor extends Composite {
             public void onChange(ChangeEvent changeEvent) {
                 ticketHelpInfo.setVisible(false);
                 listener.updated();
-                worker.requestWork();
+                TicketEditor.this.worker.requestWork();
             }
         });
     }
@@ -48,10 +49,5 @@ public class TicketEditor extends Composite {
 
     public TicketListBox getTicket() {
         return ticket;
-    }
-
-    public void setWorker(DelayedWork worker) {
-        this.worker = worker;
-        weekdays.setWorker(worker);
     }
 }

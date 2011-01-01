@@ -1,7 +1,5 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.Date;
@@ -15,9 +13,10 @@ public class TravelScheduleEditor extends Composite {
     private boolean isReady;
     private ScheduleEntry active;
     private TravelScheduleList travelScheduleList;
-    private DelayedWork worker;
+    private final DelayedWork worker;
 
-    public TravelScheduleEditor() {
+    public TravelScheduleEditor(DelayedWork worker) {
+        this.worker = worker;
         VerticalPanel root = new VerticalPanel();
         rangeEditor = new RangeEditor();
 
@@ -28,7 +27,7 @@ public class TravelScheduleEditor extends Composite {
                 active.setWeekdays(ticketEditor.getWeekdays());
                 travelScheduleList.update();
             }
-        });
+        }, this.worker);
 
         root.add(helpInfo);
         root.add(rangeEditor.getDates());
@@ -63,7 +62,7 @@ public class TravelScheduleEditor extends Composite {
                 if (ready) {
                     active.getInterval().set(fromValue, toValue);
                     travelScheduleList.update();
-                    worker.requestWork();
+                    TravelScheduleEditor.this.worker.requestWork();
                 }
                 if (ready && !isReady) {
                     isReady = true;
@@ -102,10 +101,5 @@ public class TravelScheduleEditor extends Composite {
         ticketEditor.getTicket().setSelectedTicket(defaultValue);
         ticketEditor.getWeekdayEditor().setWeekDays(entry.getWeekdays().getRawTickets());
         setVisible(true);
-    }
-
-    public void setWorker(DelayedWork worker) {
-        this.worker = worker;
-        ticketEditor.setWorker(worker);
     }
 }
