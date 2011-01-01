@@ -6,7 +6,7 @@
   <!-- Configure path to GWT SDK -->
   <property name="gwt.sdk" location="/home/krka/downloads/gwt-2.1.1" />
 
-  <!-- Configure path to App Engine SDK -->
+  <!-- Configure pappengineath to App Engine SDK -->
   <property name="appengine.sdk" location="/home/krka/downloads/appengine-java-sdk-1.4.0" />
 
 
@@ -16,8 +16,6 @@
     <fileset dir="${gwt.sdk}" includes="gwt-dev*.jar"/>
     <!-- Add any additional non-server libs (such as JUnit) -->
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
-    <fileset dir="../../core/lib" includes="**/*.jar"/>
-    <pathelement location="../../core/lib/gwttime-alpha.jar"/>
   </path>
 
   <path id="tools.class.path">
@@ -34,10 +32,9 @@
     <copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet-deps.jar" />
 
     <!-- Add any additional server libs that need to be copied -->
-    <copy todir="war/WEB-INF/lib" flatten="true">
+    <!--copy todir="war/WEB-INF/lib" flatten="true">
       <fileset dir="${appengine.sdk}/lib/user" includes="**/*.jar"/>
-      <fileset dir="../../core/lib" includes="**/*.jar"/>
-    </copy>
+    </copy-->
 
   </target>
 
