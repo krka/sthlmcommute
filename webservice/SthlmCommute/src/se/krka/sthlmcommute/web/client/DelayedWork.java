@@ -8,14 +8,21 @@ public class DelayedWork {
     private final Timer latestTimer;
     private final Runnable job;
 
-    public DelayedWork(Runnable job) {
+    private final int delayMillis;
+
+    public DelayedWork(Runnable job, int delayMillis) {
+        this.delayMillis = delayMillis;
         latestTimer = new MyTimer();
         this.job = job;
     }
 
+    public DelayedWork(Runnable job) {
+        this(job, DELAY);
+    }
+
     public void requestWork() {
         latestTimer.cancel();
-        latestTimer.schedule(DELAY);
+        latestTimer.schedule(delayMillis);
     }
 
     public void cancelWork() {

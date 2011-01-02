@@ -2,28 +2,70 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.HasDirection;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.*;
+import se.krka.travelopt.Prices;
+import se.krka.travelopt.TicketType;
+import se.krka.travelopt.localization.TravelOptLocale;
 
 public class PriceCategories extends Composite {
-    private final TravelInterface travelInterface;
-    private final DelayedWork delayedWork;
-    private final RadioButton fullPrice;
-    private final RadioButton reducedPrice;
+    private final CellTable<TicketType> cellTable;
+    private final RadioGroup radioGroup;
 
-    private RadioButton selected;
+    private RadioGroup.Button lastSelected;
     private HelpSection helpSection;
 
-    public PriceCategories(TravelInterface travelInterface, ClientConstants clientConstants, DelayedWork delayedWork) {
-        this.travelInterface = travelInterface;
-        this.delayedWork = delayedWork;
-        CaptionPanel root = new CaptionPanel(clientConstants.priceCategories());
-        VerticalPanel panel = new VerticalPanel();
-        root.add(panel);
-        fullPrice = createButton(clientConstants.fullPrice());
-        panel.add(fullPrice);
-        reducedPrice = createButton(clientConstants.reducedPrice());
-        panel.add(reducedPrice);
-        initWidget(root);
+    public PriceCategories(final TravelInterface travelInterface, ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
+
+        cellTable = new CellTable<TicketType>();
+        cellTable.addColumn(new TextColumn<TicketType>() {
+            @Override
+            public String getValue(TicketType ticketType) {
+                return ticketType.name();
+            }
+        }, "Name");
+        cellTable.addColumn(new TextColumn<TicketType>() {
+            @Override
+            public String getValue(TicketType ticketType) {
+                return ticketType.description();
+            }
+        }, "Description");
+
+        radioGroup = new RadioGroup("priceCategories");
+        radioGroup.addRadioButton("full", clientConstants.fullPrice());
+        radioGroup.addRadioButton("reduced", clientConstants.reducedPrice());
+        radioGroup.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                cellTable.setRowData(Prices.getPriceCategory(getSelected(), locale).getTicketTypes());
+                travelInterface.doneWithPriceCategory();
+                if (helpSection != null) {
+                    helpSection.selectedPriceCategory();
+                }
+
+                RadioGroup.Button newSelected = radioGroup.getSelected();
+                if (lastSelected != newSelected) {
+                    delayedWork.requestWork();
+                    lastSelected = newSelected;
+                }
+            }
+        });
+
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.setWidth("100%");
+        panel.add(radioGroup);
+        panel.setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant.endOf(HasDirection.Direction.DEFAULT));
+        DisclosurePanel disclosurePanel = createPricelist();
+        disclosurePanel.setWidth("40em");
+        panel.add(disclosurePanel);
+
+        initWidget(UIUtil.wrapCaption(clientConstants.priceCategories(), panel));
+    }
+
+    private DisclosurePanel createPricelist() {
+        return UIUtil.wrapDisclosure("Ticket price list", cellTable);
     }
 
     private RadioButton createButton(String name) {
@@ -31,27 +73,17 @@ public class PriceCategories extends Composite {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                travelInterface.doneWithPriceCategory();
-                if (helpSection != null) {
-                    helpSection.selectedPriceCategory();
-                }
-                if (selected != button) {
-                    delayedWork.requestWork();
-                }
-                selected = button;
             }
         });
         return button;
     }
 
     public String getSelected() {
-        if (fullPrice.getValue()) {
-            return "full";
+        RadioGroup.Button button = radioGroup.getSelected();
+        if (button == null) {
+            return null;
         }
-        if (reducedPrice.getValue()) {
-            return "reduced";
-        }
-        return null;
+        return button.getFormValue();
     }
 
     public void addListener(HelpSection helpSection) {

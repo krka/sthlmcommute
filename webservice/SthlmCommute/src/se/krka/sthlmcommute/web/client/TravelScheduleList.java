@@ -12,6 +12,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import se.krka.travelopt.localization.TravelOptLocale;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class TravelScheduleList extends Composite {
     private final SingleSelectionModel<ScheduleEntry> selectionModel;
     private final TravelScheduleEditor travelScheduleEditor;
     private final ListDataProvider<ScheduleEntry> listDataProvider;
+
+    private final DelayedWork collisionDetector;
 
     public TravelScheduleList(final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
         this.travelScheduleEditor = travelScheduleEditor;
@@ -35,6 +38,10 @@ public class TravelScheduleList extends Composite {
                 }
                 if (scheduleEntry.getWeekdays().countTickets() == 0) {
                     setError(safeHtmlBuilder, "Incomplete tickets");
+                    return;
+                }
+                if (scheduleEntry.isOverlapping()) {
+                    setError(safeHtmlBuilder, "Overlapping period");
                     return;
                 }
                 safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDate(from) + "</span>");
@@ -65,6 +72,7 @@ public class TravelScheduleList extends Composite {
         Panel root = new VerticalPanel();
         root.add(scheduleEntryCellList);
 
+        collisionDetector = new DelayedWork(new CollisionDetector(list, listDataProvider), 500);
         initWidget(UIUtil.wrapCaption("Entries:", root));
 
     }
@@ -88,6 +96,7 @@ public class TravelScheduleList extends Composite {
     }
 
     public void update() {
+        collisionDetector.requestWork();
         listDataProvider.refresh();
     }
 

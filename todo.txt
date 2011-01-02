@@ -1,23 +1,28 @@
-* google analytics DONE
-* set swedish as default locale DONE
+=== DONE ====
+* google analytics
+* set swedish as default locale
+* add contact info
+* show price list
+* no execute without atleast one entry
 
-* gwt localization ONGOING
-* show price list ONGOING
+=== ONGOING ====
+* gwt localization
 
 
+=== IN QUEUE ====
 * optimize TravelOpt for better JS performance by removing dates from the solver
-* no execute without atleast one entry DONE
-* flag entries are red if they overlap
+* flag entries as red if they overlap
 
 * figure out best terminology.
 
-* sort entries by date
-* highlight entry to be used as extended.
-* add contact info
 * create favicon and android icon
 * explain ticket and overrides
 * explain optimize
 * provide examples
 
 * adsense
+
+=== REMOVEd ====
+
+* sort entries by date
 

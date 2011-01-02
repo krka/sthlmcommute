@@ -16,7 +16,7 @@ public class TravelInterface {
         TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
         DelayedWork worker = new DelayedWork(travelOptRunner);
 
-        priceCategories = new PriceCategories(this, clientConstants, worker);
+        priceCategories = new PriceCategories(this, clientConstants, worker, locale);
         travelSchedule = new TravelSchedule(clientConstants, locale, worker);
 
         optimizeOptions = new OptimizeOptions(worker, locale);

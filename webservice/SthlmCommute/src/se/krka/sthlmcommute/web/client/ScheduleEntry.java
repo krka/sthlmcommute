@@ -10,6 +10,7 @@ import java.util.List;
 public class ScheduleEntry implements Comparable<ScheduleEntry> {
     private final DateInterval interval = new DateInterval(null, null);
     private Weekdays weekdays;
+    private boolean overlapping;
 
     public ScheduleEntry(Weekdays weekdays) {
         this.weekdays = weekdays;
@@ -40,5 +41,13 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
 
     public boolean valid() {
         return interval.getFrom() != null && interval.getTo() != null && weekdays.countTickets() > 0;
+    }
+
+    public void setOverlapping(boolean overlapping) {
+        this.overlapping = overlapping;
+    }
+
+    public boolean isOverlapping() {
+        return overlapping;
     }
 }
