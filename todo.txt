@@ -19,7 +19,10 @@
 * explain ticket and overrides
 * explain optimize
 * provide examples
-
+* remove unnecessary server side libs
+* noselectionmodel för icke-interaktiva tabeller
+* kunna välja rabatthäfte som komplett häfte istället för uppdelat
+* spara inställningar i cookies
 * adsense
 
 === REMOVEd ====
