@@ -1,6 +1,7 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.persistors.EntryPersistor;
 import se.krka.sthlmcommute.web.client.persistors.OptimizePersistor;
 import se.krka.sthlmcommute.web.client.persistors.PriceCategoryClientPersistor;
@@ -16,20 +17,25 @@ public class TravelInterface {
     public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants, ClientPersistance persistance) {
         help = new Help();
 
-        TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
+        final TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
         DelayedWork worker = new DelayedWork(travelOptRunner);
 
         priceCategories = new PriceCategories(this, clientConstants, worker, locale);
         travelSchedule = new TravelSchedule(clientConstants, locale, worker);
 
         optimizeOptions = new OptimizeOptions(worker, locale);
-        travelOptRunner.setup(travelSchedule.getList().getList(), priceCategories, optimizeOptions);
+        travelSchedule.getAsyncWidget().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+            @Override
+            public void run(TravelScheduleList widget) {
+                travelOptRunner.setup(widget.getList(), priceCategories, optimizeOptions);
+            }
+        });
 
         helpSection = new HelpSection(priceCategories, travelSchedule, travelSchedule.getRangeEditor());
 
         persistance.add(new PriceCategoryClientPersistor(priceCategories));
         persistance.add(new OptimizePersistor(optimizeOptions));
-        persistance.add(new EntryPersistor(travelSchedule));
+        travelSchedule.addPersistance(persistance);
     }
 
     public void setup() {

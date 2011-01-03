@@ -7,6 +7,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.NoSelectionModel;
+import se.krka.sthlmcommute.web.client.async.AsyncWidget;
+import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
+import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
+import se.krka.sthlmcommute.web.client.async.GenericFailureAsyncCallback;
 import se.krka.travelopt.*;
 import se.krka.travelopt.localization.TravelOptLocale;
 
@@ -16,7 +20,7 @@ import java.util.List;
 public class TravelOptRunner implements Runnable {
     private final TravelOptLocale locale;
     private final Label errorLabel;
-    private final CellTable<Ticket> ticketCellTable;
+    private final AsyncWidget<CellTable<Ticket>> asyncTable;
 
     private List<ScheduleEntry> entries;
     private PriceCategories priceCategories;
@@ -27,58 +31,63 @@ public class TravelOptRunner implements Runnable {
         this.locale = locale;
         errorLabel = new Label("error");
 
-        ticketCellTable = new CellTable<Ticket>(5);
-        ticketCellTable.setSelectionModel(new NoSelectionModel<Object>());
+        asyncTable = new AsyncWidget<CellTable<Ticket>>(new AsyncWidgetLoader<CellTable<Ticket>>() {
+            @Override
+            public CellTable<Ticket> load() {
+                CellTable<Ticket> ticketCellTable = new CellTable<Ticket>(5);
+                ticketCellTable.setSelectionModel(new NoSelectionModel<Object>());
 
-        ticketCellTable.setWidth("55em");
+                ticketCellTable.setWidth("55em");
 
-        ticketCellTable.addColumn(new TextColumn<Ticket>() {
-            @Override
-            public String getValue(Ticket ticket) {
-                if (ticket.getStartDate() == 0) {
-                    return "";
-                }
-                return locale.formatDay(ticket.getStartDate());
-            }
-        }, "From");
-        ticketCellTable.addColumn(new TextColumn<Ticket>() {
-            @Override
-            public String getValue(Ticket ticket) {
-                if (ticket.getEndDate() == 0) {
-                    return "";
-                }
-                return locale.formatDay(ticket.getEndDate());
-            }
-        }, "To");
-        ticketCellTable.addColumn(new TextColumn<Ticket>() {
-            @Override
-            public String getValue(Ticket ticket) {
-                if (ticket.getStartDate() == 0) {
-                    return "";
-                }
-                return String.valueOf(ticket.getNumberOfTickets());
-            }
-        }, "Tickets");
+                ticketCellTable.addColumn(new TextColumn<Ticket>() {
+                    @Override
+                    public String getValue(Ticket ticket) {
+                        if (ticket.getStartDate() == 0) {
+                            return "";
+                        }
+                        return locale.formatDay(ticket.getStartDate());
+                    }
+                }, "From");
+                ticketCellTable.addColumn(new TextColumn<Ticket>() {
+                    @Override
+                    public String getValue(Ticket ticket) {
+                        if (ticket.getEndDate() == 0) {
+                            return "";
+                        }
+                        return locale.formatDay(ticket.getEndDate());
+                    }
+                }, "To");
+                ticketCellTable.addColumn(new TextColumn<Ticket>() {
+                    @Override
+                    public String getValue(Ticket ticket) {
+                        if (ticket.getStartDate() == 0) {
+                            return "";
+                        }
+                        return String.valueOf(ticket.getNumberOfTickets());
+                    }
+                }, "Tickets");
 
-        ticketCellTable.addColumn(new TextColumn<Ticket>() {
-            @Override
-            public String getValue(Ticket ticket) {
-                if (ticket.getTicketType() == null) {
-                    return "Total";
-                }
-                return ticket.getTicketType().name();
+                ticketCellTable.addColumn(new TextColumn<Ticket>() {
+                    @Override
+                    public String getValue(Ticket ticket) {
+                        if (ticket.getTicketType() == null) {
+                            return "Total";
+                        }
+                        return ticket.getTicketType().name();
+                    }
+                }, "Type");
+                ticketCellTable.addColumn(new TextColumn<Ticket>() {
+                    @Override
+                    public String getValue(Ticket ticket) {
+                        return ticket.getCost().toString();
+                    }
+                }, "Cost");
+                return ticketCellTable;
             }
-        }, "Type");
-        ticketCellTable.addColumn(new TextColumn<Ticket>() {
-            @Override
-            public String getValue(Ticket ticket) {
-                return ticket.getCost().toString();
-            }
-        }, "Cost");
-
+        });
         VerticalPanel panel = new VerticalPanel();
         panel.add(errorLabel);
-        panel.add(UIUtil.wrapScroll(ticketCellTable, "57em", "10em"));
+        panel.add(UIUtil.wrapScroll(asyncTable, "57em", "10em"));
         RootPanel.get("result").add(UIUtil.wrapCaption("Result", panel));
     }
 
@@ -100,7 +109,7 @@ public class TravelOptRunner implements Runnable {
                 if (s != null) {
                     errorLabel.setText(s);
                     errorLabel.setVisible(true);
-                    ticketCellTable.setVisible(false);
+                    asyncTable.setVisible(false);
                 }
            }
         });
@@ -109,10 +118,15 @@ public class TravelOptRunner implements Runnable {
     private void clear() {
         errorLabel.setText("");
         errorLabel.setVisible(false);
-        ArrayList<Ticket> list = new ArrayList<Ticket>();
+        final ArrayList<Ticket> list = new ArrayList<Ticket>();
         addTotal(list, Money.ZERO);
-        ticketCellTable.setRowData(list);
-        ticketCellTable.setVisible(true);
+        asyncTable.runWhenReady(new AsyncWidgetUsage<CellTable<Ticket>>() {
+            @Override
+            public void run(CellTable<Ticket> widget) {
+                widget.setRowData(list);
+            }
+        });
+        asyncTable.setVisible(true);
     }
 
     public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
@@ -147,9 +161,14 @@ public class TravelOptRunner implements Runnable {
     }
 
     private void renderResult(TravelResult result) {
-        List<Ticket> tickets = summarize(result.getTickets());
+        final List<Ticket> tickets = summarize(result.getTickets());
         addTotal(tickets, result.getTotalCost());
-        ticketCellTable.setRowData(tickets);
+        asyncTable.runWhenReady(new AsyncWidgetUsage<CellTable<Ticket>>() {
+            @Override
+            public void run(CellTable<Ticket> widget) {
+                widget.setRowData(tickets);
+            }
+        });
     }
 
     private void addTotal(List<Ticket> tickets, Money totalCost) {

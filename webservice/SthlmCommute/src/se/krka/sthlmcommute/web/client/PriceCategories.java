@@ -1,5 +1,7 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection;
@@ -7,33 +9,44 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.NoSelectionModel;
+import se.krka.sthlmcommute.web.client.async.AsyncWidget;
+import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
+import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
+import se.krka.sthlmcommute.web.client.components.RadioGroup;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.TicketType;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class PriceCategories extends Composite {
-    private final CellTable<TicketType> cellTable;
     private final RadioGroup radioGroup;
 
     private RadioGroup.Button lastSelected;
     private HelpSection helpSection;
+    private final AsyncWidget<CellTable<TicketType>> asyncWidget;
 
     public PriceCategories(final TravelInterface travelInterface, ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
 
-        cellTable = new CellTable<TicketType>();
-        cellTable.setSelectionModel(new NoSelectionModel<Object>());
-        cellTable.addColumn(new TextColumn<TicketType>() {
+        asyncWidget = new AsyncWidget<CellTable<TicketType>>(new AsyncWidgetLoader<CellTable<TicketType>>() {
             @Override
-            public String getValue(TicketType ticketType) {
-                return ticketType.name();
+            public CellTable<TicketType> load() {
+                CellTable<TicketType> cellTable = new CellTable<TicketType>();
+                cellTable.setSelectionModel(new NoSelectionModel<Object>());
+                cellTable.addColumn(new TextColumn<TicketType>() {
+                    @Override
+                    public String getValue(TicketType ticketType) {
+                        return ticketType.name();
+                    }
+                }, "Name");
+                cellTable.addColumn(new TextColumn<TicketType>() {
+                    @Override
+                    public String getValue(TicketType ticketType) {
+                        return ticketType.description();
+                    }
+                }, "Description");
+                return cellTable;
             }
-        }, "Name");
-        cellTable.addColumn(new TextColumn<TicketType>() {
-            @Override
-            public String getValue(TicketType ticketType) {
-                return ticketType.description();
-            }
-        }, "Description");
+        });
+
 
         radioGroup = new RadioGroup("priceCategories");
         radioGroup.addRadioButton("full", clientConstants.fullPrice());
@@ -41,7 +54,12 @@ public class PriceCategories extends Composite {
         radioGroup.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                cellTable.setRowData(Prices.getPriceCategory(getSelected(), locale).getTicketTypes());
+                asyncWidget.runWhenReady(new AsyncWidgetUsage<CellTable<TicketType>>() {
+                    @Override
+                    public void run(CellTable<TicketType> widget) {
+                        widget.setRowData(Prices.getPriceCategory(getSelected(), locale).getTicketTypes());
+                    }
+                });
                 travelInterface.doneWithPriceCategory();
                 if (helpSection != null) {
                     helpSection.selectedPriceCategory();
@@ -67,17 +85,7 @@ public class PriceCategories extends Composite {
     }
 
     private DisclosurePanel createPricelist() {
-        return UIUtil.wrapDisclosure("Ticket price list", cellTable);
-    }
-
-    private RadioButton createButton(String name) {
-        final RadioButton button = new RadioButton("priceCategories", name);
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-            }
-        });
-        return button;
+        return UIUtil.wrapDisclosure("Ticket price list", asyncWidget);
     }
 
     public String getSelected() {

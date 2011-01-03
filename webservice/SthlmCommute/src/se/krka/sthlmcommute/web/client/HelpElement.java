@@ -7,7 +7,7 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class HelpElement implements OpenHandler<DisclosurePanel>,CloseHandler<DisclosurePanel> {
+public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
     private final DisclosurePanel widget;
     private final HelpSection helpSection;
     private final Widget highlight;

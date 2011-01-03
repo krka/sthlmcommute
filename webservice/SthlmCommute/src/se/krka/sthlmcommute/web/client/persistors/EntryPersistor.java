@@ -9,16 +9,16 @@ import se.krka.sthlmcommute.web.client.TravelScheduleList;
 import java.util.List;
 
 public class EntryPersistor implements ClientPersistor {
-    private final TravelSchedule travelSchedule;
+    private final TravelScheduleList travelSchedule;
 
-    public EntryPersistor(TravelSchedule travelSchedule) {
+    public EntryPersistor(TravelScheduleList travelSchedule) {
         this.travelSchedule = travelSchedule;
     }
 
     @Override
     public void onExit() {
         StringBuilder sb = new StringBuilder();
-        List<ScheduleEntry> list = travelSchedule.getList().getList();
+        List<ScheduleEntry> list = travelSchedule.getList();
         for (ScheduleEntry scheduleEntry : list) {
             if (sb.length() > 0) {
                 sb.append(",");
@@ -34,7 +34,7 @@ public class EntryPersistor implements ClientPersistor {
         if (s != null && !s.equals("")) {
             String[] split = s.split(",");
             for (String s2 : split) {
-                ScheduleEntry scheduleEntry = travelSchedule.getList().createNew();
+                ScheduleEntry scheduleEntry = travelSchedule.createNew();
                 scheduleEntry.deserialize(s2);
             }
         }

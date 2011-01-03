@@ -39,7 +39,7 @@ public class HelpSection extends Composite implements DateIntervalUpdateListener
         initWidget(root);
 
         priceCategories.addListener(this);
-        travelSchedule.getList().addListener(this);
+        travelSchedule.addListener(this);
         rangeEditor.getIntervalPicker().addListener(this);
 
         priceCategory.open();

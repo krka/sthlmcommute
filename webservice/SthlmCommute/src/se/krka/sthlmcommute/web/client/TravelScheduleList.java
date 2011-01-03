@@ -111,11 +111,19 @@ public class TravelScheduleList extends Composite {
         return list;
     }
 
-    public SingleSelectionModel<ScheduleEntry> getSelectionModel() {
-        return selectionModel;
-    }
-
     public void addListener(HelpSection helpSection) {
         this.helpSection = helpSection;
+    }
+
+    public void removeSelectedEntry() {
+        list.remove(selectionModel.getSelectedObject());
+    }
+
+    public ScheduleEntry getSelectedObject() {
+        return selectionModel.getSelectedObject();
+    }
+
+    public void addSelectionChangeHandler(SelectionChangeEvent.Handler handler) {
+        selectionModel.addSelectionChangeHandler(handler);
     }
 }
