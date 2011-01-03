@@ -7,8 +7,8 @@ import java.util.*;
 public class TravelPlan {
     private final TravelOptLocale locale;
 
-	private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
-	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
+	private final TreeSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
+	private final Collection<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
     private final int extensionStart;
 
@@ -22,7 +22,7 @@ public class TravelPlan {
 		return new Builder(locale);
 	}
 
-	public SortedSet<TravelPlanDate> getDates() {
+	public Collection<TravelPlanDate> getDates() {
 		return immutableDates;
 	}
 
@@ -106,7 +106,7 @@ public class TravelPlan {
 
             // Hardcoded number of days = 30, the best ticket type for SL
             for (int i = 0; i < 30; i++) {
-                addDay(lastDate + i, weekDays);
+                addDay(extensionStart + i, weekDays);
             }
             return new TravelPlan(locale, dates, extensionStart);
         }
