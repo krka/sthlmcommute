@@ -39,7 +39,7 @@ public class HelpSection extends Composite implements DateIntervalUpdateListener
         initWidget(root);
 
         priceCategories.addListener(this);
-        travelSchedule.addListener(this);
+        travelSchedule.getList().addListener(this);
         rangeEditor.getIntervalPicker().addListener(this);
 
         priceCategory.open();
@@ -49,17 +49,6 @@ public class HelpSection extends Composite implements DateIntervalUpdateListener
         HelpElement element = new HelpElement(this, header, content, highlight);
         elements.add(element);
         return element;
-    }
-
-    private boolean allClosedExcept(HelpElement element) {
-        for (HelpElement helpElement : elements) {
-            if (helpElement != element) {
-                if (!helpElement.isClosed()) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     public void closeAllExcept(HelpElement except) {

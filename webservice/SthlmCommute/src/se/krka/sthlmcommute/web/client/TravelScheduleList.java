@@ -24,6 +24,7 @@ public class TravelScheduleList extends Composite {
     private final ListDataProvider<ScheduleEntry> listDataProvider;
 
     private final DelayedWork collisionDetector;
+    private HelpSection helpSection;
 
     public TravelScheduleList(final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
         this.travelScheduleEditor = travelScheduleEditor;
@@ -81,10 +82,16 @@ public class TravelScheduleList extends Composite {
         safeHtmlBuilder.appendHtmlConstant("<div style='text-align:center;width:10em;margin-left:auto;margin-right:auto'>" + reason + "</div>");
     }
 
-    public void createNew() {
+    public ScheduleEntry createNew() {
         ScheduleEntry entry = new ScheduleEntry(new Weekdays(0, createDefaultWeekdays()));
         list.add(entry);
         selectionModel.setSelected(entry, true);
+
+        if (helpSection != null) {
+            helpSection.createdAnEntry();
+        }
+
+        return entry;
     }
 
     private int[] createDefaultWeekdays() {
@@ -108,4 +115,7 @@ public class TravelScheduleList extends Composite {
         return selectionModel;
     }
 
+    public void addListener(HelpSection helpSection) {
+        this.helpSection = helpSection;
+    }
 }

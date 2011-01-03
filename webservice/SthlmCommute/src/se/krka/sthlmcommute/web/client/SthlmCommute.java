@@ -6,6 +6,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.cellview.client.*;
@@ -33,9 +35,19 @@ public class SthlmCommute implements EntryPoint {
 
         RootPanel.get("locales").add(getLocaleLinks(localeName));
 
-        TravelInterface travelinterface = new TravelInterface(travelOptLocale, clientConstants);
+        final ClientPersistance persistance = new ClientPersistance();
+
+        TravelInterface travelinterface = new TravelInterface(travelOptLocale, clientConstants, persistance);
 
         travelinterface.setup();
+
+        persistance.onLoad();
+        Window.addCloseHandler(new CloseHandler<Window>() {
+            @Override
+            public void onClose(CloseEvent<Window> windowCloseEvent) {
+                persistance.onExit();
+            }
+        });
     }
     private final String[] locales = new String[]{"sv", "en"};
 

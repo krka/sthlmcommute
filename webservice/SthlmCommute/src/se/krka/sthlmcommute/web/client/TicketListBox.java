@@ -32,4 +32,11 @@ public class TicketListBox extends ListBox {
     }
 
 
+    public String serialize() {
+        return getSelectedTicket() + "";
+    }
+
+    public void deserialize(String data) {
+        setSelectedTicket(Integer.parseInt(data));
+    }
 }

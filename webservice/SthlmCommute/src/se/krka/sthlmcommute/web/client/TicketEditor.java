@@ -45,7 +45,21 @@ public class TicketEditor extends Composite {
         return ticket;
     }
 
-    public void hideHelp() {
-        weekdays.hideHelp();
+    public String serialize() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(ticket.serialize());
+        for (int i = 0; i < 7; i++) {
+            stringBuilder.append(",");
+            stringBuilder.append(weekdays.getWeekday(i));
+        }
+        return stringBuilder.toString();
+    }
+
+    public void deserialize(String data) {
+        String[] values = data.split(",");
+        ticket.deserialize(values[0]);
+        for (int i = 0; i < 7; i++) {
+            weekdays.setWeekDay(i, Integer.parseInt(values[i + 1]));
+        }
     }
 }

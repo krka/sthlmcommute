@@ -1,6 +1,9 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.persistors.EntryPersistor;
+import se.krka.sthlmcommute.web.client.persistors.OptimizePersistor;
+import se.krka.sthlmcommute.web.client.persistors.PriceCategoryClientPersistor;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelInterface {
@@ -10,7 +13,7 @@ public class TravelInterface {
     private final OptimizeOptions optimizeOptions;
     private final HelpSection helpSection;
 
-    public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants) {
+    public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants, ClientPersistance persistance) {
         help = new Help();
 
         TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
@@ -23,6 +26,10 @@ public class TravelInterface {
         travelOptRunner.setup(travelSchedule.getList().getList(), priceCategories, optimizeOptions);
 
         helpSection = new HelpSection(priceCategories, travelSchedule, travelSchedule.getRangeEditor());
+
+        persistance.add(new PriceCategoryClientPersistor(priceCategories));
+        persistance.add(new OptimizePersistor(optimizeOptions));
+        persistance.add(new EntryPersistor(travelSchedule));
     }
 
     public void setup() {

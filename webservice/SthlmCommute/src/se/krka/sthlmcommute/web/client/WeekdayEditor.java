@@ -67,8 +67,4 @@ public class WeekdayEditor extends Composite {
             setWeekDay(i, tickets[i]);
         }
     }
-
-    public void hideHelp() {
-        //weekdayHelpInfo.setVisible(false);
-    }
 }

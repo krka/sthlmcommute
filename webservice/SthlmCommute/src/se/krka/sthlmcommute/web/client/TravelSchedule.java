@@ -13,7 +13,6 @@ public class TravelSchedule extends Composite {
 
     private final DelayedWork worker;
     private final Button newButton;
-    private HelpSection helpSection;
 
     public TravelSchedule(ClientConstants clientConstants, TravelOptLocale locale, DelayedWork worker) {
         this.worker = worker;
@@ -43,9 +42,6 @@ public class TravelSchedule extends Composite {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 travelScheduleList.createNew();
-                if (helpSection != null) {
-                    helpSection.createdAnEntry();
-                }
             }
         });
         deleteButton.addClickHandler(new ClickHandler() {
@@ -72,15 +68,6 @@ public class TravelSchedule extends Composite {
 
     public TravelScheduleList getList() {
         return travelScheduleList;
-    }
-
-    public Button getNewButton() {
-        return newButton;
-    }
-
-    public void addListener(HelpSection helpSection) {
-
-        this.helpSection = helpSection;
     }
 
     public RangeEditor getRangeEditor() {

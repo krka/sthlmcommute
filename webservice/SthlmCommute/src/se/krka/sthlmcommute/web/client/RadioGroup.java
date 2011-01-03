@@ -13,9 +13,7 @@ import java.util.List;
 public class RadioGroup extends Composite {
     private final VerticalPanel root;
     private final String identifier;
-    private final ClickHandler listener = new MyClickHandler();
-
-    private final List<ClickHandler> handlers = new ArrayList<ClickHandler>();
+    private final MyClickHandler listener = new MyClickHandler();
 
     public RadioGroup(String identifier) {
         this.identifier = identifier;
@@ -24,7 +22,7 @@ public class RadioGroup extends Composite {
     }
 
     public void addClickHandler(ClickHandler handler) {
-        handlers.add(handler);
+        listener.add(handler);
     }
 
     public void addRadioButton(String value, String header) {
@@ -47,6 +45,22 @@ public class RadioGroup extends Composite {
         return null;
     }
 
+    public void setSelected(String formValue) {
+        for (Widget widget : root) {
+            if (widget instanceof Button) {
+                Button button = (Button) widget;
+                if (button.getGroup() == this) {
+                    if (button.getFormValue().equals(formValue)) {
+                        button.setValue(true);
+                        listener.onClick(new ClickEvent() {
+
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     public class Button extends RadioButton {
         public Button(String value, String header) {
             super(identifier, header);
@@ -59,11 +73,17 @@ public class RadioGroup extends Composite {
     }
 
     private class MyClickHandler implements ClickHandler {
+        private final List<ClickHandler> handlers = new ArrayList<ClickHandler>();
+
         @Override
         public void onClick(ClickEvent clickEvent) {
             for (ClickHandler handler : handlers) {
                 handler.onClick(clickEvent);
             }
+        }
+
+        public void add(ClickHandler handler) {
+            handlers.add(handler);
         }
     }
 }

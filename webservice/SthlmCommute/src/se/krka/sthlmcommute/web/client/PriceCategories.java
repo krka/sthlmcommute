@@ -91,4 +91,8 @@ public class PriceCategories extends Composite {
     public void addListener(HelpSection helpSection) {
         this.helpSection = helpSection;
     }
+
+    public RadioGroup getRadioGroup() {
+        return radioGroup;
+    }
 }
