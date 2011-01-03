@@ -7,6 +7,7 @@
 * noselectionmodel för icke-interaktiva tabeller
 * remove unnecessary server side libs
 * optimize TravelOpt for better JS performance by removing dates from the solver
+* spara inställningar i cookies
 
 === ONGOING ====
 * gwt localization
@@ -23,10 +24,9 @@
 * explain optimize
 * provide examples
 * kunna välja rabatthäfte som komplett häfte istället för uppdelat
-* spara inställningar i cookies
 * adsense
 
-=== REMOVEd ====
+=== UNCERTAIN ====
 
 * sort entries by date
 
