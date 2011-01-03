@@ -1,5 +1,6 @@
 package se.krka.sthlmcommute.web.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
@@ -91,14 +92,18 @@ public class TravelOptRunner implements Runnable {
 
     @Override
     public void run() {
-        clear();
-
-        String s = optimize(entries, optimizeOptions, priceCategories.getSelected());
-        if (s != null) {
-            errorLabel.setText(s);
-            errorLabel.setVisible(true);
-            ticketCellTable.setVisible(false);
-        }
+        GWT.runAsync(new GenericFailureAsyncCallback(){
+            @Override
+            public void onSuccess() {
+                clear();
+                String s = optimize(entries, optimizeOptions, priceCategories.getSelected());
+                if (s != null) {
+                    errorLabel.setText(s);
+                    errorLabel.setVisible(true);
+                    ticketCellTable.setVisible(false);
+                }
+           }
+        });
     }
 
     private void clear() {
@@ -178,4 +183,5 @@ public class TravelOptRunner implements Runnable {
         }
         return res;
     }
+
 }
