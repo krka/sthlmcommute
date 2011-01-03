@@ -4,6 +4,8 @@
 * add contact info
 * show price list
 * no execute without atleast one entry
+* noselectionmodel för icke-interaktiva tabeller
+* remove unnecessary server side libs
 
 === ONGOING ====
 * gwt localization
@@ -19,8 +21,6 @@
 * explain ticket and overrides
 * explain optimize
 * provide examples
-* remove unnecessary server side libs
-* noselectionmodel för icke-interaktiva tabeller
 * kunna välja rabatthäfte som komplett häfte istället för uppdelat
 * spara inställningar i cookies
 * adsense

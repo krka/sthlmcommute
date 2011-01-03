@@ -6,6 +6,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.NoSelectionModel;
 import se.krka.travelopt.Money;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.Ticket;
@@ -34,6 +35,8 @@ public class TravelOptRunner implements Runnable {
         errorLabel = new Label("error");
 
         ticketCellTable = new CellTable<Ticket>(5);
+        ticketCellTable.setSelectionModel(new NoSelectionModel<Object>());
+
         ticketCellTable.setWidth("55em");
 
         ticketCellTable.addColumn(new TextColumn<Ticket>() {

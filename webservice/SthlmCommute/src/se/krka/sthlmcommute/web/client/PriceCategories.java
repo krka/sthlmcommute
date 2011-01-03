@@ -6,6 +6,7 @@ import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.view.client.NoSelectionModel;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.TicketType;
 import se.krka.travelopt.localization.TravelOptLocale;
@@ -20,6 +21,7 @@ public class PriceCategories extends Composite {
     public PriceCategories(final TravelInterface travelInterface, ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
 
         cellTable = new CellTable<TicketType>();
+        cellTable.setSelectionModel(new NoSelectionModel<Object>());
         cellTable.addColumn(new TextColumn<TicketType>() {
             @Override
             public String getValue(TicketType ticketType) {
