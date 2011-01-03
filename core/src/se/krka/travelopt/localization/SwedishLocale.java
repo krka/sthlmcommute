@@ -2,8 +2,6 @@ package se.krka.travelopt.localization;
 
 import se.krka.travelopt.*;
 
-import java.util.Date;
-
 public class SwedishLocale implements TravelOptLocale {
     public static final SwedishLocale INSTANCE = new SwedishLocale();
     private SwedishLocale() {
@@ -30,10 +28,10 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     private String formatTicketDate(Ticket ticket) {
-        if (ticket.getEndDate().equals(ticket.getStartDate())) {
-            return formatDate(ticket.getStartDate());
+        if (ticket.getEndDate() == ticket.getStartDate()) {
+            return formatDay(ticket.getStartDate());
         }
-        return formatDate(ticket.getStartDate()) + " till " + formatDate(ticket.getEndDate());
+        return formatDay(ticket.getStartDate()) + " till " + formatDay(ticket.getEndDate());
     }
 
 
@@ -70,8 +68,8 @@ public class SwedishLocale implements TravelOptLocale {
         return input + " är inte en giltig veckodag.";
     }
 
-    public String travelPlanDate(Date date, int numTickets) {
-        return formatDate(date) + " behöver " + numTickets + " biljetter";
+    public String travelPlanDate(int dayOrdinal, int numTickets) {
+        return formatDay(dayOrdinal) + " behöver " + numTickets + " biljetter";
     }
 
     @Override
@@ -80,12 +78,12 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
     @Override
-    public String formatDate(Date date) {
-        return weekDay(date).substring(0, 3) + " " + Util.format(date);
+    public String formatDay(int dayOrdinal) {
+        return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
     }
 
-    private String weekDay(Date date) {
-        return weekDayName(WeekDays.WeekDayEnum.get(date));
+    private String weekDay(int dayOrdinal) {
+        return weekDayName(Util.getDayOfWeek(dayOrdinal));
     }
 
 }

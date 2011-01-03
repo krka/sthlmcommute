@@ -1,23 +1,15 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.NoSelectionModel;
-import se.krka.travelopt.Money;
-import se.krka.travelopt.Prices;
-import se.krka.travelopt.Ticket;
-import se.krka.travelopt.TravelOpt;
-import se.krka.travelopt.TravelPlan;
-import se.krka.travelopt.TravelResult;
-import se.krka.travelopt.Util;
+import se.krka.travelopt.*;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TravelOptRunner implements Runnable {
@@ -42,25 +34,25 @@ public class TravelOptRunner implements Runnable {
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
-                if (ticket.getStartDate() == null) {
+                if (ticket.getStartDate() == 0) {
                     return "";
                 }
-                return locale.formatDate(ticket.getStartDate());
+                return locale.formatDay(ticket.getStartDate());
             }
         }, "From");
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
-                if (ticket.getEndDate() == null) {
+                if (ticket.getEndDate() == 0) {
                     return "";
                 }
-                return locale.formatDate(ticket.getEndDate());
+                return locale.formatDay(ticket.getEndDate());
             }
         }, "To");
         ticketCellTable.addColumn(new TextColumn<Ticket>() {
             @Override
             public String getValue(Ticket ticket) {
-                if (ticket.getStartDate() == null) {
+                if (ticket.getStartDate() == 0) {
                     return "";
                 }
                 return String.valueOf(ticket.getNumberOfTickets());
@@ -157,7 +149,7 @@ public class TravelOptRunner implements Runnable {
 
     private void addTotal(List<Ticket> tickets, Money totalCost) {
         if (tickets.size() != 1) {
-            tickets.add(0, new Ticket(locale, totalCost, null, null, null));
+            tickets.add(0, new Ticket(locale, totalCost, null, 0, 0));
         }
     }
 
@@ -168,7 +160,7 @@ public class TravelOptRunner implements Runnable {
         for (Ticket ticket : tickets) {
             if (prev != null) {
                 boolean sameType = ticket.getTicketType().equals(prev.getTicketType());
-                boolean adjacent = Util.dayDifference(ticket.getStartDate(), prev.getEndDate()) == 1;
+                boolean adjacent = ticket.getStartDate() == prev.getEndDate() + 1;
                 if (sameType && adjacent) {
                     Money newCost = prev.getCost().add(ticket.getCost());
                     int numberOfTickets = prev.getNumberOfTickets() + ticket.getNumberOfTickets();

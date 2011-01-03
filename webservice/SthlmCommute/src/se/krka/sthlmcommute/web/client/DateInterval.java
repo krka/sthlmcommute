@@ -22,8 +22,7 @@ public class DateInterval implements Comparable<DateInterval> {
         if (to == null || from == null) {
             return 0;
         }
-        long num = to.getTime() - from.getTime();
-        return (int) (1 + (num + 86400000 - 1) / 86400000);
+        return Util.toDayOrdinal(to) - Util.toDayOrdinal(from) + 1;
     }
 
     @Override

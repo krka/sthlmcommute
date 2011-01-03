@@ -21,36 +21,28 @@ public class TravelOpt {
 
         List<Purchase> purchases = new ArrayList<Purchase>();
 
-        Date firstDay = null;
-        Date lastDate = null;
-
-        Date looper;
+        int firstDay = 0;
+        int lastDay = 0;
 
         for (TravelPlanDate travelPlanDate : travelPlan.getDates()) {
-            Date date =  travelPlanDate.getDate();
-
-            if (lastDate != null) {
-                looper = lastDate;
-                looper = Util.plusDays(looper, 1);
-                while (Util.before(looper, date)) {
+            int  dayOrdinal =  travelPlanDate.getDayOrdinal();
+            if (lastDay != 0) {
+                // Handle intermediate dates
+                for (int i = lastDay + 1; i < dayOrdinal; i++) {
                     handle(purchases, 0);
-                    looper = Util.plusDays(looper, 1);
                 }
             } else {
-                firstDay = date;
+                firstDay = dayOrdinal;
             }
             handle(purchases, travelPlanDate.getNumTickets());
-            lastDate = date;
+            lastDay = dayOrdinal;
         }
 
-        if (firstDay == null) {
+        if (firstDay == 0) {
             return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
         }
 
-        looper = lastDate;
-        looper = Util.plusDays(looper, 1);
-
-        extendPeriod(purchases, looper);
+        extendPeriod(purchases);
 
 
         optimizedExtendPeriod(purchases, travelPlan, firstDay);
@@ -64,27 +56,27 @@ public class TravelOpt {
         List<Ticket> tickets = new ArrayList<Ticket>();
         while (!stack.isEmpty()) {
             Purchase purchase = stack.pop();
-            Date startDate = Util.plusDays(firstDay, purchase.startAt);
+            int startDate = firstDay + purchase.startAt;
             Money cost = purchase.totalCost.subtract(purchase.parent.totalCost);
             TicketType ticketType = purchase.ticketType;
-            Date endDate = Util.plusDays(startDate, ticketType.numberOfDays() - 1);
+            int endDate = startDate + ticketType.numberOfDays() - 1;
             int count = purchase.count;
             tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate, endDate, count));
         }
         return new TravelResult(travelPlan.getLocale(), tickets);
     }
 
-	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, Date firstDay) {
-		Date extensionStart = travelPlan.getExtensionStart();
+	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, int firstDay) {
+		int extensionStart = travelPlan.getExtensionStart();
 		int i = purchases.size() - 1;
 		double bestScore = Double.MAX_VALUE;
 		Purchase bestPurchase = null;
 		while (true) {
 			Purchase purchase = getPurchase(i, purchases);
-			Date startDate = Util.plusDays(firstDay, i);
+			int startDate = firstDay + i;
 
             // Don't count purchases made after the extension
-            if (Util.before(Util.plusDays(firstDay, purchase.startAt), extensionStart)) {
+            if (firstDay + purchase.startAt < extensionStart) {
                 double score = purchase.totalCost.getValue() / (i + 1);
                 if (score <= bestScore) {
                     bestScore = score;
@@ -92,7 +84,7 @@ public class TravelOpt {
                 }
             }
 
-            if (Util.before(startDate, extensionStart)) {
+            if (startDate < extensionStart) {
                 break;
             }
 
@@ -110,11 +102,10 @@ public class TravelOpt {
 		}
 	}
 
-	private void extendPeriod(List<Purchase> purchases, Date looper) {
+	private void extendPeriod(List<Purchase> purchases) {
 		Purchase current = lastPurchase(purchases);
 		Money cost = current.totalCost;
 		while (current.totalCost.equals(cost)) {
-            looper = Util.plusDays(looper, 1);
 			handle(purchases, 1);
 			current = lastPurchase(purchases);
 		}

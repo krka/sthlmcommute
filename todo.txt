@@ -6,14 +6,15 @@
 * no execute without atleast one entry
 * noselectionmodel för icke-interaktiva tabeller
 * remove unnecessary server side libs
+* optimize TravelOpt for better JS performance by removing dates from the solver
 
 === ONGOING ====
 * gwt localization
 
 
 === IN QUEUE ====
-* optimize TravelOpt for better JS performance by removing dates from the solver
 * flag entries as red if they overlap
+* unify WholeDays and SimpleTicket ?
 
 * figure out best terminology.
 

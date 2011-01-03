@@ -2,8 +2,6 @@ package se.krka.travelopt;
 
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.Date;
-
 public class WeekDays {
     private final int[] tickets = new int[7];
 
@@ -28,8 +26,8 @@ public class WeekDays {
 		}
 	}
 
-	public int getNumTickets(int defaultNumTickets, Date date) {
-        int integer = tickets[WeekDayEnum.get(date)];
+	public int getNumTickets(int defaultNumTickets, int dayOrdinal) {
+        int integer = tickets[Util.getDayOfWeek(dayOrdinal)];
 		if (integer == -1) {
 			return defaultNumTickets;
 		}
@@ -104,10 +102,5 @@ public class WeekDays {
 		public WeekDayEnum succ() {
 			return VALUES[(ordinal() + 1) % 7];
 		}
-
-        public static int get(Date date) {
-            return Util.getDayOfWeek(date);
-        }
-
 	}
 }

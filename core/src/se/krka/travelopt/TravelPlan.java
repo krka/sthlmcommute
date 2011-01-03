@@ -10,9 +10,9 @@ public class TravelPlan {
 	private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
 	private final SortedSet<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
-    private final Date extensionStart;
+    private final int extensionStart;
 
-	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, Date extensionStart) {
+	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, int extensionStart) {
         this.locale = locale;
         this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
@@ -26,7 +26,7 @@ public class TravelPlan {
 		return immutableDates;
 	}
 
-	public Date getExtensionStart() {
+	public int getExtensionStart() {
 		return extensionStart;
 	}
 
@@ -34,8 +34,8 @@ public class TravelPlan {
         return locale;
     }
 
-    public long getNumDays() {
-        return Util.numDays(dates.first().getDate(), dates.last().getDate());
+    public int getNumDays() {
+        return dates.last().getDayOrdinal() - dates.first().getDayOrdinal();
     }
 
     public static class Builder {
@@ -49,15 +49,15 @@ public class TravelPlan {
         }
 
         public Builder addDay(Date date) {
-			addDay(date, numTickets);
+			addDay(Util.toDayOrdinal(date), numTickets);
 			return this;
 		}
 
 		public TravelPlan build() {
             if (dates.isEmpty()) {
-                return new TravelPlan(locale, dates, null);
+                return new TravelPlan(locale, dates, 0);
             }
-            Date ext = Util.plusDays(dates.last().getDate(), 1);
+            int ext = dates.last().getDayOrdinal() + 1;
             return new TravelPlan(locale, dates, ext);
         }
 
@@ -77,13 +77,13 @@ public class TravelPlan {
 		}
 
         private Builder addPeriod(Date from, Date to, WeekDays weekDays) {
-            if (Util.numDays(from, to) > 2*365) {
+            int fromOrdinal = Util.toDayOrdinal(from);
+            int toOrdinal = Util.toDayOrdinal(to);
+            if (toOrdinal - fromOrdinal > 2*365) {
                 throw new IllegalArgumentException(locale.tooLongPeriodError());
             }
-            addDay(from, weekDays);
-            while (Util.before(from, to)) {
-                from = Util.plusDays(from, 1);
-                addDay(from, weekDays);
+            for (int i = fromOrdinal; i <= toOrdinal; i++) {
+                addDay(i, weekDays);
             }
             return this;
         }
@@ -101,25 +101,23 @@ public class TravelPlan {
 		}
 
         private TravelPlan buildExtended(WeekDays weekDays) {
-            Date lastDate = dates.last().getDate();
-            Date extensionStart = Util.plusDays(lastDate, 1);
+            int lastDate = dates.last().getDayOrdinal();
+            int extensionStart = lastDate + 1;
 
             // Hardcoded number of days = 30, the best ticket type for SL
             for (int i = 0; i < 30; i++) {
-                lastDate = Util.plusDays(lastDate, 1);
-                addDay(lastDate, weekDays);
+                addDay(lastDate + i, weekDays);
             }
             return new TravelPlan(locale, dates, extensionStart);
         }
 
-        private void addDay(Date Date, WeekDays weekDays) {
-			int numTickets = weekDays.getNumTickets(this.numTickets, Date);
-			addDay(Date, numTickets);
+        private void addDay(int dayOrdinal, WeekDays weekDays) {
+            addDay(dayOrdinal, weekDays.getNumTickets(numTickets, dayOrdinal));
 		}
 
-		private void addDay(Date date, int numTickets) {
+		private void addDay(int dayOrdinal, int numTickets) {
 			if (numTickets > 0) {
-				dates.add(new TravelPlanDate(date, numTickets, locale));
+				dates.add(new TravelPlanDate(dayOrdinal, numTickets, locale));
 			}
 		}
 

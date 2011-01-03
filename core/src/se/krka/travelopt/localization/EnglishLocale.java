@@ -2,8 +2,6 @@ package se.krka.travelopt.localization;
 
 import se.krka.travelopt.*;
 
-import java.util.Date;
-
 public class EnglishLocale implements TravelOptLocale {
     public static final EnglishLocale INSTANCE = new EnglishLocale();
     private EnglishLocale() {
@@ -30,10 +28,10 @@ public class EnglishLocale implements TravelOptLocale {
     }
 
     private String formatTicketDate(Ticket ticket) {
-        if (ticket.getEndDate().equals(ticket.getStartDate())) {
-            return formatDate(ticket.getStartDate());
+        if (ticket.getEndDate() == ticket.getStartDate()) {
+            return formatDay(ticket.getStartDate());
         }
-        return formatDate(ticket.getStartDate()) + " to " + formatDate(ticket.getEndDate());
+        return formatDay(ticket.getStartDate()) + " to " + formatDay(ticket.getEndDate());
     }
 
     public String priceStructure(String body) {
@@ -69,8 +67,8 @@ public class EnglishLocale implements TravelOptLocale {
         return input + " is not a valid weekday";
     }
 
-    public String travelPlanDate(Date date, int numTickets) {
-        return formatDate(date) + " needs " + numTickets + " tickets";
+    public String travelPlanDate(int dayOrdinal, int numTickets) {
+        return formatDay(dayOrdinal) + " needs " + numTickets + " tickets";
     }
 
     @Override
@@ -78,12 +76,12 @@ public class EnglishLocale implements TravelOptLocale {
         return "You must select a non-empty time period.";
     }
 
-    public String formatDate(Date date) {
-        return weekDay(date).substring(0, 3) + " " + Util.format(date);
+    @Override
+    public String formatDay(int dayOrdinal) {
+        return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
     }
 
-    private String weekDay(Date date) {
-        return weekDayName(Util.getDayOfWeek(date));
+    private String weekDay(int dayOrdinal) {
+        return weekDayName(Util.getDayOfWeek(dayOrdinal));
     }
-
 }

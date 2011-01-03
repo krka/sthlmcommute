@@ -5,8 +5,6 @@ import se.krka.travelopt.Ticket;
 import se.krka.travelopt.TravelResult;
 import se.krka.travelopt.WeekDays;
 
-import java.util.Date;
-
 public interface TravelOptLocale {
     String tooLongPeriodError();
 
@@ -30,9 +28,9 @@ public interface TravelOptLocale {
 
     String invalidWeekDay(String input);
 
-    String travelPlanDate(Date date, int numTickets);
+    String travelPlanDate(int dayOrdinal, int numTickets);
 
     String mustSelectPeriod();
 
-    String formatDate(Date date);
+    String formatDay(int dayOrdinal);
 }

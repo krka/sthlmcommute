@@ -10,9 +10,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import se.krka.travelopt.Util;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class TravelScheduleList extends Composite {
                     setError(safeHtmlBuilder, "Overlapping period");
                     return;
                 }
-                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDate(from) + "</span>");
+                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDay(Util.toDayOrdinal(from)) + "</span>");
                 safeHtmlBuilder.appendEscaped(" ");
                 safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:5em;text-align:right;padding-right:2em'>" + scheduleEntry.getInterval().getDays() + " days</span>");
 

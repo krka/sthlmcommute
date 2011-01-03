@@ -83,20 +83,23 @@ public class DateIntervalPicker {
         }
         Date from = this.from.getValue();
         Date to = this.to.getValue();
-        if (from != null && to != null && !Util.before(to, from)) {
+
+        if (from == null || to == null) {
+            return;
+        }
+
+        int fromOrdinal = Util.toDayOrdinal(from);
+        int toOrdinal = Util.toDayOrdinal(to);
+
+        if (fromOrdinal <= toOrdinal) {
             highlightStart = from;
             highlightEnd = to;
 
-            long time = highlightStart.getTime();
-            Date date = new Date(time);
-            while (Util.before(date, highlightEnd)) {
+            for (int i = fromOrdinal; i <= toOrdinal; i++) {
+                Date date = Util.fromDayOrdinal(i);
                 this.from.addStyleToDates("interval", date);
                 this.to.addStyleToDates("interval", date);
-                time += 86400000;
-                date.setTime(time);
             }
-            this.from.addStyleToDates("interval", date);
-            this.to.addStyleToDates("interval", date);
         }
     }
 
@@ -105,16 +108,14 @@ public class DateIntervalPicker {
             return;
         }
 
-        long time = highlightStart.getTime();
-        Date date = new Date(time);
-        while (Util.before(date, highlightEnd)) {
-            from.removeStyleFromDates("interval", date);
-            to.removeStyleFromDates("interval", date);
-            time += 86400000;
-            date.setTime(time);
+        int fromOrdinal = Util.toDayOrdinal(highlightStart);
+        int toOrdinal = Util.toDayOrdinal(highlightEnd);
+
+        for (int i = fromOrdinal; i <= toOrdinal; i++) {
+            Date date = Util.fromDayOrdinal(i);
+            this.from.removeStyleFromDates("interval", date);
+            this.to.removeStyleFromDates("interval", date);
         }
-        from.removeStyleFromDates("interval", date);
-        to.removeStyleFromDates("interval", date);
 
         highlightStart = null;
         highlightEnd = null;
