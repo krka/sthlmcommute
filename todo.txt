@@ -22,7 +22,9 @@
 * figure out best terminology.
 - Biljett / Ticket - sådant man faktiskt köper, dyker upp i resultatvyn.
 - Kupong / Coupon - Sånt som finns på förköpshäfte
-
+- Schema / Schedule - inputen
+- Post / Entry - entries
+- Datumspan / Date span - date interval
 
 * explain ticket and overrides
 * explain optimize

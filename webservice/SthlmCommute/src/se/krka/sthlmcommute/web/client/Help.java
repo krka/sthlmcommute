@@ -2,6 +2,7 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.RowCountChangeEvent;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
@@ -31,10 +32,13 @@ public class Help {
                 priceCategories);
 
         newEntry = helpSection.createAndAdd(
-                "Creating a schedule",
-                new Label("Start by creating a new entry for your travel schedule."), travelSchedule);
+                clientConstants.creatingSchedule(),
+                new Label(clientConstants.creatingScheduleHelp()),
+                travelSchedule);
 
-        selectDates = helpSection.createAndAdd("Selecting an interval", new Label("Select a time interval for your new entry"));
+        selectDates = helpSection.createAndAdd(
+                clientConstants.selectingDateSpan(),
+                new Label(clientConstants.selectingDateSpanHelp()));
         travelSchedule.getAsyncList().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
@@ -42,7 +46,9 @@ public class Help {
             }
         });
 
-        selectTickets = helpSection.createAndAdd("Selecting tickets", new Label("foo"));
+        selectTickets = helpSection.createAndAdd(
+                clientConstants.selectingCoupons(),
+                new HTML(clientConstants.selectingCouponsHelp()));
 
         shownResult = helpSection.createAndAdd("The result", new Label("bar"), travelOptRunner.getResultPanel());
         travelOptRunner.addResultListener(new TravelResultListener() {
