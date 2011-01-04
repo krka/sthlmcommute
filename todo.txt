@@ -14,7 +14,7 @@
 
 
 === IN QUEUE ====
-* flag entries as red if they overlap
+* rework overlap
 * unify WholeDays and SimpleTicket ?
 
 * figure out best terminology.
