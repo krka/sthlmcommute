@@ -1,20 +1,18 @@
 package se.krka.sthlmcommute.web.client.persistance;
 
 import com.google.gwt.user.client.Cookies;
-import se.krka.sthlmcommute.web.client.*;
+import se.krka.sthlmcommute.web.client.Help;
+import se.krka.sthlmcommute.web.client.ScheduleEntry;
+import se.krka.sthlmcommute.web.client.TravelScheduleList;
 import se.krka.sthlmcommute.web.client.util.DelayedWork;
 
 import java.util.List;
 
 public class EntryPersistor implements ClientPersistor {
     private final TravelScheduleList travelSchedule;
-    private final Help help;
-    private final DelayedWork worker;
 
-    public EntryPersistor(TravelScheduleList travelSchedule, Help help, DelayedWork worker) {
+    public EntryPersistor(TravelScheduleList travelSchedule) {
         this.travelSchedule = travelSchedule;
-        this.help = help;
-        this.worker = worker;
     }
 
     @Override
@@ -37,13 +35,7 @@ public class EntryPersistor implements ClientPersistor {
             String[] split = s.split(",");
             for (String s2 : split) {
                 ScheduleEntry scheduleEntry = travelSchedule.createNew();
-                scheduleEntry.deserialize(s2);
-                travelSchedule.update();
-                worker.requestWork();
-
-                if (scheduleEntry.getInterval().getFrom() != null && scheduleEntry.getInterval().getTo() != null) {
-                    help.selectedDates();
-                }
+                scheduleEntry.deserialize(s2, travelSchedule);
             }
         }
     }

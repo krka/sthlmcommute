@@ -68,7 +68,7 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
         return sb.toString();
     }
 
-    public void deserialize(String s) {
+    public void deserialize(String s, TravelScheduleList travelScheduleList) {
         String[] split = s.split(":");
         if (split.length != 10) {
             return;
@@ -82,8 +82,8 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
         for (int i = 0; i < 7; i++) {
             tickets[i] = Integer.parseInt(split[3 + i]);
         }
-        weekdays = new Weekdays(defaultValue, tickets);
-        interval.set(from, to);
+        travelScheduleList.updateScheduleEntryInterval(this, from, to);
+        travelScheduleList.updateTickets(this, new Weekdays(defaultValue, tickets));
     }
 
     private static Date deserializeDate(String s) {

@@ -9,16 +9,20 @@ import se.krka.sthlmcommute.web.client.components.HelpElement;
 import se.krka.sthlmcommute.web.client.components.HelpSection;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
+import se.krka.travelopt.TravelResult;
 
 import java.util.Date;
 
 public class Help {
+    private final HelpSection helpSection;
+
     private final HelpElement priceCategory;
     private final HelpElement newEntry;
     private final HelpElement selectDates;
-    private final HelpSection helpSection;
+    private final HelpElement selectTickets;
+    private final HelpElement shownResult;
 
-    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule) {
+    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule, TravelOptRunner travelOptRunner) {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
@@ -39,12 +43,23 @@ public class Help {
             }
         });
 
+        selectTickets = helpSection.createAndAdd("Selecting tickets", new Label("foo"));
+
+        shownResult = helpSection.createAndAdd("The result", new Label("bar"), travelOptRunner.getResultPanel());
+        travelOptRunner.addResultListener(new TravelResultListener() {
+            @Override
+            public void newResult(TravelResult result) {
+                gotResult();
+            }
+        });
+
         priceCategories.getRadioGroup().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 selectedPriceCategory();
             }
         });
+
         travelSchedule.getAsyncList().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
@@ -54,6 +69,21 @@ public class Help {
                         createdAnEntry();
                     }
                 });
+
+                selectTickets.setHighlight(widget.getTravelScheduleEditor().getTicketEditor());
+                widget.addScheduleEntryUpdateListener(new ScheduleEntryUpdateListener() {
+                    @Override
+                    public void updated(ScheduleEntry entry) {
+                        if (entry.getInterval().getDays() > 0) {
+                            selectedDates();
+                        }
+                        if (entry.getWeekdays().countTickets() > 0) {
+                            selectedTickets();
+                        }
+                    }
+                });
+
+
             }
         });
         travelSchedule.addListener(new DateIntervalUpdateListener() {
@@ -91,8 +121,22 @@ public class Help {
         if (selectDates.tryConsume()) {
             selectDates.close();
 
-            // next .open();
+            selectTickets.open();
         }
     }
 
+
+    public void selectedTickets() {
+        if (selectTickets.tryConsume()) {
+            selectTickets.close();
+
+            shownResult.open();
+        }
+    }
+
+    public void gotResult() {
+        if (shownResult.tryConsume()) {
+            shownResult.open();
+        }
+    }
 }

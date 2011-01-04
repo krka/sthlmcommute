@@ -3,9 +3,7 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.NoSelectionModel;
 import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
@@ -26,7 +24,10 @@ public class TravelOptRunner implements Runnable {
     private List<ScheduleEntry> entries;
     private PriceCategories priceCategories;
     private OptimizeOptions optimizeOptions;
+    private final List<Ticket> tickets = new ArrayList<Ticket>();
 
+    private final List<TravelResultListener> listeners = new ArrayList<TravelResultListener>();
+    private final CaptionPanel resultPanel;
 
     public TravelOptRunner(final TravelOptLocale locale) {
         this.locale = locale;
@@ -89,7 +90,12 @@ public class TravelOptRunner implements Runnable {
         VerticalPanel panel = new VerticalPanel();
         panel.add(errorLabel);
         panel.add(UIUtil.wrapScroll(asyncTable, "57em", "10em"));
-        RootPanel.get("result").add(UIUtil.wrapCaption("Result", panel));
+        resultPanel = UIUtil.wrapCaption("Result", panel);
+        RootPanel.get("result").add(resultPanel);
+    }
+
+    public CaptionPanel getResultPanel() {
+        return resultPanel;
     }
 
     public void setup(List<ScheduleEntry> entries, PriceCategories priceCategories, OptimizeOptions optimizeOptions) {
@@ -119,12 +125,12 @@ public class TravelOptRunner implements Runnable {
     private void clear() {
         errorLabel.setText("");
         errorLabel.setVisible(false);
-        final ArrayList<Ticket> list = new ArrayList<Ticket>();
-        addTotal(list, Money.ZERO);
+        tickets.clear();
+        addTotal(tickets, Money.ZERO);
         asyncTable.runASAP(new AsyncWidgetUsage<CellTable<Ticket>>() {
             @Override
             public void run(CellTable<Ticket> widget) {
-                widget.setRowData(list);
+                widget.setRowData(tickets);
             }
         });
         asyncTable.setVisible(true);
@@ -155,14 +161,21 @@ public class TravelOptRunner implements Runnable {
             TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
             TravelResult result = travelOpt.findOptimum(travelPlan);
             renderResult(result);
+            notifyListeners(result);
             return null;
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
+    private void notifyListeners(TravelResult result) {
+        for (TravelResultListener listener : listeners) {
+            listener.newResult(result);
+        }
+    }
+
     private void renderResult(TravelResult result) {
-        final List<Ticket> tickets = summarize(result.getTickets());
+        summarize(result.getTickets());
         addTotal(tickets, result.getTotalCost());
         asyncTable.runASAP(new AsyncWidgetUsage<CellTable<Ticket>>() {
             @Override
@@ -178,11 +191,11 @@ public class TravelOptRunner implements Runnable {
         }
     }
 
-    private List<Ticket> summarize(List<Ticket> tickets) {
-        ArrayList<Ticket> res = new ArrayList<Ticket>();
+    private void summarize(List<Ticket> result) {
+        tickets.clear();
 
         Ticket prev = null;
-        for (Ticket ticket : tickets) {
+        for (Ticket ticket : result) {
             if (prev != null) {
                 boolean sameType = ticket.getTicketType().equals(prev.getTicketType());
                 boolean adjacent = ticket.getStartDate() == prev.getEndDate() + 1;
@@ -191,7 +204,7 @@ public class TravelOptRunner implements Runnable {
                     int numberOfTickets = prev.getNumberOfTickets() + ticket.getNumberOfTickets();
                     prev = new Ticket(locale, newCost, prev.getTicketType(), prev.getStartDate(), ticket.getEndDate(), numberOfTickets);
                 } else {
-                    res.add(prev);
+                    tickets.add(prev);
                     prev = ticket;
                 }
             } else {
@@ -199,9 +212,11 @@ public class TravelOptRunner implements Runnable {
             }
         }
         if (prev != null) {
-            res.add(prev);
+            tickets.add(prev);
         }
-        return res;
     }
 
+    public void addResultListener(TravelResultListener listener) {
+        listeners.add(listener);
+    }
 }

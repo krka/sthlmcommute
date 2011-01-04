@@ -14,9 +14,7 @@ public class WeekDays {
     }
 
     public WeekDays(int[] tickets) {
-        for (int i = 0; i < 7; i++) {
-            this.tickets[i] = tickets[i];
-        }
+        System.arraycopy(tickets, 0, this.tickets, 0, 7);
     }
 
     public WeekDays(TravelOptLocale locale, String s) {

@@ -2,14 +2,15 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
-import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
-import se.krka.sthlmcommute.web.client.persistance.EntryPersistor;
 import se.krka.sthlmcommute.web.client.util.DelayedWork;
 import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
@@ -26,10 +27,9 @@ public class TravelSchedule extends Composite {
         asyncTravelScheduleList = new AsyncWidget<TravelScheduleList>(new AsyncWidgetLoader<TravelScheduleList>() {
             @Override
             public TravelScheduleList load() {
-                TravelScheduleList travelScheduleList1 = new TravelScheduleList(locale, worker);
-                return travelScheduleList1;
+                return new TravelScheduleList(locale, worker);
             }
-        });;
+        });
 
         newButton = new Button("New entry");
 
@@ -99,15 +99,6 @@ public class TravelSchedule extends Composite {
             }
         });
         return horiz;
-    }
-
-    public void addPersistance(final ClientPersistance persistance, final Help help) {
-        asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
-            @Override
-            public void run(TravelScheduleList widget) {
-                persistance.add(new EntryPersistor(widget, help, worker));
-            }
-        });
     }
 
     public AsyncWidget<TravelScheduleList> getAsyncList() {

@@ -1,9 +1,9 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
-import se.krka.sthlmcommute.web.client.util.DelayedWork;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.Date;
@@ -11,12 +11,10 @@ import java.util.Date;
 public class TravelScheduleEditor extends Composite {
     private final DateIntervalPicker rangeEditor;
     private final TicketEditor ticketEditor;
-    private final DelayedWork worker;
 
     private ScheduleEntry active;
 
-    public TravelScheduleEditor(DelayedWork worker, TravelOptLocale locale, final TravelScheduleList travelScheduleList) {
-        this.worker = worker;
+    public TravelScheduleEditor(TravelOptLocale locale, final TravelScheduleList travelScheduleList) {
         VerticalPanel root = new VerticalPanel();
         rangeEditor = new DateIntervalPicker();
 
@@ -24,10 +22,9 @@ public class TravelScheduleEditor extends Composite {
         ticketEditor = new TicketEditor(new UpdateListener() {
             @Override
             public void updated() {
-                active.setWeekdays(ticketEditor.getWeekdays());
-                travelScheduleList.update();
+                travelScheduleList.updateTickets(active, ticketEditor.getWeekdays());
             }
-        }, this.worker, locale);
+        }, locale);
 
         root.add(rangeEditor);
         root.add(ticketEditor);
@@ -38,9 +35,7 @@ public class TravelScheduleEditor extends Composite {
             @Override
             public void intervalChanged(DateIntervalPicker picker, Date fromValue, Date toValue) {
                 if (fromValue != null && toValue != null) {
-                    active.getInterval().set(fromValue, toValue);
-                    travelScheduleList.update();
-                    TravelScheduleEditor.this.worker.requestWork();
+                    travelScheduleList.updateScheduleEntryInterval(active, fromValue, toValue);
                 }
             }
         });
@@ -73,5 +68,9 @@ public class TravelScheduleEditor extends Composite {
 
     public DateIntervalPicker getRangeEditor() {
         return rangeEditor;
+    }
+
+    public TicketEditor getTicketEditor() {
+        return ticketEditor;
     }
 }

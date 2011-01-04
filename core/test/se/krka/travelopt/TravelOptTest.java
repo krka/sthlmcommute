@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TravelOptTest {
 
-    TravelOptLocale locale = EnglishLocale.INSTANCE;
-    private TravelOpt travelOpt = new TravelOpt(Prices.createSLFullPrice(locale));
+    final TravelOptLocale locale = EnglishLocale.INSTANCE;
+    private final TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory("full", locale));
 
     @Test
 	public void testEmpty() {

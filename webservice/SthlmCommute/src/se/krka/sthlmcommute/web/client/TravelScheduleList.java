@@ -15,6 +15,7 @@ import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.Util;
 import se.krka.travelopt.localization.TravelOptLocale;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,12 @@ public class TravelScheduleList extends Composite {
     private final DelayedWork collisionDetector;
     private final CellList<ScheduleEntry> scheduleEntryCellList;
 
+    private final List<ScheduleEntryUpdateListener> listeners = new ArrayList<ScheduleEntryUpdateListener>();
+    private final DelayedWork worker;
+
     public TravelScheduleList(final TravelOptLocale locale, DelayedWork worker) {
-        travelScheduleEditor = new TravelScheduleEditor(worker, locale, this);
+        this.worker = worker;
+        travelScheduleEditor = new TravelScheduleEditor(locale, this);
 
         Cell<ScheduleEntry> cell = new AbstractCell<ScheduleEntry>() {
             @Override
@@ -79,6 +84,29 @@ public class TravelScheduleList extends Composite {
         initWidget(UIUtil.wrapCaption("Entries:", root));
     }
 
+    public void updateTickets(ScheduleEntry active, Weekdays weekdays) {
+        active.setWeekdays(weekdays);
+        update();
+        notifyUpdatedScheduleEntry(active);
+    }
+
+
+    public void updateScheduleEntryInterval(ScheduleEntry entry, Date from, Date to) {
+        entry.getInterval().set(from, to);
+        update();
+        notifyUpdatedScheduleEntry(entry);
+
+    }
+    private void notifyUpdatedScheduleEntry(ScheduleEntry entry) {
+        for (ScheduleEntryUpdateListener listener : listeners) {
+            listener.updated(entry);
+        }
+    }
+
+    public void addScheduleEntryUpdateListener(ScheduleEntryUpdateListener listener) {
+        listeners.add(listener);
+    }
+
     private void setError(SafeHtmlBuilder safeHtmlBuilder, String reason) {
         safeHtmlBuilder.appendHtmlConstant("<div style='text-align:center;width:10em;margin-left:auto;margin-right:auto'>" + reason + "</div>");
     }
@@ -87,6 +115,7 @@ public class TravelScheduleList extends Composite {
         ScheduleEntry entry = new ScheduleEntry(new Weekdays(0, createDefaultWeekdays()));
         list.add(entry);
         selectionModel.setSelected(entry, true);
+        notifyUpdatedScheduleEntry(entry);
         return entry;
     }
 
@@ -105,6 +134,7 @@ public class TravelScheduleList extends Composite {
     public void update() {
         collisionDetector.requestWork();
         listDataProvider.refresh();
+        worker.requestWork();
     }
 
     public List<ScheduleEntry> getList() {

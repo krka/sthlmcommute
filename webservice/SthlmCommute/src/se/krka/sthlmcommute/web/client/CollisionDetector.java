@@ -50,9 +50,6 @@ public class CollisionDetector implements Runnable {
         if (Util.before(x, interval.getFrom())) {
             return false;
         }
-        if (Util.before(interval.getTo(), x)) {
-            return false;
-        }
-        return true;
+        return !Util.before(interval.getTo(), x);
     }
 }

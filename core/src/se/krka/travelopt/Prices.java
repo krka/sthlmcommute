@@ -6,7 +6,7 @@ import se.krka.travelopt.localization.TravelOptLocale;
 import java.util.Locale;
 
 public class Prices {
-    public static PriceStructure createSLFullPrice(TravelOptLocale locale) {
+    private static PriceStructure createSLFullPrice(TravelOptLocale locale) {
         PriceStructure.Builder builder = PriceStructure.builder(locale);
 
         builder.addWholeDays("Årskort", Money.parse("7280 SEK"), 365);
@@ -20,7 +20,7 @@ public class Prices {
         return builder.build();
     }
 
-    public static PriceStructure createSLReducedPrice(TravelOptLocale locale) {
+    private static PriceStructure createSLReducedPrice(TravelOptLocale locale) {
         PriceStructure.Builder builder = PriceStructure.builder(locale);
 
         builder.addWholeDays("Årskort", Money.parse("4370 SEK"), 365);

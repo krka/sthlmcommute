@@ -31,7 +31,6 @@ public class SthlmCommute implements EntryPoint {
 
         travelinterface.addComponents();
 
-        persistance.onLoad();
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> windowCloseEvent) {

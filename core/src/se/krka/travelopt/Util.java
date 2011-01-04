@@ -3,7 +3,7 @@ package se.krka.travelopt;
 import java.util.Date;
 
 public class Util {
-    public static final long DAY_IN_MILLIS = 86400000;
+    private static final long DAY_IN_MILLIS = 86400000;
     private static final int WEEKDAY_OFFSET = 4;
 
     public static Date parseDate(String s) {
@@ -11,8 +11,7 @@ public class Util {
         int year = Integer.parseInt(split[0]);
         int month = Integer.parseInt(split[1]);
         int day = Integer.parseInt(split[2]);
-        Date date = new Date(year - 1900, month - 1, day);
-        return date;
+        return new Date(year - 1900, month - 1, day);
     }
 
     public static int parseDay(String s) {

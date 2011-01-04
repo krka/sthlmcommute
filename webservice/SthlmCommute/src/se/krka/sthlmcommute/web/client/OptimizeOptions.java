@@ -22,7 +22,7 @@ public class OptimizeOptions extends Composite {
             public void updated() {
                 delayedWork.requestWork();
             }
-        }, delayedWork, locale);
+        }, locale);
 
         Panel root = new VerticalPanel();
         root.setWidth("60em");

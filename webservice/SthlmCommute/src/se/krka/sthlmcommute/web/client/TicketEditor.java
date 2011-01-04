@@ -11,14 +11,12 @@ public class TicketEditor extends Composite {
 
     private final TicketListBox ticket;
     private final WeekdayEditor weekdays;
-    private final DelayedWork worker;
 
-    public TicketEditor(final UpdateListener listener, DelayedWork worker, TravelOptLocale locale) {
-        this.worker = worker;
+    public TicketEditor(final UpdateListener listener, TravelOptLocale locale) {
         ticket = new TicketListBox(false);
         //ticketHelpInfo = new HelpInfo("Determine the number of tickets you need to use per day.");
 
-        weekdays = new WeekdayEditor(listener, worker, locale);
+        weekdays = new WeekdayEditor(listener, locale);
 
         Panel root = new VerticalPanel();
         root.add(new Label("Number of tickets per day:"));
@@ -30,7 +28,6 @@ public class TicketEditor extends Composite {
             @Override
             public void onChange(ChangeEvent changeEvent) {
                 listener.updated();
-                TicketEditor.this.worker.requestWork();
             }
         });
     }

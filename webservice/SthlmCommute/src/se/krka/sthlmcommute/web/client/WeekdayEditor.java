@@ -10,12 +10,10 @@ import se.krka.travelopt.localization.TravelOptLocale;
 public class WeekdayEditor extends Composite {
     private final Grid weekDayForm;
     private final UpdateListener listener;
-    private final DelayedWork worker;
     private final TravelOptLocale locale;
 
-    public WeekdayEditor(UpdateListener listener, DelayedWork worker, TravelOptLocale locale) {
+    public WeekdayEditor(UpdateListener listener, TravelOptLocale locale) {
         this.listener = listener;
-        this.worker = worker;
         this.locale = locale;
         weekDayForm = createWeekDayForm();
 
@@ -34,7 +32,6 @@ public class WeekdayEditor extends Composite {
                 @Override
                 public void onChange(ChangeEvent changeEvent) {
                     listener.updated();
-                    worker.requestWork();
                 }
             });
 

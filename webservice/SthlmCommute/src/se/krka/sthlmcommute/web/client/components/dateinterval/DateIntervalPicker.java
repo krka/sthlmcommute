@@ -20,13 +20,12 @@ public class DateIntervalPicker extends Composite {
     private Date highlightEnd;
 
     private final List<DateIntervalUpdateListener> listeners = new ArrayList<DateIntervalUpdateListener>();
-    private final Grid root;
 
     public DateIntervalPicker() {
         from = new DatePicker();
         to = new DatePicker();
 
-        root = new Grid(2, 2);
+        Grid root = new Grid(2, 2);
         root.setWidget(0, 0, new Label("From:"));
         root.setWidget(0, 1, new Label("To:"));
         root.setWidget(1, 0, from);

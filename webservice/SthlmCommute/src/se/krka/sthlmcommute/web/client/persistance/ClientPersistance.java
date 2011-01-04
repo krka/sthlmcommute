@@ -15,13 +15,8 @@ public class ClientPersistance {
         }
     }
 
-    public void onLoad() {
-        for (ClientPersistor clientPersistor : persistorList) {
-            clientPersistor.onLoad();
-        }
-    }
-
     public void add(ClientPersistor persistor) {
         persistorList.add(persistor);
+        persistor.onLoad();
     }
 }
