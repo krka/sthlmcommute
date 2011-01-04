@@ -9,6 +9,7 @@
 * optimize TravelOpt for better JS performance by removing dates from the solver
 * spara inställningar i cookies
 * create favicon
+* Fix weekday-display for english.
 
 === ONGOING ====
 * gwt localization
@@ -23,7 +24,6 @@
 - Kupong / Coupon - Sånt som finns på förköpshäfte
 
 
-* Fix weekday-display for english.
 * explain ticket and overrides
 * explain optimize
 * provide examples
