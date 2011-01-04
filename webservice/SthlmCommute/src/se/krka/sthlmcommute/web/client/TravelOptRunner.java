@@ -11,6 +11,7 @@ import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.async.GenericFailureAsyncCallback;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.*;
 import se.krka.travelopt.localization.TravelOptLocale;
 

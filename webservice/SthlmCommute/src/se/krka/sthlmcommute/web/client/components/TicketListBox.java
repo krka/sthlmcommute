@@ -1,4 +1,4 @@
-package se.krka.sthlmcommute.web.client;
+package se.krka.sthlmcommute.web.client.components;
 
 import com.google.gwt.user.client.ui.ListBox;
 

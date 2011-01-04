@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.Util;
 import se.krka.travelopt.localization.TravelOptLocale;
 

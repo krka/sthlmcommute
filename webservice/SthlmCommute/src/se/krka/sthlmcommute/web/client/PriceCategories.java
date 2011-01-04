@@ -11,6 +11,8 @@ import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.components.RadioGroup;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.Prices;
 import se.krka.travelopt.TicketType;
 import se.krka.travelopt.localization.TravelOptLocale;

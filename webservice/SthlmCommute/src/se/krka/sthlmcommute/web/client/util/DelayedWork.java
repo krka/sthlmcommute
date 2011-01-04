@@ -1,4 +1,4 @@
-package se.krka.sthlmcommute.web.client;
+package se.krka.sthlmcommute.web.client.util;
 
 import com.google.gwt.user.client.Timer;
 

@@ -2,6 +2,7 @@ package se.krka.sthlmcommute.web.client.persistance;
 
 import com.google.gwt.user.client.Cookies;
 import se.krka.sthlmcommute.web.client.*;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
 import se.krka.sthlmcommute.web.client.persistance.OptimizePersistor;
 import se.krka.sthlmcommute.web.client.persistance.PriceCategoryClientPersistor;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelInterface {

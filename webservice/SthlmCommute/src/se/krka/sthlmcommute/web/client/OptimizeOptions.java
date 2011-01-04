@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import se.krka.sthlmcommute.web.client.components.RadioGroup;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class OptimizeOptions extends Composite {

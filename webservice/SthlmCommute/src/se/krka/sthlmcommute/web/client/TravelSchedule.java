@@ -7,10 +7,11 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
-import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
 import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
 import se.krka.sthlmcommute.web.client.persistance.EntryPersistor;
+import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelSchedule extends Composite {
