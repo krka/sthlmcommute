@@ -28,7 +28,6 @@ public class OptimizeOptions extends Composite {
         ClickHandler handler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                RootPanel.get().add(new Label("Got a click event, and is now " + isEnabled()));
                 ticketEditor.setVisible(isEnabled());
                 delayedWork.requestWork();
             }
