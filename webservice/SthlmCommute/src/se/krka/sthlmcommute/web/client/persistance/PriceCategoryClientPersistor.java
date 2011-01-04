@@ -1,7 +1,6 @@
-package se.krka.sthlmcommute.web.client.persistors;
+package se.krka.sthlmcommute.web.client.persistance;
 
 import com.google.gwt.user.client.Cookies;
-import se.krka.sthlmcommute.web.client.ClientPersistor;
 import se.krka.sthlmcommute.web.client.PriceCategories;
 
 public class PriceCategoryClientPersistor implements ClientPersistor {

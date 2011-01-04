@@ -1,6 +1,4 @@
-package se.krka.sthlmcommute.web.client;
-
-import com.google.gwt.user.client.Cookies;
+package se.krka.sthlmcommute.web.client.persistance;
 
 import java.util.ArrayList;
 import java.util.List;

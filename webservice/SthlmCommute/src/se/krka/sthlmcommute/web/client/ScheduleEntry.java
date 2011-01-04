@@ -1,12 +1,9 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateInterval;
 import se.krka.travelopt.Util;
 
 import java.util.Date;
-import java.util.List;
 
 public class ScheduleEntry implements Comparable<ScheduleEntry> {
     private final DateInterval interval = new DateInterval(null, null);

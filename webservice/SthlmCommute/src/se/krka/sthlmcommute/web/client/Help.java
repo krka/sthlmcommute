@@ -7,6 +7,8 @@ import com.google.gwt.view.client.RowCountChangeEvent;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.components.HelpElement;
 import se.krka.sthlmcommute.web.client.components.HelpSection;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
 
 import java.util.Date;
 
@@ -16,7 +18,7 @@ public class Help {
     private final HelpElement selectDates;
     private final HelpSection helpSection;
 
-    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule, RangeEditor rangeEditor) {
+    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule, DateIntervalPicker rangeEditor) {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
@@ -49,7 +51,7 @@ public class Help {
                 });
             }
         });
-        rangeEditor.getIntervalPicker().addListener(new DateIntervalUpdateListener() {
+        rangeEditor.addListener(new DateIntervalUpdateListener() {
             @Override
             public void intervalChanged(DateIntervalPicker picker, Date fromValue, Date toValue) {
                 if (fromValue != null && toValue != null) {

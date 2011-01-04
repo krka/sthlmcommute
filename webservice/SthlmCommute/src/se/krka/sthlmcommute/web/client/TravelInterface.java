@@ -2,8 +2,9 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
-import se.krka.sthlmcommute.web.client.persistors.OptimizePersistor;
-import se.krka.sthlmcommute.web.client.persistors.PriceCategoryClientPersistor;
+import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
+import se.krka.sthlmcommute.web.client.persistance.OptimizePersistor;
+import se.krka.sthlmcommute.web.client.persistance.PriceCategoryClientPersistor;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelInterface {

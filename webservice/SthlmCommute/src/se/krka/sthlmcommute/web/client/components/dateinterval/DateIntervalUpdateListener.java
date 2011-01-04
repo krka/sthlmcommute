@@ -1,4 +1,4 @@
-package se.krka.sthlmcommute.web.client;
+package se.krka.sthlmcommute.web.client.components.dateinterval;
 
 import java.util.Date;
 

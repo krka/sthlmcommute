@@ -1,7 +1,10 @@
-package se.krka.sthlmcommute.web.client;
+package se.krka.sthlmcommute.web.client.components.dateinterval;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import se.krka.travelopt.Util;
 
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DateIntervalPicker {
+public class DateIntervalPicker extends Composite {
     private final DatePicker from;
     private final DatePicker to;
 
@@ -17,11 +20,18 @@ public class DateIntervalPicker {
     private Date highlightEnd;
 
     private final List<DateIntervalUpdateListener> listeners = new ArrayList<DateIntervalUpdateListener>();
+    private final Grid root;
 
-    public DateIntervalPicker(DatePicker from, DatePicker to) {
-        this.from = from;
-        this.to = to;
+    public DateIntervalPicker() {
+        from = new DatePicker();
+        to = new DatePicker();
 
+        root = new Grid(2, 2);
+        root.setWidget(0, 0, new Label("From:"));
+        root.setWidget(0, 1, new Label("To:"));
+        root.setWidget(1, 0, from);
+        root.setWidget(1, 1, to);
+        initWidget(root);
         install();
     }
 

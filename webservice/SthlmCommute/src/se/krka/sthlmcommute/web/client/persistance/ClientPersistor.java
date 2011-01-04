@@ -1,4 +1,4 @@
-package se.krka.sthlmcommute.web.client;
+package se.krka.sthlmcommute.web.client.persistance;
 
 public interface ClientPersistor {
     void onExit();

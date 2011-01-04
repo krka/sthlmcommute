@@ -1,6 +1,7 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.view.client.ListDataProvider;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateInterval;
 import se.krka.travelopt.Util;
 
 import java.util.Date;

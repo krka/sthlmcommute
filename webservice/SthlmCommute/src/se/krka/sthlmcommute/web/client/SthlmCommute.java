@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
 import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
 

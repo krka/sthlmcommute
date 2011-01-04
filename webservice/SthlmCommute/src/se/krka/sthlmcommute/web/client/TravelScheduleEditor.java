@@ -1,12 +1,14 @@
 package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.Date;
 
 public class TravelScheduleEditor extends Composite {
-    private final RangeEditor rangeEditor;
+    private final DateIntervalPicker rangeEditor;
 
     private final TicketEditor ticketEditor;
 
@@ -17,7 +19,7 @@ public class TravelScheduleEditor extends Composite {
     public TravelScheduleEditor(DelayedWork worker, TravelOptLocale locale) {
         this.worker = worker;
         VerticalPanel root = new VerticalPanel();
-        rangeEditor = new RangeEditor();
+        rangeEditor = new DateIntervalPicker();
 
         //helpInfo = new HelpInfo("Choose the time period for when you need to travel.");
         ticketEditor = new TicketEditor(new UpdateListener() {
@@ -33,7 +35,7 @@ public class TravelScheduleEditor extends Composite {
         initWidget(root);
         setVisible(false);
 
-        rangeEditor.getIntervalPicker().addListener(new DateIntervalUpdateListener() {
+        rangeEditor.addListener(new DateIntervalUpdateListener() {
             @Override
             public void intervalChanged(DateIntervalPicker picker, Date fromValue, Date toValue) {
                 if (fromValue != null && toValue != null) {
@@ -66,7 +68,7 @@ public class TravelScheduleEditor extends Composite {
             rangeEditor.getTo().setCurrentMonth(to);
         }
 
-        rangeEditor.getIntervalPicker().applyHighlight();
+        rangeEditor.applyHighlight();
 
         int defaultValue = entry.getWeekdays().getDefaultValue();
         ticketEditor.getTicket().setSelectedTicket(defaultValue);
@@ -74,7 +76,7 @@ public class TravelScheduleEditor extends Composite {
         setVisible(true);
     }
 
-    public RangeEditor getRangeEditor() {
+    public DateIntervalPicker getRangeEditor() {
         return rangeEditor;
     }
 }
