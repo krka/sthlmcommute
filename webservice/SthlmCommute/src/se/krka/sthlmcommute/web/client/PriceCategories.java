@@ -48,8 +48,8 @@ public class PriceCategories extends Composite {
 
 
         radioGroup = new RadioGroup("choosePriceCategories");
-        radioGroup.addRadioButton("full", clientConstants.fullPrice());
-        radioGroup.addRadioButton("reduced", clientConstants.reducedPrice());
+        radioGroup.addRadioButton("full", clientConstants.fullprice());
+        radioGroup.addRadioButton("reduced", clientConstants.reducedprice());
         radioGroup.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -76,7 +76,7 @@ public class PriceCategories extends Composite {
         disclosurePanel.setWidth("40em");
         panel.add(disclosurePanel);
 
-        initWidget(UIUtil.wrapCaption(clientConstants.choosePriceCategories(), panel));
+        initWidget(UIUtil.wrapCaption(clientConstants.choosePriceCategory(), panel));
     }
 
     private DisclosurePanel createPricelist() {

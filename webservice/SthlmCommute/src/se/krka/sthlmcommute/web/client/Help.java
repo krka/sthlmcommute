@@ -26,8 +26,8 @@ public class Help {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
-                clientConstants.choosePriceCategories(),
-                new Label(clientConstants.choosePriceCategoriesHelp()),
+                clientConstants.choosePriceCategory(),
+                new Label(clientConstants.choosePriceCategoryHelp()),
                 priceCategories);
 
         newEntry = helpSection.createAndAdd(
