@@ -26,7 +26,8 @@ public class WeekdayEditor extends Composite {
     private Grid createWeekDayForm() {
         Grid grid = new Grid(2, 7);
         for (int day = 0; day < 7; day++) {
-            grid.setWidget(0, day, new Label(locale.weekDayName(day).substring(0, 1)));
+            int index = getIndexForWeekday(day);
+            grid.setWidget(0, index, new Label(locale.weekDayName(day).substring(0, 1)));
             final TicketListBox listBox = new TicketListBox(true);
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override
@@ -35,18 +36,24 @@ public class WeekdayEditor extends Composite {
                 }
             });
 
-            grid.setWidget(1, day, listBox);
+            grid.setWidget(1, index, listBox);
         }
         return grid;
 
     }
 
-    public int getWeekday(int i) {
-        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, i);
+    private int getIndexForWeekday(int day) {
+        return (7 + day - locale.firstDayOfWeek()) % 7;
+    }
+
+    public int getWeekday(int day) {
+        int index = getIndexForWeekday(day);
+        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, index);
         return listBox.getSelectedTicket();
     }
 
-    public void setWeekDay(int index, int value) {
+    public void setWeekDay(int day, int value) {
+        int index = getIndexForWeekday(day);
         TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, index);
         listBox.setSelectedTicket(value);
     }

@@ -33,4 +33,6 @@ public interface TravelOptLocale {
     String mustSelectPeriod();
 
     String formatDay(int dayOrdinal);
+
+    int firstDayOfWeek();
 }

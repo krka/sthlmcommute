@@ -22,5 +22,7 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
     String when();
 
     @Key("choosePriceCategory")
-    String priceCategories();
+    String choosePriceCategories();
+
+    String choosePriceCategoriesHelp();
 }

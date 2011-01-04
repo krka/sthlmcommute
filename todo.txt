@@ -19,7 +19,11 @@
 * unify WholeDays and SimpleTicket ?
 
 * figure out best terminology.
+- Biljett / Ticket - sådant man faktiskt köper, dyker upp i resultatvyn.
+- Kupong / Coupon - Sånt som finns på förköpshäfte
 
+
+* Fix weekday-display for english.
 * explain ticket and overrides
 * explain optimize
 * provide examples

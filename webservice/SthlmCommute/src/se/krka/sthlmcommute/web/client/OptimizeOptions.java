@@ -2,9 +2,7 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.components.RadioGroup;
 import se.krka.sthlmcommute.web.client.util.DelayedWork;
 import se.krka.sthlmcommute.web.client.util.UIUtil;
@@ -30,6 +28,7 @@ public class OptimizeOptions extends Composite {
         ClickHandler handler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                RootPanel.get().add(new Label("Got a click event, and is now " + isEnabled()));
                 ticketEditor.setVisible(isEnabled());
                 delayedWork.requestWork();
             }
@@ -63,6 +62,10 @@ public class OptimizeOptions extends Composite {
     }
 
     public boolean isEnabled() {
-        return radioGroup.getSelected().getFormValue().equals("extend");
+        RadioGroup.Button selected = radioGroup.getSelected();
+        if (selected == null) {
+            return false;
+        }
+        return selected.getFormValue().equals("extend");
     }
 }

@@ -82,6 +82,11 @@ public class SwedishLocale implements TravelOptLocale {
         return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
     }
 
+    @Override
+    public int firstDayOfWeek() {
+        return 0;
+    }
+
     private String weekDay(int dayOrdinal) {
         return weekDayName(Util.getDayOfWeek(dayOrdinal));
     }

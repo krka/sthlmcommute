@@ -30,7 +30,7 @@ public class TravelInterface {
             }
         });
 
-        help = new Help(priceCategories, travelSchedule, travelOptRunner);
+        help = new Help(clientConstants, priceCategories, travelSchedule, travelOptRunner);
 
         persistance.add(new PriceCategoryClientPersistor(priceCategories));
         persistance.add(new OptimizePersistor(optimizeOptions));
@@ -44,7 +44,7 @@ public class TravelInterface {
 
     public void addComponents() {
         RootPanel.get("helpsection").add(help.getHelpSection());
-        RootPanel.get("priceCategories").add(priceCategories);
+        RootPanel.get("choosePriceCategories").add(priceCategories);
         RootPanel.get("travelSchedule").add(travelSchedule);
         RootPanel.get("extendContainer").add(optimizeOptions);
     }

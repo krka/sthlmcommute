@@ -22,13 +22,12 @@ public class Help {
     private final HelpElement selectTickets;
     private final HelpElement shownResult;
 
-    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule, TravelOptRunner travelOptRunner) {
+    public Help(ClientConstants clientConstants, PriceCategories priceCategories, TravelSchedule travelSchedule, TravelOptRunner travelOptRunner) {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
-                "Choosing a price category",
-                new Label("Are you paying full price or do you get a discount for being under 20 years old or being a senior citizen? " +
-                        "Pick the appropriate option."),
+                clientConstants.choosePriceCategories(),
+                new Label(clientConstants.choosePriceCategoriesHelp()),
                 priceCategories);
 
         newEntry = helpSection.createAndAdd(
