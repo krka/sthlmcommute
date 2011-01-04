@@ -8,6 +8,7 @@
 * remove unnecessary server side libs
 * optimize TravelOpt for better JS performance by removing dates from the solver
 * spara inställningar i cookies
+* create favicon
 
 === ONGOING ====
 * gwt localization
@@ -19,7 +20,6 @@
 
 * figure out best terminology.
 
-* create favicon and android icon
 * explain ticket and overrides
 * explain optimize
 * provide examples

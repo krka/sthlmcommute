@@ -1,7 +1,5 @@
 package se.krka.sthlmcommute.web.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection;
@@ -21,10 +19,9 @@ public class PriceCategories extends Composite {
     private final RadioGroup radioGroup;
 
     private RadioGroup.Button lastSelected;
-    private HelpSection helpSection;
     private final AsyncWidget<CellTable<TicketType>> asyncWidget;
 
-    public PriceCategories(final TravelInterface travelInterface, ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
+    public PriceCategories(ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
 
         asyncWidget = new AsyncWidget<CellTable<TicketType>>(new AsyncWidgetLoader<CellTable<TicketType>>() {
             @Override
@@ -54,16 +51,12 @@ public class PriceCategories extends Composite {
         radioGroup.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                asyncWidget.runWhenReady(new AsyncWidgetUsage<CellTable<TicketType>>() {
+                asyncWidget.runASAP(new AsyncWidgetUsage<CellTable<TicketType>>() {
                     @Override
                     public void run(CellTable<TicketType> widget) {
                         widget.setRowData(Prices.getPriceCategory(getSelected(), locale).getTicketTypes());
                     }
                 });
-                travelInterface.doneWithPriceCategory();
-                if (helpSection != null) {
-                    helpSection.selectedPriceCategory();
-                }
 
                 RadioGroup.Button newSelected = radioGroup.getSelected();
                 if (lastSelected != newSelected) {
@@ -94,10 +87,6 @@ public class PriceCategories extends Composite {
             return null;
         }
         return button.getFormValue();
-    }
-
-    public void addListener(HelpSection helpSection) {
-        this.helpSection = helpSection;
     }
 
     public RadioGroup getRadioGroup() {

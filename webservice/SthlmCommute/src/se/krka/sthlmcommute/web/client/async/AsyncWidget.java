@@ -24,10 +24,22 @@ public class AsyncWidget<T extends Widget> extends Composite implements HasWidge
     }
 
     public void startPrefetch() {
-        runWhenReady(EmptyWidgetUsage.<T>getInstance());
+        runASAP(EmptyWidgetUsage.<T>getInstance());
     }
 
     public void runWhenReady(final AsyncWidgetUsage<T> usage) {
+        switch (state) {
+            case 0:
+            case 1:
+                pending.add(usage);
+                break;
+            case 2:
+                usage.run(widget);
+                break;
+        }
+    }
+
+    public void runASAP(final AsyncWidgetUsage<T> usage) {
         switch (state) {
             case 0:
                 state = 1;

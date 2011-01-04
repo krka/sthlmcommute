@@ -66,13 +66,6 @@ public class DateIntervalPicker {
         to.addValueChangeHandler(handler);
     }
 
-    private boolean eq(Date x, Date y) {
-        if (x == null) {
-            return y == null;
-        }
-        return x.equals(y);
-    }
-
     private boolean isHighlighted() {
         return highlightStart != null;
     }

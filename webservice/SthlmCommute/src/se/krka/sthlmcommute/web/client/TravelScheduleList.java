@@ -24,7 +24,7 @@ public class TravelScheduleList extends Composite {
     private final ListDataProvider<ScheduleEntry> listDataProvider;
 
     private final DelayedWork collisionDetector;
-    private HelpSection helpSection;
+    private final CellList<ScheduleEntry> scheduleEntryCellList;
 
     public TravelScheduleList(final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
         this.travelScheduleEditor = travelScheduleEditor;
@@ -53,7 +53,7 @@ public class TravelScheduleList extends Composite {
                 safeHtmlBuilder.appendHtmlConstant("<span>" + ticketsPerWeek + " ticket/week</span>");
             }
         };
-        CellList<ScheduleEntry> scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
+        scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
 
         selectionModel = new SingleSelectionModel<ScheduleEntry>();
         scheduleEntryCellList.setSelectionModel(selectionModel);
@@ -75,7 +75,6 @@ public class TravelScheduleList extends Composite {
 
         collisionDetector = new DelayedWork(new CollisionDetector(list, listDataProvider), 500);
         initWidget(UIUtil.wrapCaption("Entries:", root));
-
     }
 
     private void setError(SafeHtmlBuilder safeHtmlBuilder, String reason) {
@@ -86,12 +85,11 @@ public class TravelScheduleList extends Composite {
         ScheduleEntry entry = new ScheduleEntry(new Weekdays(0, createDefaultWeekdays()));
         list.add(entry);
         selectionModel.setSelected(entry, true);
-
-        if (helpSection != null) {
-            helpSection.createdAnEntry();
-        }
-
         return entry;
+    }
+
+    public CellList<ScheduleEntry> getCellList() {
+        return scheduleEntryCellList;
     }
 
     private int[] createDefaultWeekdays() {
@@ -109,10 +107,6 @@ public class TravelScheduleList extends Composite {
 
     public List<ScheduleEntry> getList() {
         return list;
-    }
-
-    public void addListener(HelpSection helpSection) {
-        this.helpSection = helpSection;
     }
 
     public void removeSelectedEntry() {

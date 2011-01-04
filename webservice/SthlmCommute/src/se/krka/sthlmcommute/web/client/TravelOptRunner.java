@@ -120,7 +120,7 @@ public class TravelOptRunner implements Runnable {
         errorLabel.setVisible(false);
         final ArrayList<Ticket> list = new ArrayList<Ticket>();
         addTotal(list, Money.ZERO);
-        asyncTable.runWhenReady(new AsyncWidgetUsage<CellTable<Ticket>>() {
+        asyncTable.runASAP(new AsyncWidgetUsage<CellTable<Ticket>>() {
             @Override
             public void run(CellTable<Ticket> widget) {
                 widget.setRowData(list);
@@ -163,7 +163,7 @@ public class TravelOptRunner implements Runnable {
     private void renderResult(TravelResult result) {
         final List<Ticket> tickets = summarize(result.getTickets());
         addTotal(tickets, result.getTotalCost());
-        asyncTable.runWhenReady(new AsyncWidgetUsage<CellTable<Ticket>>() {
+        asyncTable.runASAP(new AsyncWidgetUsage<CellTable<Ticket>>() {
             @Override
             public void run(CellTable<Ticket> widget) {
                 widget.setRowData(tickets);

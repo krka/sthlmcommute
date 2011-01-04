@@ -48,7 +48,7 @@ public class TravelSchedule extends Composite {
         deleteButton.setEnabled(false);
 
 
-        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+        asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(final TravelScheduleList widget) {
                 widget.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -65,7 +65,7 @@ public class TravelSchedule extends Composite {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 newButton.setEnabled(false);
-                asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+                asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
                     @Override
                     public void run(final TravelScheduleList widget) {
                         widget.createNew();
@@ -79,7 +79,7 @@ public class TravelSchedule extends Composite {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 if (asyncTravelScheduleList.isReady()) {
-                    asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+                    asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
                         @Override
                         public void run(TravelScheduleList widget) {
                             widget.removeSelectedEntry();
@@ -102,20 +102,11 @@ public class TravelSchedule extends Composite {
         return travelScheduleEditor.getRangeEditor();
     }
 
-    public void addListener(final HelpSection helpSection) {
-        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+    public void addPersistance(final ClientPersistance persistance, final Help help) {
+        asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
-                widget.addListener(helpSection);
-            }
-        });
-    }
-
-    public void addPersistance(final ClientPersistance persistance) {
-        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
-            @Override
-            public void run(TravelScheduleList widget) {
-                persistance.add(new EntryPersistor(widget));
+                persistance.add(new EntryPersistor(widget, help, worker));
             }
         });
     }

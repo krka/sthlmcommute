@@ -2,24 +2,13 @@ package se.krka.sthlmcommute.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.MultiSelectionModel;
-import se.krka.travelopt.*;
 import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
-
-import java.util.*;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -39,7 +28,7 @@ public class SthlmCommute implements EntryPoint {
 
         TravelInterface travelinterface = new TravelInterface(travelOptLocale, clientConstants, persistance);
 
-        travelinterface.setup();
+        travelinterface.addComponents();
 
         persistance.onLoad();
         Window.addCloseHandler(new CloseHandler<Window>() {
