@@ -21,26 +21,28 @@ public class TravelSchedule extends Composite {
 
     private final DelayedWork worker;
     private final Button newButton;
+    private final ClientConstants clientConstants;
 
-    public TravelSchedule(ClientConstants clientConstants, final TravelOptLocale locale, final DelayedWork worker) {
+    public TravelSchedule(final ClientConstants clientConstants, final TravelOptLocale locale, final DelayedWork worker, final ClientMessages clientMessages) {
         this.worker = worker;
+        this.clientConstants = clientConstants;
         asyncTravelScheduleList = new AsyncWidget<TravelScheduleList>(new AsyncWidgetLoader<TravelScheduleList>() {
             @Override
             public TravelScheduleList load() {
-                return new TravelScheduleList(locale, worker);
+                return new TravelScheduleList(locale, worker, clientConstants, clientMessages);
             }
         });
 
-        newButton = new Button("New entry");
+        newButton = new Button(clientConstants.newEntry());
 
-        initWidget(UIUtil.wrapCaption("Travel schedule", createView()));
+        initWidget(UIUtil.wrapCaption(clientConstants.schedule(), createView()));
     }
 
     private HorizontalPanel createView() {
         final HorizontalPanel horiz = new HorizontalPanel();
         VerticalPanel vert = new VerticalPanel();
 
-        final Button deleteButton = new Button("Delete");
+        final Button deleteButton = new Button(clientConstants.delete());
         deleteButton.setEnabled(false);
 
 

@@ -3,28 +3,29 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import se.krka.sthlmcommute.web.client.components.TicketListBox;
-import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.components.CouponListBox;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
 
-public class TicketEditor extends Composite {
+public class CouponEditor extends Composite {
 
-    private final TicketListBox ticket;
+    private final CouponListBox coupon;
     private final WeekdayEditor weekdays;
 
-    public TicketEditor(final UpdateListener listener, TravelOptLocale locale) {
-        ticket = new TicketListBox(false);
-        //ticketHelpInfo = new HelpInfo("Determine the number of tickets you need to use per day.");
+    public CouponEditor(final UpdateListener listener, TravelOptLocale locale, ClientConstants clientConstants) {
+        coupon = new CouponListBox(false);
 
-        weekdays = new WeekdayEditor(listener, locale);
+        weekdays = new WeekdayEditor(listener, locale, clientConstants);
 
         Panel root = new VerticalPanel();
-        root.add(new Label("Number of tickets per day:"));
-        root.add(ticket);
-        root.add(weekdays);
-        initWidget(root);
 
-        ticket.addChangeHandler(new ChangeHandler() {
+        root.add(new Label(clientConstants.couponsPerDay()));
+        root.add(coupon);
+        root.add(UIUtil.spacer("1px", "1em"));
+        root.add(weekdays);
+        initWidget(UIUtil.wrapCaption(clientConstants.coupons(), root));
+
+        coupon.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent changeEvent) {
                 listener.updated();
@@ -33,20 +34,20 @@ public class TicketEditor extends Composite {
     }
 
     public Weekdays getWeekdays() {
-        return new Weekdays(ticket.getSelectedTicket(), weekdays.getTickets());
+        return new Weekdays(coupon.getSelectedCoupon(), weekdays.getCoupons());
     }
 
     public WeekdayEditor getWeekdayEditor() {
         return weekdays;
     }
 
-    public TicketListBox getTicket() {
-        return ticket;
+    public CouponListBox getCoupon() {
+        return coupon;
     }
 
     public String serialize() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(ticket.serialize());
+        stringBuilder.append(coupon.serialize());
         for (int i = 0; i < 7; i++) {
             stringBuilder.append(",");
             stringBuilder.append(weekdays.getWeekday(i));
@@ -56,7 +57,7 @@ public class TicketEditor extends Composite {
 
     public void deserialize(String data) {
         String[] values = data.split(",");
-        ticket.deserialize(values[0]);
+        coupon.deserialize(values[0]);
         for (int i = 0; i < 7; i++) {
             weekdays.setWeekDay(i, Integer.parseInt(values[i + 1]));
         }

@@ -5,11 +5,11 @@ import se.krka.travelopt.localization.TravelOptLocale;
 public class TravelPlanDate implements Comparable<TravelPlanDate> {
     private final TravelOptLocale locale;
 	private final int dayOrdinal;
-	private final int numTickets;
+	private final int numCoupons;
 
-	public TravelPlanDate(int dayOrdinal, int numTickets, TravelOptLocale locale) {
+	public TravelPlanDate(int dayOrdinal, int numCoupons, TravelOptLocale locale) {
         this.dayOrdinal = dayOrdinal;
-		this.numTickets = numTickets;
+		this.numCoupons = numCoupons;
         this.locale = locale;
     }
 
@@ -17,13 +17,13 @@ public class TravelPlanDate implements Comparable<TravelPlanDate> {
         return dayOrdinal - travelPlanDate.dayOrdinal;
 	}
 
-	public int getNumTickets() {
-		return numTickets;
+	public int getNumCoupons() {
+		return numCoupons;
 	}
 
 	@Override
 	public String toString() {
-        return locale.travelPlanDate(dayOrdinal, numTickets);
+        return locale.travelPlanDate(dayOrdinal, numCoupons);
 	}
 
     public int getDayOrdinal() {

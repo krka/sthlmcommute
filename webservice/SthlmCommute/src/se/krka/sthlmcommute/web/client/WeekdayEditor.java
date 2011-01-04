@@ -3,8 +3,8 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import se.krka.sthlmcommute.web.client.components.TicketListBox;
-import se.krka.sthlmcommute.web.client.util.DelayedWork;
+import se.krka.sthlmcommute.web.client.components.CouponListBox;
+import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekdayEditor extends Composite {
@@ -12,15 +12,12 @@ public class WeekdayEditor extends Composite {
     private final UpdateListener listener;
     private final TravelOptLocale locale;
 
-    public WeekdayEditor(UpdateListener listener, TravelOptLocale locale) {
+    public WeekdayEditor(UpdateListener listener, TravelOptLocale locale, ClientConstants clientConstants) {
         this.listener = listener;
         this.locale = locale;
         weekDayForm = createWeekDayForm();
 
-        Panel root = new VerticalPanel();
-        root.add(new Label("Exceptions:"));
-        root.add(weekDayForm);
-        initWidget(root);
+        initWidget(UIUtil.wrapVertical(new Label(clientConstants.exceptions()), weekDayForm));
     }
 
     private Grid createWeekDayForm() {
@@ -28,7 +25,7 @@ public class WeekdayEditor extends Composite {
         for (int day = 0; day < 7; day++) {
             int index = getIndexForWeekday(day);
             grid.setWidget(0, index, new Label(locale.weekDayName(day).substring(0, 1)));
-            final TicketListBox listBox = new TicketListBox(true);
+            final CouponListBox listBox = new CouponListBox(true);
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override
                 public void onChange(ChangeEvent changeEvent) {
@@ -48,17 +45,17 @@ public class WeekdayEditor extends Composite {
 
     public int getWeekday(int day) {
         int index = getIndexForWeekday(day);
-        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, index);
-        return listBox.getSelectedTicket();
+        CouponListBox listBox = (CouponListBox) weekDayForm.getWidget(1, index);
+        return listBox.getSelectedCoupon();
     }
 
     public void setWeekDay(int day, int value) {
         int index = getIndexForWeekday(day);
-        TicketListBox listBox = (TicketListBox) weekDayForm.getWidget(1, index);
-        listBox.setSelectedTicket(value);
+        CouponListBox listBox = (CouponListBox) weekDayForm.getWidget(1, index);
+        listBox.setSelectedCoupon(value);
     }
 
-    public int[] getTickets() {
+    public int[] getCoupons() {
         int[] res = new int[7];
         for (int i = 0; i < 7; i++) {
             res[i] = getWeekday(i);
@@ -66,9 +63,9 @@ public class WeekdayEditor extends Composite {
         return res;
     }
 
-    public void setWeekDays(int[] tickets) {
+    public void setWeekDays(int[] coupons) {
         for (int i = 0; i < 7; i++) {
-            setWeekDay(i, tickets[i]);
+            setWeekDay(i, coupons[i]);
         }
     }
 }

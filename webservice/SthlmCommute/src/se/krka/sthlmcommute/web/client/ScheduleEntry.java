@@ -8,16 +8,10 @@ import java.util.Date;
 public class ScheduleEntry implements Comparable<ScheduleEntry> {
     private final DateInterval interval = new DateInterval(null, null);
     private Weekdays weekdays;
-    private boolean overlapping;
 
     public ScheduleEntry(Weekdays weekdays) {
         this.weekdays = weekdays;
 
-    }
-
-    @Override
-    public String toString() {
-        return interval.toString() + " " + weekdays.toString();
     }
 
     public DateInterval getInterval() {
@@ -38,22 +32,14 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
     }
 
     public boolean valid() {
-        return interval.getFrom() != null && interval.getTo() != null && weekdays.countTickets() > 0;
-    }
-
-    public void setOverlapping(boolean overlapping) {
-        this.overlapping = overlapping;
-    }
-
-    public boolean isOverlapping() {
-        return overlapping;
+        return interval.getFrom() != null && interval.getTo() != null && weekdays.countCoupons() > 0;
     }
 
     public String serialize() {
         Date from = interval.getFrom();
         Date to = interval.getTo();
         int defaultValue = weekdays.getDefaultValue();
-        int[] tickets = weekdays.getRawTickets();
+        int[] coupons = weekdays.getRawCoupons();
 
         StringBuilder sb = new StringBuilder();
         sb.append(serialize(from));
@@ -63,7 +49,7 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
         sb.append(defaultValue);
         for (int i = 0; i < 7; i++) {
             sb.append(":");
-            sb.append(tickets[i]);
+            sb.append(coupons[i]);
         }
         return sb.toString();
     }
@@ -78,12 +64,12 @@ public class ScheduleEntry implements Comparable<ScheduleEntry> {
         Date to = deserializeDate(split[1]);
 
         int defaultValue = Integer.parseInt(split[2]);
-        int[] tickets = new int[7];
+        int[] coupons = new int[7];
         for (int i = 0; i < 7; i++) {
-            tickets[i] = Integer.parseInt(split[3 + i]);
+            coupons[i] = Integer.parseInt(split[3 + i]);
         }
         travelScheduleList.updateScheduleEntryInterval(this, from, to);
-        travelScheduleList.updateTickets(this, new Weekdays(defaultValue, tickets));
+        travelScheduleList.updateCoupons(this, new Weekdays(defaultValue, coupons));
     }
 
     private static Date deserializeDate(String s) {

@@ -10,15 +10,6 @@
 * spara inställningar i cookies
 * create favicon
 * Fix weekday-display for english.
-
-=== ONGOING ====
-* gwt localization
-
-
-=== IN QUEUE ====
-* rework overlap
-* unify WholeDays and SimpleTicket ?
-
 * figure out best terminology.
 - Biljett / Ticket - sådant man faktiskt köper, dyker upp i resultatvyn.
 - Kupong / Coupon - Sånt som finns på förköpshäfte
@@ -26,9 +17,15 @@
 - Post / Entry - entries
 - Datumspan / Date span - date interval
 
-* explain ticket and overrides
-* explain optimize
-* provide examples
+=== ONGOING ====
+* gwt localization
+
+
+=== IN QUEUE ====
+* try to remove TravelOptLocale to only have localization in one place.
+* rework overlap
+* unify WholeDays and SimpleTicket ?
+
 * kunna välja rabatthäfte som komplett häfte istället för uppdelat
 * adsense
 

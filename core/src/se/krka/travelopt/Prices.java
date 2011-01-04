@@ -3,6 +3,9 @@ package se.krka.travelopt;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class Prices {
+    public static final String FULL = "full";
+    public static final String REDUCED = "reduced";
+
     private static PriceStructure createSLFullPrice(TravelOptLocale locale) {
         PriceStructure.Builder builder = PriceStructure.builder(locale);
 
@@ -12,7 +15,7 @@ public class Prices {
         builder.addWholeDays("7-dagarsbiljett", Money.parse("260 SEK"), 7);
         builder.addWholeDays("72-timmarsbiljett", Money.parse("200 SEK"), 3);
         builder.addWholeDays("24-timmarsbiljett", Money.parse("100 SEK"), 1);
-        builder.addSimpleTicket("Förköpsremsa", Money.parse("180 SEK"), 16);
+        builder.addCouponTicket("Förköpsremsa", Money.parse("180 SEK"), 16);
 
         return builder.build();
     }
@@ -26,13 +29,13 @@ public class Prices {
         builder.addWholeDays("7-dagarsbiljett", Money.parse("200 SEK"), 7);
         builder.addWholeDays("72-timmarsbiljett", Money.parse("120 SEK"), 3);
         builder.addWholeDays("24-timmarsbiljett", Money.parse("60 SEK"), 1);
-        builder.addSimpleTicket("Förköpsremsa", Money.parse("110 SEK"), 16);
+        builder.addCouponTicket("Förköpsremsa", Money.parse("110 SEK"), 16);
 
         return builder.build();
     }
 
     public static PriceStructure getPriceCategory(String priceCategory, TravelOptLocale locale) {
-        if (priceCategory.equals("reduced")) {
+        if (priceCategory.equals(REDUCED)) {
             return createSLReducedPrice(locale);
         }
         return createSLFullPrice(locale);

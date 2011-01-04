@@ -20,12 +20,12 @@ public class WholeDays implements TicketType {
 		return numDays;
 	}
 
-	public Money cost(int numTickets) {
+	public Money cost(int numCoupons) {
 		return price;
 	}
 
     @Override
-    public int getCount(int numTickets) {
+    public int getCount(int numCoupons) {
         return 1;
     }
 

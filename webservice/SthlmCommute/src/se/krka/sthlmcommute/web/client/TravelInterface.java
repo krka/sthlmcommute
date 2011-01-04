@@ -15,14 +15,14 @@ public class TravelInterface {
     private final OptimizeOptions optimizeOptions;
     private final Help help;
 
-    public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants, final ClientPersistance persistance) {
-        final TravelOptRunner travelOptRunner = new TravelOptRunner(locale);
+    public TravelInterface(TravelOptLocale locale, ClientConstants clientConstants, final ClientPersistance persistance, ClientMessages clientMessages) {
+        final TravelOptRunner travelOptRunner = new TravelOptRunner(locale, clientConstants);
         final DelayedWork worker = new DelayedWork(travelOptRunner);
 
         priceCategories = new PriceCategories(clientConstants, worker, locale);
-        travelSchedule = new TravelSchedule(clientConstants, locale, worker);
+        travelSchedule = new TravelSchedule(clientConstants, locale, worker, clientMessages);
 
-        optimizeOptions = new OptimizeOptions(worker, locale);
+        optimizeOptions = new OptimizeOptions(worker, locale, clientConstants);
         travelSchedule.getAsyncList().runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
@@ -30,7 +30,7 @@ public class TravelInterface {
             }
         });
 
-        help = new Help(clientConstants, priceCategories, travelSchedule, travelOptRunner);
+        help = new Help(clientConstants, priceCategories, travelSchedule, travelOptRunner, optimizeOptions);
 
         persistance.add(new PriceCategoryClientPersistor(priceCategories));
         persistance.add(new OptimizePersistor(optimizeOptions));

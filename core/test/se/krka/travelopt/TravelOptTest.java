@@ -5,13 +5,14 @@ import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
 public class TravelOptTest {
 
     final TravelOptLocale locale = EnglishLocale.INSTANCE;
-    private final TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory("full", locale));
+    private final TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(Prices.FULL, locale));
 
     @Test
 	public void testEmpty() {
@@ -23,7 +24,7 @@ public class TravelOptTest {
 	@Test
 	public void testSingleDay() {
         TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-19")).
 				build();
 		TravelResult result = travelOpt.findOptimum(travelPlan);
@@ -35,7 +36,7 @@ public class TravelOptTest {
 	@Test
 	public void testTwoDays() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-19")).
 				addDay(Util.parseDate("2010-12-20")).
 				build();
@@ -51,7 +52,7 @@ public class TravelOptTest {
 	@Test
 	public void testFourDays() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-19")).
 				addDay(Util.parseDate("2010-12-20")).
 				addDay(Util.parseDate("2010-12-21")).
@@ -67,7 +68,7 @@ public class TravelOptTest {
 	@Test
 	public void testWithGap() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-18")).
 				addDay(Util.parseDate("2010-12-19")).
 				addDay(Util.parseDate("2010-12-20")).
@@ -116,7 +117,7 @@ public class TravelOptTest {
 	@Test
 	public void testWithGapExtended() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addPeriod(Util.parseDate("2010-12-18"), Util.parseDate("2010-12-23")).
 				addPeriod(Util.parseDate("2011-01-03"), Util.parseDate("2011-02-01"), "m-f").
 				buildExtended("m-f");
@@ -131,7 +132,7 @@ public class TravelOptTest {
 	@Test
 	public void testSevenDaysGap() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-01")).
 				addDay(Util.parseDate("2010-12-02")).
 				addDay(Util.parseDate("2010-12-03")).
@@ -149,7 +150,7 @@ public class TravelOptTest {
 	@Test
 	public void test16DaysWithGap() {
 		TravelPlan travelPlan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-01")).
 				addDay(Util.parseDate("2010-12-02")).
 				addDay(Util.parseDate("2010-12-03")).
@@ -183,7 +184,7 @@ public class TravelOptTest {
 	@Test
 	public void testExtend() {
 		TravelPlan plan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-01")).
 				buildExtended("m-f");
 		TravelResult optimum = travelOpt.findOptimum(plan);
@@ -195,7 +196,7 @@ public class TravelOptTest {
 	@Test
 	public void testExtend2() {
 		TravelPlan plan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-01")).
 				buildExtended("m,w,f,sa");
 		TravelResult optimum = travelOpt.findOptimum(plan);
@@ -208,7 +209,7 @@ public class TravelOptTest {
 	@Test
 	public void testExtend3() {
 		TravelPlan plan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addDay(Util.parseDate("2010-12-01")).
 				buildExtended("m");
 		TravelResult optimum = travelOpt.findOptimum(plan);
@@ -220,11 +221,13 @@ public class TravelOptTest {
 
 	@Test
 	public void testRange() {
-		TravelPlan plan = TravelPlan.builder(locale).
-                setTicketsPerDay(1).
+
+        TravelPlan plan = TravelPlan.builder(locale).
+                setCouponsPerDay(1).
                 addPeriod(Util.parseDate("2010-12-01"), Util.parseDate("2010-12-11"), "m-f").
                 build();
 		ArrayList<TravelPlanDate> list = new ArrayList<TravelPlanDate>(plan.getDates());
+        System.out.println(plan);
 		assertEquals(8, list.size());
 		assertEquals(Util.parseDay("2010-12-01"), list.get(0).getDayOrdinal());
 		assertEquals(Util.parseDay("2010-12-02"), list.get(1).getDayOrdinal());
@@ -239,34 +242,34 @@ public class TravelOptTest {
 	@Test
 	public void testWeekDaySettings() {
 		TravelPlan plan = TravelPlan.builder(locale).
-				setTicketsPerDay(6).
+                setCouponsPerDay(6).
 				addPeriod(Util.parseDate("2010-12-13"), Util.parseDate("2010-12-19"), "m-tu:1, f, sa:2").
 				build();
 		ArrayList<TravelPlanDate> list = new ArrayList<TravelPlanDate>(plan.getDates());
 		assertEquals(4, list.size());
 
-		assertEquals(1, list.get(0).getNumTickets());
+		assertEquals(1, list.get(0).getNumCoupons());
 		assertEquals(Util.parseDay("2010-12-13"), list.get(0).getDayOrdinal());
 
-		assertEquals(1, list.get(1).getNumTickets());
+		assertEquals(1, list.get(1).getNumCoupons());
 		assertEquals(Util.parseDay("2010-12-14"), list.get(1).getDayOrdinal());
 
-		assertEquals(6, list.get(2).getNumTickets());
+		assertEquals(6, list.get(2).getNumCoupons());
 		assertEquals(Util.parseDay("2010-12-17"), list.get(2).getDayOrdinal());
 
-		assertEquals(2, list.get(3).getNumTickets());
+		assertEquals(2, list.get(3).getNumCoupons());
 		assertEquals(Util.parseDay("2010-12-18"), list.get(3).getDayOrdinal());
 	}
 
     @Test
     public void testExtend4() {
         TravelPlan plan1 = TravelPlan.builder(locale).
-                setTicketsPerDay(4).
+                setCouponsPerDay(4).
                 addPeriod(Util.parseDate("2011-01-05"), Util.parseDate("2011-01-15")).
                 build();
 
         TravelPlan plan2 = TravelPlan.builder(locale).
-                setTicketsPerDay(4).
+                setCouponsPerDay(4).
                 addPeriod(Util.parseDate("2011-01-05"), Util.parseDate("2011-01-15")).
                 buildExtended("mon-sun:1");
 
@@ -275,4 +278,25 @@ public class TravelOptTest {
         assertEquals(result1, result2);
     }
 
+    @Test
+    public void testEmptyExtend() {
+        TravelPlan plan = TravelPlan.builder(locale).
+                setCouponsPerDay(0).
+                addPeriod(Util.parseDate("2011-01-01"), Util.parseDate("2011-01-01"), "m:1, tu-su:0").
+                buildExtended("mon-sun:0");
+
+        TravelResult result = travelOpt.findOptimum(plan);
+        assertEquals(Money.ZERO, result.getTotalCost());
+    }
+
+    @Test
+    public void testNonEmptyExtend() {
+        TravelPlan plan = TravelPlan.builder(locale).
+                setCouponsPerDay(0).
+                addPeriod(Util.parseDate("2011-01-01"), Util.parseDate("2011-01-01"), "m:1, tu-su:0").
+                buildExtended("mon-sun:1");
+
+        TravelResult result = travelOpt.findOptimum(plan);
+        assertEquals(Money.ZERO, result.getTotalCost());
+    }
 }

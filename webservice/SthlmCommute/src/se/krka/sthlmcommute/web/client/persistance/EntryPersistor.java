@@ -9,6 +9,7 @@ import se.krka.sthlmcommute.web.client.util.DelayedWork;
 import java.util.List;
 
 public class EntryPersistor implements ClientPersistor {
+    public static final String ENTRIES = "entries";
     private final TravelScheduleList travelSchedule;
 
     public EntryPersistor(TravelScheduleList travelSchedule) {
@@ -25,12 +26,12 @@ public class EntryPersistor implements ClientPersistor {
             }
             sb.append(scheduleEntry.serialize());
         }
-        Cookies.setCookie("entries", sb.toString());
+        Cookies.setCookie(ENTRIES, sb.toString());
     }
 
     @Override
     public void onLoad() {
-        String s = Cookies.getCookie("entries");
+        String s = Cookies.getCookie(ENTRIES);
         if (s != null && !s.equals("")) {
             String[] split = s.split(",");
             for (String s2 : split) {

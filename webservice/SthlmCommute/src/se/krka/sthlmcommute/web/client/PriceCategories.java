@@ -18,12 +18,14 @@ import se.krka.travelopt.TicketType;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class PriceCategories extends Composite {
+    public static final String GROUP_NAME = "choosePriceCategories";
     private final RadioGroup radioGroup;
 
     private RadioGroup.Button lastSelected;
     private final AsyncWidget<CellTable<TicketType>> asyncWidget;
+    private final ClientConstants clientConstants;
 
-    public PriceCategories(ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
+    public PriceCategories(final ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
 
         asyncWidget = new AsyncWidget<CellTable<TicketType>>(new AsyncWidgetLoader<CellTable<TicketType>>() {
             @Override
@@ -35,21 +37,22 @@ public class PriceCategories extends Composite {
                     public String getValue(TicketType ticketType) {
                         return ticketType.name();
                     }
-                }, "Name");
+                }, clientConstants.name());
                 cellTable.addColumn(new TextColumn<TicketType>() {
                     @Override
                     public String getValue(TicketType ticketType) {
                         return ticketType.description();
                     }
-                }, "Description");
+                }, clientConstants.description());
                 return cellTable;
             }
         });
 
 
-        radioGroup = new RadioGroup("choosePriceCategories");
-        radioGroup.addRadioButton("full", clientConstants.fullprice());
-        radioGroup.addRadioButton("reduced", clientConstants.reducedprice());
+        radioGroup = new RadioGroup(GROUP_NAME);
+        this.clientConstants = clientConstants;
+        radioGroup.addRadioButton(Prices.FULL, this.clientConstants.fullprice());
+        radioGroup.addRadioButton(Prices.REDUCED, this.clientConstants.reducedprice());
         radioGroup.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -76,11 +79,11 @@ public class PriceCategories extends Composite {
         disclosurePanel.setWidth("40em");
         panel.add(disclosurePanel);
 
-        initWidget(UIUtil.wrapCaption(clientConstants.choosePriceCategory(), panel));
+        initWidget(UIUtil.wrapCaption(this.clientConstants.choosePriceCategory(), panel));
     }
 
     private DisclosurePanel createPricelist() {
-        return UIUtil.wrapDisclosure("Ticket price list", asyncWidget);
+        return UIUtil.wrapDisclosure(clientConstants.ticketPriceList(), asyncWidget);
     }
 
     public String getSelected() {

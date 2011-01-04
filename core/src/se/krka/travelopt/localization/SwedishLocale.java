@@ -15,7 +15,7 @@ public class SwedishLocale implements TravelOptLocale {
         return numDays + " dagar för " + price;
     }
 
-    public String simpleTicketDesc(int numTickets, Money price) {
+    public String couponTicketDesc(int numTickets, Money price) {
         return numTickets + " biljetter för " + price;
     }
 

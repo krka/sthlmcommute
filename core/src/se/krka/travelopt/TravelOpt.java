@@ -12,7 +12,7 @@ public class TravelOpt {
 
 	public TravelResult findOptimum(TravelPlan travelPlan) {
         if (travelPlan.getDates().isEmpty()) {
-            return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
+            return emptyResult(travelPlan);
         }
 
         if (travelPlan.getNumDays() > 2*365) {
@@ -34,18 +34,22 @@ public class TravelOpt {
             } else {
                 firstDay = dayOrdinal;
             }
-            handle(purchases, travelPlanDate.getNumTickets());
+            handle(purchases, travelPlanDate.getNumCoupons());
             lastDay = dayOrdinal;
         }
 
         if (firstDay == 0) {
-            return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
+            return emptyResult(travelPlan);
         }
 
         extendPeriod(purchases);
 
 
         optimizedExtendPeriod(purchases, travelPlan, firstDay);
+
+        if (purchases.isEmpty()) {
+            return emptyResult(travelPlan);
+        }
 
         Stack<Purchase> stack = new Stack<Purchase>();
         Purchase current = lastPurchase(purchases);
@@ -66,12 +70,16 @@ public class TravelOpt {
         return new TravelResult(travelPlan.getLocale(), tickets);
     }
 
-	private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, int firstDay) {
+    private TravelResult emptyResult(TravelPlan travelPlan) {
+        return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
+    }
+
+    private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, int firstDay) {
 		int extensionStart = travelPlan.getExtensionStart();
 		int i = purchases.size() - 1;
 		double bestScore = Double.MAX_VALUE;
 		Purchase bestPurchase = null;
-		while (true) {
+        while (true) {
 			Purchase purchase = getPurchase(i, purchases);
 			int startDate = firstDay + i;
 
@@ -91,8 +99,17 @@ public class TravelOpt {
 			i--;
 		}
 		if (bestPurchase == null) {
-			return;
-		}
+            i = purchases.size() - 1;
+            while (i >= 0) {
+                Purchase purchase = getPurchase(i, purchases);
+                if (firstDay + purchase.startAt < extensionStart) {
+                    break;
+                }
+                purchases.remove(i);
+                i--;
+            }
+            return;
+        }
 		for (i = purchases.size() - 1; i >= 0; i--) {
 			Purchase purchase = getPurchase(i, purchases);
 			if (purchase == bestPurchase) {
@@ -116,13 +133,13 @@ public class TravelOpt {
 		return purchases.get(purchases.size() - 1);
 	}
 
-	private void handle(List<Purchase> purchases, int numTickets) {
+	private void handle(List<Purchase> purchases, int numCoupons) {
 		int i = purchases.size();
 		Purchase best = null;
 		for (TicketType ticketType : priceStructure.getTicketTypes()) {
 			int days = ticketType.numberOfDays();
-			Money cost = ticketType.cost(numTickets);
-            int count = ticketType.getCount(numTickets);
+			Money cost = ticketType.cost(numCoupons);
+            int count = ticketType.getCount(numCoupons);
 
             Purchase prev = getPurchase(i - days, purchases);
 

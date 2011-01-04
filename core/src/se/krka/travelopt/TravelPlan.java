@@ -35,6 +35,9 @@ public class TravelPlan {
     }
 
     public int getNumDays() {
+        if (dates.isEmpty()) {
+            return 0;
+        }
         return dates.last().getDayOrdinal() - dates.first().getDayOrdinal();
     }
 
@@ -42,14 +45,15 @@ public class TravelPlan {
         private final TravelOptLocale locale;
 
         private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
-        private int numTickets;
+        private int numCoupons;
+        private int lastDay;
 
         public Builder(TravelOptLocale locale) {
             this.locale = locale;
         }
 
         public Builder addDay(Date date) {
-			addDay(Util.toDayOrdinal(date), numTickets);
+			addDay(Util.toDayOrdinal(date), numCoupons);
 			return this;
 		}
 
@@ -57,12 +61,12 @@ public class TravelPlan {
             if (dates.isEmpty()) {
                 return new TravelPlan(locale, dates, 0);
             }
-            int ext = dates.last().getDayOrdinal() + 1;
+            int ext = lastDay + 1;
             return new TravelPlan(locale, dates, ext);
         }
 
-		public Builder setTicketsPerDay(int numTickets) {
-			this.numTickets = numTickets;
+		public Builder setCouponsPerDay(int numCoupons) {
+			this.numCoupons = numCoupons;
 			return this;
 		}
 
@@ -71,8 +75,8 @@ public class TravelPlan {
             return addPeriod(from, to, weekDays);
         }
 
-		public Builder addPeriod(Date from, Date to, int[] tickets) {
-            WeekDays weekDays = new WeekDays(tickets);
+		public Builder addPeriod(Date from, Date to, int[] coupons) {
+            WeekDays weekDays = new WeekDays(coupons);
             return addPeriod(from, to, weekDays);
 		}
 
@@ -92,8 +96,8 @@ public class TravelPlan {
             return addPeriod(from, to, WeekDays.ALL);
         }
 
-        public TravelPlan buildExtended(int[] tickets) {
-            return buildExtended(new WeekDays(tickets));
+        public TravelPlan buildExtended(int[] coupons) {
+            return buildExtended(new WeekDays(coupons));
         }
 
 		public TravelPlan buildExtended(String days) {
@@ -101,8 +105,10 @@ public class TravelPlan {
 		}
 
         private TravelPlan buildExtended(WeekDays weekDays) {
-            int lastDate = dates.last().getDayOrdinal();
-            int extensionStart = lastDate + 1;
+            if (lastDay == 0) {
+                return new TravelPlan(locale, dates, 0);
+            }
+            int extensionStart = lastDay + 1;
 
             // Hardcoded number of days = 30, the best ticket type for SL
             for (int i = 0; i < 30; i++) {
@@ -112,14 +118,17 @@ public class TravelPlan {
         }
 
         private void addDay(int dayOrdinal, WeekDays weekDays) {
-            addDay(dayOrdinal, weekDays.getNumTickets(numTickets, dayOrdinal));
+            addDay(dayOrdinal, weekDays.getNumCoupons(numCoupons, dayOrdinal));
 		}
 
-		private void addDay(int dayOrdinal, int numTickets) {
-			if (numTickets > 0) {
-				dates.add(new TravelPlanDate(dayOrdinal, numTickets, locale));
-			}
-		}
+		private void addDay(int dayOrdinal, int numCoupons) {
+            if (dayOrdinal > lastDay) {
+                lastDay = dayOrdinal;
+            }
+            if (numCoupons > 0) {
+                dates.add(new TravelPlanDate(dayOrdinal, numCoupons, locale));
+            }
+        }
 
     }
 

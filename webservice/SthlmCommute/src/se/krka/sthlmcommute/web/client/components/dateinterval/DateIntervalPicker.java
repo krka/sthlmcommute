@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.datepicker.client.DatePicker;
+import se.krka.sthlmcommute.web.client.ClientConstants;
 import se.krka.travelopt.Util;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DateIntervalPicker extends Composite {
+    public static final String INTERVAL_STYLE_CLASS = "interval";
     private final DatePicker from;
     private final DatePicker to;
 
@@ -21,13 +23,13 @@ public class DateIntervalPicker extends Composite {
 
     private final List<DateIntervalUpdateListener> listeners = new ArrayList<DateIntervalUpdateListener>();
 
-    public DateIntervalPicker() {
+    public DateIntervalPicker(ClientConstants clientConstants) {
         from = new DatePicker();
         to = new DatePicker();
 
         Grid root = new Grid(2, 2);
-        root.setWidget(0, 0, new Label("From:"));
-        root.setWidget(0, 1, new Label("To:"));
+        root.setWidget(0, 0, new Label(clientConstants.from()));
+        root.setWidget(0, 1, new Label(clientConstants.to()));
         root.setWidget(1, 0, from);
         root.setWidget(1, 1, to);
         initWidget(root);
@@ -99,8 +101,8 @@ public class DateIntervalPicker extends Composite {
 
             for (int i = fromOrdinal; i <= toOrdinal; i++) {
                 Date date = Util.fromDayOrdinal(i);
-                this.from.addStyleToDates("interval", date);
-                this.to.addStyleToDates("interval", date);
+                this.from.addStyleToDates(INTERVAL_STYLE_CLASS, date);
+                this.to.addStyleToDates(INTERVAL_STYLE_CLASS, date);
             }
         }
     }
@@ -115,8 +117,8 @@ public class DateIntervalPicker extends Composite {
 
         for (int i = fromOrdinal; i <= toOrdinal; i++) {
             Date date = Util.fromDayOrdinal(i);
-            this.from.removeStyleFromDates("interval", date);
-            this.to.removeStyleFromDates("interval", date);
+            this.from.removeStyleFromDates(INTERVAL_STYLE_CLASS, date);
+            this.to.removeStyleFromDates(INTERVAL_STYLE_CLASS, date);
         }
 
         highlightStart = null;

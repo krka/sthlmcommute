@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
@@ -22,12 +23,15 @@ public class SthlmCommute implements EntryPoint {
         final String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
         TravelOptLocale travelOptLocale = Locales.getLocale(localeName);
         ClientConstants clientConstants = GWT.create(ClientConstants.class);
+        ClientMessages clientMessages = GWT.create(ClientMessages.class);
+
+        setupHTMLTexts(clientConstants, clientMessages);
 
         RootPanel.get("locales").add(getLocaleLinks(localeName));
 
         final ClientPersistance persistance = new ClientPersistance();
 
-        TravelInterface travelinterface = new TravelInterface(travelOptLocale, clientConstants, persistance);
+        TravelInterface travelinterface = new TravelInterface(travelOptLocale, clientConstants, persistance, clientMessages);
 
         travelinterface.addComponents();
 
@@ -37,7 +41,19 @@ public class SthlmCommute implements EntryPoint {
                 persistance.onExit();
             }
         });
+
     }
+
+    private void setupHTMLTexts(ClientConstants clientConstants, ClientMessages clientMessages) {
+        setElement("help", clientConstants.help());
+        setElement("contact", clientConstants.contact());
+        setElement("sendEmailTo", clientMessages.sendEmailTo("kristofer.karlsson@gmail.com"));
+    }
+
+    private void setElement(String element, String value) {
+        RootPanel.get(element).add(new HTML(SafeHtmlUtils.htmlEscape(value)));
+    }
+
     private final String[] locales = new String[]{"sv", "en"};
 
     private HTML getLocaleLinks(String localeName) {

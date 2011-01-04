@@ -9,18 +9,21 @@ import se.krka.sthlmcommute.web.client.util.UIUtil;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class OptimizeOptions extends Composite {
+    public static final String GROUP_NAME = "extendGroup";
+    public static final String ONLY = "only";
+    public static final String EXTEND = "extend";
     private final RadioGroup radioGroup;
-    private final TicketEditor ticketEditor;
+    private final CouponEditor couponEditor;
 
-    public OptimizeOptions(final DelayedWork delayedWork, TravelOptLocale locale) {
-        radioGroup = new RadioGroup("extendGroup");
+    public OptimizeOptions(final DelayedWork delayedWork, TravelOptLocale locale, ClientConstants clientConstants) {
+        radioGroup = new RadioGroup(GROUP_NAME);
 
-        ticketEditor = new TicketEditor(new UpdateListener() {
+        couponEditor = new CouponEditor(new UpdateListener() {
             @Override
             public void updated() {
                 delayedWork.requestWork();
             }
-        }, locale);
+        }, locale, clientConstants);
 
         Panel root = new VerticalPanel();
         root.setWidth("60em");
@@ -28,36 +31,32 @@ public class OptimizeOptions extends Composite {
         ClickHandler handler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                ticketEditor.setVisible(isEnabled());
+                couponEditor.setVisible(isEnabled());
                 delayedWork.requestWork();
             }
         };
 
         radioGroup.addClickHandler(handler);
-        radioGroup.addRadioButton("only", "Minimize cost for the selected period.");
-        radioGroup.addRadioButton("extend", "Minimize cost for the selected period and extend indefinitely.");
-        radioGroup.setSelected("only");
+        radioGroup.addRadioButton(ONLY, clientConstants.optimizeOptions_option_onlySchedule());
+        radioGroup.addRadioButton(EXTEND, clientConstants.optimizeOptions_option_extended());
+        radioGroup.setSelected(ONLY);
 
         VerticalPanel hidden = new VerticalPanel();
         hidden.setWidth("4em");
 
-        root.add(UIUtil.wrapCaption("Optimization settings", UIUtil.wrapFlow(radioGroup, UIUtil.wrapHorizontal(hidden, ticketEditor))));
+        root.add(UIUtil.wrapCaption(clientConstants.optimizeSettings(), UIUtil.wrapFlow(radioGroup, UIUtil.wrapHorizontal(hidden, couponEditor))));
         initWidget(root);
 
-        ticketEditor.setVisible(false);
+        couponEditor.setVisible(false);
 
-    }
-
-    public int[] getTickets() {
-        return ticketEditor.getWeekdays().getTickets();
     }
 
     public RadioGroup getRadioGroup() {
         return radioGroup;
     }
 
-    public TicketEditor getTicketEditor() {
-        return ticketEditor;
+    public CouponEditor getCouponEditor() {
+        return couponEditor;
     }
 
     public boolean isEnabled() {
@@ -65,6 +64,6 @@ public class OptimizeOptions extends Composite {
         if (selected == null) {
             return false;
         }
-        return selected.getFormValue().equals("extend");
+        return selected.getFormValue().equals(EXTEND);
     }
 }

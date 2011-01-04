@@ -2,31 +2,31 @@ package se.krka.travelopt;
 
 import se.krka.travelopt.localization.TravelOptLocale;
 
-public class SimpleTicket implements TicketType {
+public class CouponTicket implements TicketType {
     private final TravelOptLocale locale;
 
     private final String name;
 	private final Money price;
-	private final int numTickets;
+	private final int numCoupons;
 
-    public SimpleTicket(TravelOptLocale locale, String name, Money price, int numTickets) {
+    public CouponTicket(TravelOptLocale locale, String name, Money price, int numCoupons) {
         this.locale = locale;
         this.name = name;
 		this.price = price;
-		this.numTickets = numTickets;
+		this.numCoupons = numCoupons;
     }
 
 	public int numberOfDays() {
 		return 1;
 	}
 
-	public Money cost(int numTickets) {
-        return price.multiply(numTickets).divideBy(this.numTickets);
+	public Money cost(int numCoupons) {
+        return price.multiply(numCoupons).divideBy(this.numCoupons);
 	}
 
     @Override
-    public int getCount(int numTickets) {
-        return numTickets;
+    public int getCount(int numCoupons) {
+        return numCoupons;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SimpleTicket implements TicketType {
 
     @Override
     public String description() {
-        return locale.simpleTicketDesc(numTickets, price);
+        return locale.couponTicketDesc(numCoupons, price);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class SimpleTicket implements TicketType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleTicket that = (SimpleTicket) o;
+        CouponTicket that = (CouponTicket) o;
 
-        if (numTickets != that.numTickets) return false;
+        if (numCoupons != that.numCoupons) return false;
         if (!locale.equals(that.locale)) return false;
         if (!name.equals(that.name)) return false;
         if (!price.equals(that.price)) return false;
@@ -64,7 +64,7 @@ public class SimpleTicket implements TicketType {
         int result = locale.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + price.hashCode();
-        result = 31 * result + numTickets;
+        result = 31 * result + numCoupons;
         return result;
     }
 }

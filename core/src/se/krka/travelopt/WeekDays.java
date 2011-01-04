@@ -3,18 +3,18 @@ package se.krka.travelopt;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekDays {
-    private final int[] tickets = new int[7];
+    private final int[] coupons = new int[7];
 
     public static WeekDays ALL = new WeekDays();
 
     private WeekDays() {
         for (int i = 0; i < 7; i++) {
-            tickets[i] = -1;
+            coupons[i] = -1;
         }
     }
 
-    public WeekDays(int[] tickets) {
-        System.arraycopy(tickets, 0, this.tickets, 0, 7);
+    public WeekDays(int[] coupons) {
+        System.arraycopy(coupons, 0, this.coupons, 0, 7);
     }
 
     public WeekDays(TravelOptLocale locale, String s) {
@@ -24,10 +24,11 @@ public class WeekDays {
 		}
 	}
 
-	public int getNumTickets(int defaultNumTickets, int dayOrdinal) {
-        int integer = tickets[Util.getDayOfWeek(dayOrdinal)];
+	public int getNumCoupons(int defaultNumCoupons, int dayOrdinal) {
+        int dayOfWeek = Util.getDayOfWeek(dayOrdinal);
+        int integer = coupons[dayOfWeek];
 		if (integer == -1) {
-			return defaultNumTickets;
+			return defaultNumCoupons;
 		}
 		return integer;
 	}
@@ -37,33 +38,33 @@ public class WeekDays {
 		if (s.length == 1) {
 			processRange(s[0], -1, locale);
 		} else if (s.length == 2) {
-			int numTickets = Integer.parseInt(s[1].trim());
-			processRange(s[0], numTickets, locale);
+			int numCoupons = Integer.parseInt(s[1].trim());
+			processRange(s[0], numCoupons, locale);
 		} else {
 			throw new IllegalArgumentException(locale.tooManyColonsInTerm(term));
 		}
 	}
 
-	private void processRange(String term, int numTickets, TravelOptLocale locale) {
+	private void processRange(String term, int numCoupons, TravelOptLocale locale) {
         String[] s = term.split("-");
         if (s.length == 1) {
             WeekDayEnum weekDayEnum = WeekDayEnum.parse(locale, s[0]);
-            processWeekDay(weekDayEnum, numTickets);
+            processWeekDay(weekDayEnum, numCoupons);
         } else if (s.length == 2) {
             WeekDayEnum from = WeekDayEnum.parse(locale, s[0]);
             WeekDayEnum to = WeekDayEnum.parse(locale, s[1]);
-            processWeekDay(from, numTickets);
+            processWeekDay(from, numCoupons);
             while (from != to) {
                 from = from.succ();
-                processWeekDay(from, numTickets);
+                processWeekDay(from, numCoupons);
             }
         } else {
             throw new IllegalArgumentException(locale.tooManyDashesInTerm(term));
         }
     }
 
-	private void processWeekDay(WeekDayEnum weekDay, int numTickets) {
-        tickets[weekDay.ordinal()] = numTickets;
+	private void processWeekDay(WeekDayEnum weekDay, int numCoupons) {
+        coupons[weekDay.ordinal()] = numCoupons;
 	}
 
 	public enum WeekDayEnum {

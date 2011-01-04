@@ -3,7 +3,6 @@ package se.krka.sthlmcommute.web.client;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.RowCountChangeEvent;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.components.HelpElement;
@@ -20,25 +19,29 @@ public class Help {
     private final HelpElement priceCategory;
     private final HelpElement newEntry;
     private final HelpElement selectDates;
-    private final HelpElement selectTickets;
+    private final HelpElement selectCoupons;
     private final HelpElement shownResult;
 
-    public Help(ClientConstants clientConstants, PriceCategories priceCategories, TravelSchedule travelSchedule, TravelOptRunner travelOptRunner) {
+    public Help(ClientConstants clientConstants,
+                final PriceCategories priceCategories,
+                TravelSchedule travelSchedule,
+                TravelOptRunner travelOptRunner,
+                OptimizeOptions optimizeOptions) {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
                 clientConstants.choosePriceCategory(),
-                new Label(clientConstants.choosePriceCategoryHelp()),
+                new HTML(clientConstants.choosePriceCategoryHelp()),
                 priceCategories);
 
         newEntry = helpSection.createAndAdd(
                 clientConstants.creatingSchedule(),
-                new Label(clientConstants.creatingScheduleHelp()),
+                new HTML(clientConstants.creatingScheduleHelp()),
                 travelSchedule);
 
         selectDates = helpSection.createAndAdd(
                 clientConstants.selectingDateSpan(),
-                new Label(clientConstants.selectingDateSpanHelp()));
+                new HTML(clientConstants.selectingDateSpanHelp()));
         travelSchedule.getAsyncList().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
@@ -46,14 +49,20 @@ public class Help {
             }
         });
 
-        selectTickets = helpSection.createAndAdd(
+        selectCoupons = helpSection.createAndAdd(
                 clientConstants.selectingCoupons(),
                 new HTML(clientConstants.selectingCouponsHelp()));
 
         shownResult = helpSection.createAndAdd(
-				"The result",
-				new Label("bar"),
+				clientConstants.resultView(),
+				new HTML(clientConstants.resultViewHelp()),
 				travelOptRunner.getResultPanel());
+
+        helpSection.createAndAdd(
+                clientConstants.optimizeOptions(),
+                new HTML(clientConstants.optimizeOptionsHelp()),
+                optimizeOptions
+                );
         travelOptRunner.addResultListener(new TravelResultListener() {
             @Override
             public void newResult(TravelResult result) {
@@ -64,7 +73,9 @@ public class Help {
         priceCategories.getRadioGroup().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                selectedPriceCategory();
+                if (priceCategories.getSelected() != null) {
+                    selectedPriceCategory();
+                }
             }
         });
 
@@ -78,15 +89,15 @@ public class Help {
                     }
                 });
 
-                selectTickets.setHighlight(widget.getTravelScheduleEditor().getTicketEditor());
+                selectCoupons.setHighlight(widget.getTravelScheduleEditor().getCouponEditor());
                 widget.addScheduleEntryUpdateListener(new ScheduleEntryUpdateListener() {
                     @Override
                     public void updated(ScheduleEntry entry) {
                         if (entry.getInterval().getDays() > 0) {
                             selectedDates();
                         }
-                        if (entry.getWeekdays().countTickets() > 0) {
-                            selectedTickets();
+                        if (entry.getWeekdays().countCoupons() > 0) {
+                            selectedCoupons();
                         }
                     }
                 });
@@ -129,14 +140,14 @@ public class Help {
         if (selectDates.tryConsume()) {
             selectDates.close();
 
-            selectTickets.open();
+            selectCoupons.open();
         }
     }
 
 
-    public void selectedTickets() {
-        if (selectTickets.tryConsume()) {
-            selectTickets.close();
+    public void selectedCoupons() {
+        if (selectCoupons.tryConsume()) {
+            selectCoupons.close();
 
             shownResult.open();
         }

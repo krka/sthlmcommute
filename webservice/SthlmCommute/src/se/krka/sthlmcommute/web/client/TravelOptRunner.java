@@ -18,6 +18,7 @@ import java.util.List;
 
 public class TravelOptRunner implements Runnable {
     private final TravelOptLocale locale;
+    private final ClientConstants clientConstants;
     private final Label errorLabel;
     private final AsyncWidget<CellTable<Ticket>> asyncTable;
 
@@ -28,10 +29,12 @@ public class TravelOptRunner implements Runnable {
 
     private final List<TravelResultListener> listeners = new ArrayList<TravelResultListener>();
     private final CaptionPanel resultPanel;
+    private final ScrollPanel scrollPanel;
 
-    public TravelOptRunner(final TravelOptLocale locale) {
+    public TravelOptRunner(final TravelOptLocale locale, final ClientConstants clientConstants) {
         this.locale = locale;
-        errorLabel = new Label("error");
+        this.clientConstants = clientConstants;
+        errorLabel = new Label();
 
         asyncTable = new AsyncWidget<CellTable<Ticket>>(new AsyncWidgetLoader<CellTable<Ticket>>() {
             @Override
@@ -49,7 +52,7 @@ public class TravelOptRunner implements Runnable {
                         }
                         return locale.formatDay(ticket.getStartDate());
                     }
-                }, "From");
+                }, clientConstants.from());
                 ticketCellTable.addColumn(new TextColumn<Ticket>() {
                     @Override
                     public String getValue(Ticket ticket) {
@@ -58,7 +61,7 @@ public class TravelOptRunner implements Runnable {
                         }
                         return locale.formatDay(ticket.getEndDate());
                     }
-                }, "To");
+                }, clientConstants.to());
                 ticketCellTable.addColumn(new TextColumn<Ticket>() {
                     @Override
                     public String getValue(Ticket ticket) {
@@ -67,31 +70,33 @@ public class TravelOptRunner implements Runnable {
                         }
                         return String.valueOf(ticket.getNumberOfTickets());
                     }
-                }, "Tickets");
+                }, clientConstants.numberOfTickets());
 
                 ticketCellTable.addColumn(new TextColumn<Ticket>() {
                     @Override
                     public String getValue(Ticket ticket) {
                         if (ticket.getTicketType() == null) {
-                            return "Total";
+                            return clientConstants.total();
                         }
                         return ticket.getTicketType().name();
                     }
-                }, "Type");
+                }, clientConstants.tickettype());
                 ticketCellTable.addColumn(new TextColumn<Ticket>() {
                     @Override
                     public String getValue(Ticket ticket) {
                         return ticket.getCost().toString();
                     }
-                }, "Cost");
+                }, clientConstants.price());
                 return ticketCellTable;
             }
         });
         VerticalPanel panel = new VerticalPanel();
         panel.add(errorLabel);
-        panel.add(UIUtil.wrapScroll(asyncTable, "57em", "10em"));
-        resultPanel = UIUtil.wrapCaption("Result", panel);
+        scrollPanel = UIUtil.wrapScroll(asyncTable, "57em", "10em");
+        panel.add(scrollPanel);
+        resultPanel = UIUtil.wrapCaption(clientConstants.result(), panel);
         RootPanel.get("result").add(resultPanel);
+        clear();
     }
 
     public CaptionPanel getResultPanel() {
@@ -108,6 +113,7 @@ public class TravelOptRunner implements Runnable {
 
     @Override
     public void run() {
+        clear();
         GWT.runAsync(new GenericFailureAsyncCallback(){
             @Override
             public void onSuccess() {
@@ -116,46 +122,38 @@ public class TravelOptRunner implements Runnable {
                 if (s != null) {
                     errorLabel.setText(s);
                     errorLabel.setVisible(true);
-                    asyncTable.setVisible(false);
+                } else {
+                    scrollPanel.setVisible(true);
                 }
            }
         });
     }
 
     private void clear() {
-        errorLabel.setText("");
+        scrollPanel.setVisible(false);
         errorLabel.setVisible(false);
-        tickets.clear();
-        addTotal(tickets, Money.ZERO);
-        asyncTable.runASAP(new AsyncWidgetUsage<CellTable<Ticket>>() {
-            @Override
-            public void run(CellTable<Ticket> widget) {
-                widget.setRowData(tickets);
-            }
-        });
-        asyncTable.setVisible(true);
     }
 
     public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
         try {
             TravelPlan.Builder builder = TravelPlan.builder(locale);
             if (entries.isEmpty()) {
-                return "Begin by creating an entry.";
+                return clientConstants.noEntries();
             }
             for (ScheduleEntry entry : entries) {
                 if (!entry.valid()) {
-                    return "All entries must have a start and end date, as well as at least one required ticket.";
+                    return clientConstants.invalidEntries();
                 }
-                builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().getTickets());
+                builder.addPeriod(entry.getInterval().getFrom(), entry.getInterval().getTo(), entry.getWeekdays().getCoupons());
             }
             TravelPlan travelPlan;
             if (optimizeOptions.isEnabled()) {
-                travelPlan = builder.buildExtended(optimizeOptions.getTickets());
+                travelPlan = builder.buildExtended(optimizeOptions.getCouponEditor().getWeekdays().getCoupons());
             } else {
                 travelPlan = builder.build();
             }
             if (travelPlan.getDates().isEmpty()) {
-                return "You did not specify any dates which required tickets, so there is no result.";
+                return clientConstants.emptySchedule();
             }
 
             TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));

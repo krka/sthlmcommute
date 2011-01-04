@@ -10,7 +10,7 @@ public interface TravelOptLocale {
 
     String wholeDays(String name, int numDays, Money price);
 
-    String simpleTicketDesc(int numTickets, Money price);
+    String couponTicketDesc(int numTickets, Money price);
 
     String travelResult(TravelResult travelResult);
 

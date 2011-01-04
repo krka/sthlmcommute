@@ -41,8 +41,8 @@ public class PriceStructure {
             return this;
         }
 
-        public Builder addSimpleTicket(String name, Money price, int numTickets) {
-            addTicketType(new SimpleTicket(locale, name, price, numTickets));
+        public Builder addCouponTicket(String name, Money price, int numTickets) {
+            addTicketType(new CouponTicket(locale, name, price, numTickets));
             return this;
         }
 

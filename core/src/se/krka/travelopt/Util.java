@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Util {
     private static final long DAY_IN_MILLIS = 86400000;
-    private static final int WEEKDAY_OFFSET = 4;
+    private static final int WEEKDAY_OFFSET = 3;
 
     public static Date parseDate(String s) {
         String[] split = s.split("-");

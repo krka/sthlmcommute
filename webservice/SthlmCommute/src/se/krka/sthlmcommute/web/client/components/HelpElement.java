@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.TravelScheduleEditor;
 
 public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
+    public static final String HIGHLIGHT_STYLE_CLASS = "highlighted";
     private final DisclosurePanel widget;
     private final HelpSection helpSection;
     private Widget highlight;
@@ -26,7 +27,7 @@ public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<D
         widget.add(content.asWidget());
         widget.addOpenHandler(this);
         widget.addCloseHandler(this);
-        content.addStyleName("highlighted");
+        content.addStyleName(HIGHLIGHT_STYLE_CLASS);
     }
 
     public Widget getWidget() {
@@ -44,12 +45,12 @@ public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<D
     @Override
     public void onOpen(OpenEvent<DisclosurePanel> disclosurePanelOpenEvent) {
         helpSection.closeAllExcept(this);
-        highlight.addStyleName("highlighted");
+        highlight.addStyleName(HIGHLIGHT_STYLE_CLASS);
     }
 
     @Override
     public void onClose(CloseEvent<DisclosurePanel> disclosurePanelCloseEvent) {
-        highlight.removeStyleName("highlighted");
+        highlight.removeStyleName(HIGHLIGHT_STYLE_CLASS);
     }
 
     public boolean tryConsume() {
@@ -62,8 +63,8 @@ public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<D
 
     public void setHighlight(Widget newHighlight) {
         if (widget.isOpen()) {
-            newHighlight.addStyleName("highlighted");
-            highlight.removeStyleName("highlighted");
+            newHighlight.addStyleName(HIGHLIGHT_STYLE_CLASS);
+            highlight.removeStyleName(HIGHLIGHT_STYLE_CLASS);
         }
         this.highlight = newHighlight;
     }

@@ -46,4 +46,11 @@ public class UIUtil {
         }
         return container;
     }
+
+    public static Widget spacer(String width, String height) {
+        Widget spacer= new VerticalPanel();
+        spacer.setWidth(width);
+        spacer.setHeight(height);
+        return spacer;
+    }
 }

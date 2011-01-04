@@ -10,24 +10,23 @@ import java.util.Date;
 
 public class TravelScheduleEditor extends Composite {
     private final DateIntervalPicker rangeEditor;
-    private final TicketEditor ticketEditor;
+    private final CouponEditor couponEditor;
 
     private ScheduleEntry active;
 
-    public TravelScheduleEditor(TravelOptLocale locale, final TravelScheduleList travelScheduleList) {
+    public TravelScheduleEditor(TravelOptLocale locale, final TravelScheduleList travelScheduleList, ClientConstants clientConstants) {
         VerticalPanel root = new VerticalPanel();
-        rangeEditor = new DateIntervalPicker();
+        rangeEditor = new DateIntervalPicker(clientConstants);
 
-        //helpInfo = new HelpInfo("Choose the time period for when you need to travel.");
-        ticketEditor = new TicketEditor(new UpdateListener() {
+        couponEditor = new CouponEditor(new UpdateListener() {
             @Override
             public void updated() {
-                travelScheduleList.updateTickets(active, ticketEditor.getWeekdays());
+                travelScheduleList.updateCoupons(active, couponEditor.getWeekdays());
             }
-        }, locale);
+        }, locale, clientConstants);
 
         root.add(rangeEditor);
-        root.add(ticketEditor);
+        root.add(couponEditor);
         initWidget(root);
         setVisible(false);
 
@@ -61,8 +60,8 @@ public class TravelScheduleEditor extends Composite {
         rangeEditor.applyHighlight();
 
         int defaultValue = entry.getWeekdays().getDefaultValue();
-        ticketEditor.getTicket().setSelectedTicket(defaultValue);
-        ticketEditor.getWeekdayEditor().setWeekDays(entry.getWeekdays().getRawTickets());
+        couponEditor.getCoupon().setSelectedCoupon(defaultValue);
+        couponEditor.getWeekdayEditor().setWeekDays(entry.getWeekdays().getRawCoupons());
         setVisible(true);
     }
 
@@ -70,7 +69,7 @@ public class TravelScheduleEditor extends Composite {
         return rangeEditor;
     }
 
-    public TicketEditor getTicketEditor() {
-        return ticketEditor;
+    public CouponEditor getCouponEditor() {
+        return couponEditor;
     }
 }

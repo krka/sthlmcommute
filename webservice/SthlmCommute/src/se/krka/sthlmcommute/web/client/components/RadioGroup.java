@@ -50,7 +50,8 @@ public class RadioGroup extends Composite {
             if (widget instanceof Button) {
                 Button button = (Button) widget;
                 if (button.getGroup() == this) {
-                    button.setValue(button.getFormValue().equals(formValue));
+                    boolean selected = button.getFormValue().equals(formValue);
+                    button.setValue(selected);
                 }
             }
         }

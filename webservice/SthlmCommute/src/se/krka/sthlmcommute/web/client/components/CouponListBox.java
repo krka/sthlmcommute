@@ -2,8 +2,8 @@ package se.krka.sthlmcommute.web.client.components;
 
 import com.google.gwt.user.client.ui.ListBox;
 
-public class TicketListBox extends ListBox {
-    public TicketListBox(boolean includeDefault) {
+public class CouponListBox extends ListBox {
+    public CouponListBox(boolean includeDefault) {
         if (includeDefault) {
             addItem("--", "-1");
         }
@@ -14,12 +14,12 @@ public class TicketListBox extends ListBox {
         setSelectedIndex(0);
     }
 
-    public int getSelectedTicket() {
+    public int getSelectedCoupon() {
         int index = getSelectedIndex();
         return Integer.parseInt(getValue(index));
     }
 
-    public void setSelectedTicket(int value) {
+    public void setSelectedCoupon(int value) {
         String vS = String.valueOf(value);
         int n = getItemCount();
         for (int i = 0; i < n; i++) {
@@ -33,10 +33,10 @@ public class TicketListBox extends ListBox {
 
 
     public String serialize() {
-        return getSelectedTicket() + "";
+        return getSelectedCoupon() + "";
     }
 
     public void deserialize(String data) {
-        setSelectedTicket(Integer.parseInt(data));
+        setSelectedCoupon(Integer.parseInt(data));
     }
 }

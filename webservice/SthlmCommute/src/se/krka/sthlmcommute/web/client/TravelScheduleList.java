@@ -26,38 +26,33 @@ public class TravelScheduleList extends Composite {
     private final TravelScheduleEditor travelScheduleEditor;
     private final ListDataProvider<ScheduleEntry> listDataProvider;
 
-    private final DelayedWork collisionDetector;
     private final CellList<ScheduleEntry> scheduleEntryCellList;
 
     private final List<ScheduleEntryUpdateListener> listeners = new ArrayList<ScheduleEntryUpdateListener>();
     private final DelayedWork worker;
 
-    public TravelScheduleList(final TravelOptLocale locale, DelayedWork worker) {
+    public TravelScheduleList(final TravelOptLocale locale, DelayedWork worker, final ClientConstants clientConstants, final ClientMessages clientMessages) {
         this.worker = worker;
-        travelScheduleEditor = new TravelScheduleEditor(locale, this);
+        travelScheduleEditor = new TravelScheduleEditor(locale, this, clientConstants);
 
         Cell<ScheduleEntry> cell = new AbstractCell<ScheduleEntry>() {
             @Override
             public void render(Context context, ScheduleEntry scheduleEntry, SafeHtmlBuilder safeHtmlBuilder) {
                 Date from = scheduleEntry.getInterval().getFrom();
                 if (from == null || scheduleEntry.getInterval().getTo() == null) {
-                    setError(safeHtmlBuilder, "Incomplete time period");
+                    setError(safeHtmlBuilder, clientConstants.incompleteDateSpan());
                     return;
                 }
-                if (scheduleEntry.getWeekdays().countTickets() == 0) {
-                    setError(safeHtmlBuilder, "Incomplete tickets");
-                    return;
-                }
-                if (scheduleEntry.isOverlapping()) {
-                    setError(safeHtmlBuilder, "Overlapping period");
+                if (scheduleEntry.getWeekdays().countCoupons() == 0) {
+                    setError(safeHtmlBuilder, clientConstants.incompleteCoupons());
                     return;
                 }
                 safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:8em'>" + locale.formatDay(Util.toDayOrdinal(from)) + "</span>");
                 safeHtmlBuilder.appendEscaped(" ");
-                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:5em;text-align:right;padding-right:2em'>" + scheduleEntry.getInterval().getDays() + " days</span>");
+                safeHtmlBuilder.appendHtmlConstant("<span style='float:left;min-width:5em;text-align:right;padding-right:2em'>" + clientMessages.xDays(String.valueOf(scheduleEntry.getInterval().getDays())) + "</span>");
 
-                int ticketsPerWeek = scheduleEntry.getWeekdays().countTickets();
-                safeHtmlBuilder.appendHtmlConstant("<span>" + ticketsPerWeek + " ticket/week</span>");
+                int couponsPerWeek = scheduleEntry.getWeekdays().countCoupons();
+                safeHtmlBuilder.appendHtmlConstant("<span>" + clientMessages.couponsPerWeek(String.valueOf(couponsPerWeek)) + "</span>");
             }
         };
         scheduleEntryCellList = new CellList<ScheduleEntry>(cell);
@@ -80,11 +75,10 @@ public class TravelScheduleList extends Composite {
         Panel root = new VerticalPanel();
         root.add(scheduleEntryCellList);
 
-        collisionDetector = new DelayedWork(new CollisionDetector(list, listDataProvider), 500);
-        initWidget(UIUtil.wrapCaption("Entries:", root));
+        initWidget(UIUtil.wrapCaption(clientConstants.entries(), root));
     }
 
-    public void updateTickets(ScheduleEntry active, Weekdays weekdays) {
+    public void updateCoupons(ScheduleEntry active, Weekdays weekdays) {
         active.setWeekdays(weekdays);
         update();
         notifyUpdatedScheduleEntry(active);
@@ -132,7 +126,6 @@ public class TravelScheduleList extends Composite {
     }
 
     public void update() {
-        collisionDetector.requestWork();
         listDataProvider.refresh();
         worker.requestWork();
     }

@@ -15,8 +15,8 @@ public class EnglishLocale implements TravelOptLocale {
         return numDays + " days for " + price;
     }
 
-    public String simpleTicketDesc(int numTickets, Money price) {
-        return numTickets + " tickets for " + price;
+    public String couponTicketDesc(int numTickets, Money price) {
+        return numTickets + " coupons for " + price;
     }
 
     public String travelResult(TravelResult travelResult) {
