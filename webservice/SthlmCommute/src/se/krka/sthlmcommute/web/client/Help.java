@@ -50,7 +50,10 @@ public class Help {
                 clientConstants.selectingCoupons(),
                 new HTML(clientConstants.selectingCouponsHelp()));
 
-        shownResult = helpSection.createAndAdd("The result", new Label("bar"), travelOptRunner.getResultPanel());
+        shownResult = helpSection.createAndAdd(
+				"The result",
+				new Label("bar"),
+				travelOptRunner.getResultPanel());
         travelOptRunner.addResultListener(new TravelResultListener() {
             @Override
             public void newResult(TravelResult result) {
