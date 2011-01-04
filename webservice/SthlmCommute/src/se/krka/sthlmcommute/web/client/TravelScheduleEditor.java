@@ -9,14 +9,12 @@ import java.util.Date;
 
 public class TravelScheduleEditor extends Composite {
     private final DateIntervalPicker rangeEditor;
-
     private final TicketEditor ticketEditor;
-
-    private ScheduleEntry active;
-    private TravelScheduleList travelScheduleList;
     private final DelayedWork worker;
 
-    public TravelScheduleEditor(DelayedWork worker, TravelOptLocale locale) {
+    private ScheduleEntry active;
+
+    public TravelScheduleEditor(DelayedWork worker, TravelOptLocale locale, final TravelScheduleList travelScheduleList) {
         this.worker = worker;
         VerticalPanel root = new VerticalPanel();
         rangeEditor = new DateIntervalPicker();
@@ -45,10 +43,6 @@ public class TravelScheduleEditor extends Composite {
                 }
             }
         });
-    }
-
-    public void setTravelScheduleList(TravelScheduleList travelScheduleList) {
-        this.travelScheduleList = travelScheduleList;
     }
 
     public void setActive(ScheduleEntry entry) {

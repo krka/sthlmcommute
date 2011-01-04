@@ -16,7 +16,6 @@ public class WeekdayEditor extends Composite {
         this.worker = worker;
         this.locale = locale;
         weekDayForm = createWeekDayForm();
-        //weekdayHelpInfo = new HelpInfo("You may change the number of tickets for individual days of the week.");
 
         Panel root = new VerticalPanel();
         root.add(new Label("Exceptions:"));
@@ -24,7 +23,7 @@ public class WeekdayEditor extends Composite {
         initWidget(root);
     }
 
-    public Grid createWeekDayForm() {
+    private Grid createWeekDayForm() {
         Grid grid = new Grid(2, 7);
         for (int day = 0; day < 7; day++) {
             grid.setWidget(0, day, new Label(locale.weekDayName(day).substring(0, 1)));
@@ -32,7 +31,6 @@ public class WeekdayEditor extends Composite {
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override
                 public void onChange(ChangeEvent changeEvent) {
-                    //weekdayHelpInfo.setVisible(false);
                     listener.updated();
                     worker.requestWork();
                 }

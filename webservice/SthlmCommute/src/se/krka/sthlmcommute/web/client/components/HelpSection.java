@@ -1,9 +1,6 @@
 package se.krka.sthlmcommute.web.client.components;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.*;
 
 import java.util.ArrayList;
@@ -22,6 +19,12 @@ public class HelpSection extends Composite {
 
     public HelpElement createAndAdd(String header, Widget content, Widget highlight) {
         HelpElement element = new HelpElement(this, header, content, highlight);
+        add(element);
+        return element;
+    }
+
+    public HelpElement createAndAdd(String header, Widget content) {
+        HelpElement element = new HelpElement(this, header, content);
         add(element);
         return element;
     }

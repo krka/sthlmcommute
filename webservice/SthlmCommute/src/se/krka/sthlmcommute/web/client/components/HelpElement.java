@@ -4,22 +4,26 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import se.krka.sthlmcommute.web.client.TravelScheduleEditor;
 
 public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
     private final DisclosurePanel widget;
     private final HelpSection helpSection;
-    private final Widget highlight;
+    private Widget highlight;
 
     private boolean consumed;
+
+    public HelpElement(HelpSection helpSection, String header, Widget content) {
+        this(helpSection, header, content, new Hidden());
+    }
 
     public HelpElement(HelpSection helpSection, String header, Widget content, Widget highlight) {
         this.helpSection = helpSection;
         this.highlight = highlight;
         widget = new DisclosurePanel(header);
         widget.setAnimationEnabled(true);
-        widget.add(content);
+        widget.add(content.asWidget());
         widget.addOpenHandler(this);
         widget.addCloseHandler(this);
         content.addStyleName("highlighted");
@@ -40,16 +44,12 @@ public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<D
     @Override
     public void onOpen(OpenEvent<DisclosurePanel> disclosurePanelOpenEvent) {
         helpSection.closeAllExcept(this);
-        if (highlight != null) {
-            highlight.addStyleName("highlighted");
-        }
+        highlight.addStyleName("highlighted");
     }
 
     @Override
     public void onClose(CloseEvent<DisclosurePanel> disclosurePanelCloseEvent) {
-        if (highlight != null) {
-            highlight.removeStyleName("highlighted");
-        }
+        highlight.removeStyleName("highlighted");
     }
 
     public boolean tryConsume() {
@@ -58,5 +58,13 @@ public class HelpElement implements OpenHandler<DisclosurePanel>, CloseHandler<D
         }
         consumed = true;
         return true;
+    }
+
+    public void setHighlight(Widget newHighlight) {
+        if (widget.isOpen()) {
+            newHighlight.addStyleName("highlighted");
+            highlight.removeStyleName("highlighted");
+        }
+        this.highlight = newHighlight;
     }
 }

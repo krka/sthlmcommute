@@ -21,14 +21,14 @@ public class TravelInterface {
         travelSchedule = new TravelSchedule(clientConstants, locale, worker);
 
         optimizeOptions = new OptimizeOptions(worker, locale);
-        travelSchedule.getAsyncWidget().runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
+        travelSchedule.getAsyncList().runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
                 travelOptRunner.setup(widget.getList(), priceCategories, optimizeOptions);
             }
         });
 
-        help = new Help(priceCategories, travelSchedule, travelSchedule.getRangeEditor());
+        help = new Help(priceCategories, travelSchedule);
 
         persistance.add(new PriceCategoryClientPersistor(priceCategories));
         persistance.add(new OptimizePersistor(optimizeOptions));

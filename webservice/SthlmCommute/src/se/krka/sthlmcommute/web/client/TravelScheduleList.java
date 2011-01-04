@@ -26,8 +26,8 @@ public class TravelScheduleList extends Composite {
     private final DelayedWork collisionDetector;
     private final CellList<ScheduleEntry> scheduleEntryCellList;
 
-    public TravelScheduleList(final TravelOptLocale locale, TravelScheduleEditor travelScheduleEditor) {
-        this.travelScheduleEditor = travelScheduleEditor;
+    public TravelScheduleList(final TravelOptLocale locale, DelayedWork worker) {
+        travelScheduleEditor = new TravelScheduleEditor(worker, locale, this);
 
         Cell<ScheduleEntry> cell = new AbstractCell<ScheduleEntry>() {
             @Override
@@ -119,5 +119,9 @@ public class TravelScheduleList extends Composite {
 
     public void addSelectionChangeHandler(SelectionChangeEvent.Handler handler) {
         selectionModel.addSelectionChangeHandler(handler);
+    }
+
+    public TravelScheduleEditor getTravelScheduleEditor() {
+        return travelScheduleEditor;
     }
 }

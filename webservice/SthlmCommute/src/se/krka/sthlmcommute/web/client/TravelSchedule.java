@@ -8,6 +8,7 @@ import se.krka.sthlmcommute.web.client.async.AsyncWidget;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetLoader;
 import se.krka.sthlmcommute.web.client.async.AsyncWidgetUsage;
 import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalPicker;
+import se.krka.sthlmcommute.web.client.components.dateinterval.DateIntervalUpdateListener;
 import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
 import se.krka.sthlmcommute.web.client.persistance.EntryPersistor;
 import se.krka.travelopt.localization.TravelOptLocale;
@@ -15,42 +16,34 @@ import se.krka.travelopt.localization.TravelOptLocale;
 public class TravelSchedule extends Composite {
 
     private final AsyncWidget<TravelScheduleList> asyncTravelScheduleList;
-    private final TravelScheduleEditor travelScheduleEditor;
 
     private final DelayedWork worker;
     private final Button newButton;
 
-    public TravelSchedule(ClientConstants clientConstants, final TravelOptLocale locale, DelayedWork worker) {
+    public TravelSchedule(ClientConstants clientConstants, final TravelOptLocale locale, final DelayedWork worker) {
         this.worker = worker;
-        travelScheduleEditor = new TravelScheduleEditor(worker, locale);
         asyncTravelScheduleList = new AsyncWidget<TravelScheduleList>(new AsyncWidgetLoader<TravelScheduleList>() {
             @Override
             public TravelScheduleList load() {
-                TravelScheduleList travelScheduleList1 = new TravelScheduleList(locale, travelScheduleEditor);
-                travelScheduleEditor.setTravelScheduleList(travelScheduleList1);
+                TravelScheduleList travelScheduleList1 = new TravelScheduleList(locale, worker);
                 return travelScheduleList1;
             }
         });;
 
         newButton = new Button("New entry");
 
-        HorizontalPanel panel = new HorizontalPanel();
-        panel.add(createList());
-        panel.add(travelScheduleEditor);
-
-        CaptionPanel root = new CaptionPanel("Travel schedule");
-        root.add(panel);
-        initWidget(root);
+        initWidget(UIUtil.wrapCaption("Travel schedule", createView()));
     }
 
-    private Widget createList() {
-        VerticalPanel panel = new VerticalPanel();
+    private HorizontalPanel createView() {
+        final HorizontalPanel horiz = new HorizontalPanel();
+        VerticalPanel vert = new VerticalPanel();
 
         final Button deleteButton = new Button("Delete");
         deleteButton.setEnabled(false);
 
 
-        asyncTravelScheduleList.runASAP(new AsyncWidgetUsage<TravelScheduleList>() {
+        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(final TravelScheduleList widget) {
                 widget.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -85,7 +78,7 @@ public class TravelSchedule extends Composite {
                         @Override
                         public void run(TravelScheduleList widget) {
                             widget.removeSelectedEntry();
-                            travelScheduleEditor.setActive(null);
+                            widget.getTravelScheduleEditor().setActive(null);
                             deleteButton.setEnabled(false);
                             worker.requestWork();
                         }
@@ -95,13 +88,16 @@ public class TravelSchedule extends Composite {
             }
         });
 
-        panel.add(UIUtil.wrapFlow(newButton, deleteButton));
-        panel.add(asyncTravelScheduleList);
-        return panel;
-    }
-
-    public DateIntervalPicker getRangeEditor() {
-        return travelScheduleEditor.getRangeEditor();
+        vert.add(UIUtil.wrapFlow(newButton, deleteButton));
+        vert.add(asyncTravelScheduleList);
+        horiz.add(vert);
+        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+            @Override
+            public void run(TravelScheduleList widget) {
+                horiz.add(widget.getTravelScheduleEditor());
+            }
+        });
+        return horiz;
     }
 
     public void addPersistance(final ClientPersistance persistance, final Help help) {
@@ -113,7 +109,17 @@ public class TravelSchedule extends Composite {
         });
     }
 
-    public AsyncWidget<TravelScheduleList> getAsyncWidget() {
+    public AsyncWidget<TravelScheduleList> getAsyncList() {
         return asyncTravelScheduleList;
     }
+
+    public void addListener(final DateIntervalUpdateListener listener) {
+        asyncTravelScheduleList.runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+            @Override
+            public void run(TravelScheduleList widget) {
+                widget.getTravelScheduleEditor().getRangeEditor().addListener(listener);
+            }
+        });
+    }
+
 }

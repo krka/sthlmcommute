@@ -18,7 +18,7 @@ public class Help {
     private final HelpElement selectDates;
     private final HelpSection helpSection;
 
-    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule, DateIntervalPicker rangeEditor) {
+    public Help(PriceCategories priceCategories, TravelSchedule travelSchedule) {
         helpSection = new HelpSection();
 
         priceCategory = helpSection.createAndAdd(
@@ -31,8 +31,13 @@ public class Help {
                 "Creating a schedule",
                 new Label("Start by creating a new entry for your travel schedule."), travelSchedule);
 
-        selectDates = helpSection.createAndAdd("Selecting an interval", new Label("Select a time interval for your new entry"), rangeEditor);
-
+        selectDates = helpSection.createAndAdd("Selecting an interval", new Label("Select a time interval for your new entry"));
+        travelSchedule.getAsyncList().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+            @Override
+            public void run(TravelScheduleList widget) {
+                selectDates.setHighlight(widget.getTravelScheduleEditor().getRangeEditor());
+            }
+        });
 
         priceCategories.getRadioGroup().addClickHandler(new ClickHandler() {
             @Override
@@ -40,7 +45,7 @@ public class Help {
                 selectedPriceCategory();
             }
         });
-        travelSchedule.getAsyncWidget().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
+        travelSchedule.getAsyncList().runWhenReady(new AsyncWidgetUsage<TravelScheduleList>() {
             @Override
             public void run(TravelScheduleList widget) {
                 widget.getCellList().addRowCountChangeHandler(new RowCountChangeEvent.Handler() {
@@ -51,7 +56,7 @@ public class Help {
                 });
             }
         });
-        rangeEditor.addListener(new DateIntervalUpdateListener() {
+        travelSchedule.addListener(new DateIntervalUpdateListener() {
             @Override
             public void intervalChanged(DateIntervalPicker picker, Date fromValue, Date toValue) {
                 if (fromValue != null && toValue != null) {
