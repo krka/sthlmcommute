@@ -17,12 +17,12 @@
 - Post / Entry - entries
 - Datumspan / Date span - date interval
 
-=== ONGOING ====
 * gwt localization
 
+=== ONGOING ====
+* try to remove TravelOptLocale to only have localization in one place.
 
 === IN QUEUE ====
-* try to remove TravelOptLocale to only have localization in one place.
 * rework overlap
 * unify WholeDays and SimpleTicket ?
 

@@ -51,6 +51,16 @@ Referenser
 
 Optimeringsmål
 
-Algoritm
-Iterativ dynamisk programmering med rekursionsformeln:
-C(d) = min(t.cost + ) for all tickets t
+Algoritm:
+Dynamisk programmering med rekursionsformeln:
+
+input:
+int last_day
+int coupons[day]
+
+output:
+total_cost = C(last_day)
+
+C(d) = 0 if d < 0
+C(d) = min(t.cost(coupons[d]) + C(d - t.days)) for all tickets t
+
