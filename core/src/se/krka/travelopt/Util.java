@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class Util {
     private static final long DAY_IN_MILLIS = 86400000;
-    private static final long KNOWN_OFFSET = parseDate("2000-01-01").getTime() % DAY_IN_MILLIS;
-    private static final int WEEKDAY_OFFSET = 10 - parseDate("2000-01-01").getDay();
+    private static final long KNOWN_OFFSET = parseDate("2000-01-03").getTime() % DAY_IN_MILLIS;
+    private static final int WEEKDAY_OFFSET = 5 - parseDate("2000-01-03").getDay();
 
     public static Date parseDate(String s) {
         String[] split = s.split("-");
@@ -26,7 +26,7 @@ public class Util {
         int year = date.getYear() + 1900;
         int month = date.getMonth() + 1;
         int day = date.getDate();
-        return pad('0', WEEKDAY_OFFSET, "" + year) + "-" +
+        return pad('0', 4, "" + year) + "-" +
                 pad('0', 2, "" + month) + "-" +
                 pad('0', 2, "" + day);
 
