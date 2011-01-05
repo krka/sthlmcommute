@@ -27,15 +27,15 @@ public class TravelResult {
 		return tickets;
 	}
 
-	@Override
+    @Override
 	public String toString() {
-        return locale.travelResult(this);
-	}
+        return "Travel plan suggestion: " + getTotalCost() + "\n" + ticketsToString();
+    }
 
 	public String ticketsToString() {
 		StringBuilder builder = new StringBuilder();
 		for (Ticket ticket : tickets) {
-			builder.append(ticket.toString(locale)).append("\n");
+			builder.append(ticket.toString()).append("\n");
 		}
 		return builder.toString();
 	}

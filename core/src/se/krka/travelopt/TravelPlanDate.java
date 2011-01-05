@@ -1,5 +1,6 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class TravelPlanDate implements Comparable<TravelPlanDate> {
@@ -23,8 +24,8 @@ public class TravelPlanDate implements Comparable<TravelPlanDate> {
 
 	@Override
 	public String toString() {
-        return locale.travelPlanDate(dayOrdinal, numCoupons);
-	}
+        return EnglishLocale.INSTANCE.formatDay(dayOrdinal) + " needs " + numCoupons + " tickets";
+    }
 
     public int getDayOrdinal() {
         return dayOrdinal;

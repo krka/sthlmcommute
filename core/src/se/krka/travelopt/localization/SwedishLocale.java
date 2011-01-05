@@ -7,24 +7,12 @@ public class SwedishLocale implements TravelOptLocale {
     private SwedishLocale() {
     }
 
-    public String tooLongPeriodError() {
-        return "Reseplanering kan inte göras för mer än två år.";
-    }
-
     public String wholeDays(String name, int numDays, Money price) {
         return numDays + " dagar för " + price;
     }
 
     public String couponTicketDesc(int numTickets, Money price) {
         return numTickets + " biljetter för " + price;
-    }
-
-    public String travelResult(TravelResult travelResult) {
-        return "Planeringsförslag: " + travelResult.getTotalCost() + "\n" + travelResult.ticketsToString();
-    }
-
-    public String ticket(Ticket ticket) {
-        return formatTicketDate(ticket) + " " + ticket.getTicketType() + ", " + ticket.getCost();
     }
 
     private String formatTicketDate(Ticket ticket) {
@@ -35,24 +23,8 @@ public class SwedishLocale implements TravelOptLocale {
     }
 
 
-    public String priceStructure(String body) {
-        return "Biljettprislista:\n" + body;
-    }
-
-    public String tooManyColonsInTerm(String term) {
-        return "För många kolon i " + term;
-    }
-
-    public String tooManyDashesInTerm(String term) {
-        return "Får många bindestreck i " + term;
-    }
-
-    public String ambiguousWeekDay(String input, WeekDays.WeekDayEnum match1, WeekDays.WeekDayEnum match2) {
-        return "Veckodagen " + input + " är tvetydig, kan betyda både " + match1 + " och " + match2;
-    }
-
-    public String weekDayName(int value) {
-        switch (value) {
+    public String weekDayName(int day) {
+        switch (day) {
             case 0: return "Måndag";
             case 1: return "Tisdag";
             case 2: return "Onsdag";
@@ -62,19 +34,6 @@ public class SwedishLocale implements TravelOptLocale {
             case 6: return "Söndag";
             default: throw new IllegalStateException("Can not occur.");
         }
-    }
-
-    public String invalidWeekDay(String input) {
-        return input + " är inte en giltig veckodag.";
-    }
-
-    public String travelPlanDate(int dayOrdinal, int numTickets) {
-        return formatDay(dayOrdinal) + " behöver " + numTickets + " biljetter";
-    }
-
-    @Override
-    public String mustSelectPeriod() {
-        return "Du måste välja en icketom tidsperiod";
     }
 
     @Override

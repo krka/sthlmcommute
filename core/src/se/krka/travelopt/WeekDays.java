@@ -1,5 +1,6 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekDays {
@@ -41,7 +42,7 @@ public class WeekDays {
 			int numCoupons = Integer.parseInt(s[1].trim());
 			processRange(s[0], numCoupons, locale);
 		} else {
-			throw new IllegalArgumentException(locale.tooManyColonsInTerm(term));
+            throw new IllegalArgumentException("Too many colons in " + term);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class WeekDays {
                 processWeekDay(from, numCoupons);
             }
         } else {
-            throw new IllegalArgumentException(locale.tooManyDashesInTerm(term));
+            throw new IllegalArgumentException("Too many dashes in " + term);
         }
     }
 
@@ -83,17 +84,17 @@ public class WeekDays {
             String upper = s.toUpperCase();
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
-                String weekDayName = locale.weekDayName(value.ordinal()).toUpperCase();
+                String weekDayName = EnglishLocale.INSTANCE.weekDayName(value.ordinal()).toUpperCase();
 				if (weekDayName.startsWith(upper)) {
 					if (match == null) {
 						match = value;
 					} else {
-						throw new IllegalArgumentException(locale.ambiguousWeekDay(s, match, value));
+                        throw new IllegalArgumentException("weekday " + s + " is ambiguous, could mean either " + match + " or " + value);
 					}
 				}
 			}
 			if (match == null) {
-				throw new IllegalArgumentException(locale.invalidWeekDay(s));
+                throw new IllegalArgumentException(s + " is not a valid weekday");
 			}
 			return match;
 		}

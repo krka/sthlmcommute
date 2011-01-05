@@ -51,12 +51,11 @@ public class PriceStructure {
         }
     }
 
-	@Override
-	public String toString() {
+	public String devToString() {
 		StringBuilder builder = new StringBuilder();
 		for (TicketType ticketType : ticketTypes) {
-			builder.append(ticketType).append("\n");
+			builder.append(ticketType.name() + " " + ticketType.description()).append("\n");
 		}
-        return locale.priceStructure(builder.toString());
-	}
+        return "Price list:\n" + builder.toString();
+    }
 }

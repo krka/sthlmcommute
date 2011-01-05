@@ -1,5 +1,6 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class Ticket {
@@ -42,11 +43,13 @@ public class Ticket {
 
     @Override
 	public String toString() {
-        return locale.ticket(this);
-	}
-
-    public Object toString(TravelOptLocale locale) {
-        return locale.ticket(this);
+        String res;
+        if (getEndDate() == getStartDate()) {
+            res = EnglishLocale.INSTANCE.formatDay(getStartDate());
+        } else {
+            res = EnglishLocale.INSTANCE.formatDay(getStartDate()) + " to " + EnglishLocale.INSTANCE.formatDay(getEndDate());
+        }
+        return res + " " + getTicketType() + ", " + getCost();
     }
 
     public int getNumberOfTickets() {
