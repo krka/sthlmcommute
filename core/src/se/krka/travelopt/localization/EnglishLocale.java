@@ -15,8 +15,8 @@ public class EnglishLocale extends TravelOptLocale {
         return numTickets + " coupons for " + price;
     }
 
-    public String weekDayName(int day) {
-        switch (day) {
+    public String weekDayName(int dayOfWeek) {
+        switch (dayOfWeek) {
             case 0: return "Monday";
             case 1: return "Tuesday";
             case 2: return "Wednesday";
