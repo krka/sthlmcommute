@@ -1,16 +1,15 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 public class CouponTicket implements TicketType {
-    private final TravelOptLocale locale;
 
     private final String name;
 	private final Money price;
 	private final int numCoupons;
 
-    public CouponTicket(TravelOptLocale locale, String name, Money price, int numCoupons) {
-        this.locale = locale;
+    public CouponTicket(String name, Money price, int numCoupons) {
         this.name = name;
 		this.price = price;
 		this.numCoupons = numCoupons;
@@ -35,13 +34,13 @@ public class CouponTicket implements TicketType {
     }
 
     @Override
-    public String description() {
+    public String description(TravelOptLocale locale) {
         return locale.couponTicketDesc(numCoupons, price);
     }
 
     @Override
 	public String toString() {
-        return name + " (" + description() + ")";
+        return name + " (" + description(EnglishLocale.INSTANCE) + ")";
 	}
 
     @Override
@@ -52,7 +51,6 @@ public class CouponTicket implements TicketType {
         CouponTicket that = (CouponTicket) o;
 
         if (numCoupons != that.numCoupons) return false;
-        if (!locale.equals(that.locale)) return false;
         if (!name.equals(that.name)) return false;
         if (!price.equals(that.price)) return false;
 
@@ -61,8 +59,7 @@ public class CouponTicket implements TicketType {
 
     @Override
     public int hashCode() {
-        int result = locale.hashCode();
-        result = 31 * result + name.hashCode();
+        int result = name.hashCode();
         result = 31 * result + price.hashCode();
         result = 31 * result + numCoupons;
         return result;

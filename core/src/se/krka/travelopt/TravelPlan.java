@@ -1,25 +1,21 @@
 package se.krka.travelopt;
 
-import se.krka.travelopt.localization.TravelOptLocale;
-
 import java.util.*;
 
 public class TravelPlan {
-    private final TravelOptLocale locale;
 
-	private final TreeSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
+    private final TreeSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
 	private final Collection<TravelPlanDate> immutableDates = Collections.unmodifiableSortedSet(dates);
 
     private final int extensionStart;
 
-	public TravelPlan(TravelOptLocale locale, Collection<TravelPlanDate> dates, int extensionStart) {
-        this.locale = locale;
+	public TravelPlan(Collection<TravelPlanDate> dates, int extensionStart) {
         this.extensionStart = extensionStart;
 		this.dates.addAll(dates);
 	}
 
-	public static TravelPlan.Builder builder(TravelOptLocale locale) {
-		return new Builder(locale);
+	public static TravelPlan.Builder builder() {
+		return new Builder();
 	}
 
 	public Collection<TravelPlanDate> getDates() {
@@ -30,10 +26,6 @@ public class TravelPlan {
 		return extensionStart;
 	}
 
-    public TravelOptLocale getLocale() {
-        return locale;
-    }
-
     public int getNumDays() {
         if (dates.isEmpty()) {
             return 0;
@@ -42,14 +34,12 @@ public class TravelPlan {
     }
 
     public static class Builder {
-        private final TravelOptLocale locale;
 
         private final SortedSet<TravelPlanDate> dates = new TreeSet<TravelPlanDate>();
         private int numCoupons;
         private int lastDay;
 
-        public Builder(TravelOptLocale locale) {
-            this.locale = locale;
+        public Builder() {
         }
 
         public Builder addDay(Date date) {
@@ -59,10 +49,10 @@ public class TravelPlan {
 
 		public TravelPlan build() {
             if (dates.isEmpty()) {
-                return new TravelPlan(locale, dates, 0);
+                return new TravelPlan(dates, 0);
             }
             int ext = lastDay + 1;
-            return new TravelPlan(locale, dates, ext);
+            return new TravelPlan(dates, ext);
         }
 
 		public Builder setCouponsPerDay(int numCoupons) {
@@ -71,7 +61,7 @@ public class TravelPlan {
 		}
 
         public Builder addPeriod(Date from, Date to, String days) {
-            WeekDays weekDays = new WeekDays(locale, days);
+            WeekDays weekDays = new WeekDays(days);
             return addPeriod(from, to, weekDays);
         }
 
@@ -101,12 +91,12 @@ public class TravelPlan {
         }
 
 		public TravelPlan buildExtended(String days) {
-            return buildExtended(new WeekDays(locale, days));
+            return buildExtended(new WeekDays(days));
 		}
 
         private TravelPlan buildExtended(WeekDays weekDays) {
             if (lastDay == 0) {
-                return new TravelPlan(locale, dates, 0);
+                return new TravelPlan(dates, 0);
             }
             int extensionStart = lastDay + 1;
 
@@ -114,7 +104,7 @@ public class TravelPlan {
             for (int i = 0; i < 30; i++) {
                 addDay(extensionStart + i, weekDays);
             }
-            return new TravelPlan(locale, dates, extensionStart);
+            return new TravelPlan(dates, extensionStart);
         }
 
         private void addDay(int dayOrdinal, WeekDays weekDays) {
@@ -126,7 +116,7 @@ public class TravelPlan {
                 lastDay = dayOrdinal;
             }
             if (numCoupons > 0) {
-                dates.add(new TravelPlanDate(dayOrdinal, numCoupons, locale));
+                dates.add(new TravelPlanDate(dayOrdinal, numCoupons));
             }
         }
 

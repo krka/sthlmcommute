@@ -1,6 +1,6 @@
 package se.krka.travelopt;
 
-import se.krka.travelopt.localization.TravelOptLocale;
+import se.krka.travelopt.localization.EnglishLocale;
 
 public class WeekDays {
     private final int[] coupons = new int[7];
@@ -17,10 +17,10 @@ public class WeekDays {
         System.arraycopy(coupons, 0, this.coupons, 0, 7);
     }
 
-    public WeekDays(TravelOptLocale locale, String s) {
+    public WeekDays(String s) {
         String[] terms = s.split(",");
 		for (String term : terms) {
-			processTerm(term, locale);
+			processTerm(term);
 		}
 	}
 
@@ -33,33 +33,33 @@ public class WeekDays {
 		return integer;
 	}
 
-	private void processTerm(String term, TravelOptLocale locale) {
+	private void processTerm(String term) {
 		String[] s = term.split(":");
 		if (s.length == 1) {
-			processRange(s[0], -1, locale);
+			processRange(s[0], -1);
 		} else if (s.length == 2) {
 			int numCoupons = Integer.parseInt(s[1].trim());
-			processRange(s[0], numCoupons, locale);
+			processRange(s[0], numCoupons);
 		} else {
-			throw new IllegalArgumentException(locale.tooManyColonsInTerm(term));
+            throw new IllegalArgumentException("Too many colons in " + term);
 		}
 	}
 
-	private void processRange(String term, int numCoupons, TravelOptLocale locale) {
+	private void processRange(String term, int numCoupons) {
         String[] s = term.split("-");
         if (s.length == 1) {
-            WeekDayEnum weekDayEnum = WeekDayEnum.parse(locale, s[0]);
+            WeekDayEnum weekDayEnum = WeekDayEnum.parse(s[0]);
             processWeekDay(weekDayEnum, numCoupons);
         } else if (s.length == 2) {
-            WeekDayEnum from = WeekDayEnum.parse(locale, s[0]);
-            WeekDayEnum to = WeekDayEnum.parse(locale, s[1]);
+            WeekDayEnum from = WeekDayEnum.parse(s[0]);
+            WeekDayEnum to = WeekDayEnum.parse(s[1]);
             processWeekDay(from, numCoupons);
             while (from != to) {
                 from = from.succ();
                 processWeekDay(from, numCoupons);
             }
         } else {
-            throw new IllegalArgumentException(locale.tooManyDashesInTerm(term));
+            throw new IllegalArgumentException("Too many dashes in " + term);
         }
     }
 
@@ -78,22 +78,22 @@ public class WeekDays {
 
 		private final static WeekDayEnum[] VALUES = values();
 
-		public static WeekDayEnum parse(TravelOptLocale locale, String s) {
+		public static WeekDayEnum parse(String s) {
             s = s.trim();
             String upper = s.toUpperCase();
 			WeekDayEnum match = null;
 			for (WeekDayEnum value : VALUES) {
-                String weekDayName = locale.weekDayName(value.ordinal()).toUpperCase();
+                String weekDayName = EnglishLocale.INSTANCE.weekDayName(value.ordinal()).toUpperCase();
 				if (weekDayName.startsWith(upper)) {
 					if (match == null) {
 						match = value;
 					} else {
-						throw new IllegalArgumentException(locale.ambiguousWeekDay(s, match, value));
+                        throw new IllegalArgumentException("weekday " + s + " is ambiguous, could mean either " + match + " or " + value);
 					}
 				}
 			}
 			if (match == null) {
-				throw new IllegalArgumentException(locale.invalidWeekDay(s));
+                throw new IllegalArgumentException(s + " is not a valid weekday");
 			}
 			return match;
 		}

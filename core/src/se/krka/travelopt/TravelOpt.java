@@ -65,13 +65,13 @@ public class TravelOpt {
             TicketType ticketType = purchase.ticketType;
             int endDate = startDate + ticketType.numberOfDays() - 1;
             int count = purchase.count;
-            tickets.add(new Ticket(travelPlan.getLocale(), cost, ticketType, startDate, endDate, count));
+            tickets.add(new Ticket(cost, ticketType, startDate, endDate, count));
         }
-        return new TravelResult(travelPlan.getLocale(), tickets);
+        return new TravelResult(tickets);
     }
 
     private TravelResult emptyResult(TravelPlan travelPlan) {
-        return new TravelResult(travelPlan.getLocale(), Collections.EMPTY_LIST);
+        return new TravelResult(Collections.EMPTY_LIST);
     }
 
     private void optimizedExtendPeriod(List<Purchase> purchases, TravelPlan travelPlan, int firstDay) {

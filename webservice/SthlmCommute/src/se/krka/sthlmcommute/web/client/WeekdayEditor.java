@@ -24,7 +24,7 @@ public class WeekdayEditor extends Composite {
         Grid grid = new Grid(2, 7);
         for (int day = 0; day < 7; day++) {
             int index = getIndexForWeekday(day);
-            grid.setWidget(0, index, new Label(locale.weekDayName(day).substring(0, 1)));
+            grid.setWidget(0, index, new Label(locale.weekDayName(day).substring(0, 3)));
             final CouponListBox listBox = new CouponListBox(true);
             listBox.addChangeHandler(new ChangeHandler() {
                 @Override

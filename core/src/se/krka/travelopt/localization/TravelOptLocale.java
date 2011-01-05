@@ -1,37 +1,22 @@
 package se.krka.travelopt.localization;
 
-import se.krka.travelopt.Money;
-import se.krka.travelopt.Ticket;
-import se.krka.travelopt.TravelResult;
-import se.krka.travelopt.WeekDays;
+import se.krka.travelopt.*;
 
-public interface TravelOptLocale {
+public abstract class TravelOptLocale {
 
-	String wholeDays(String name, int numDays, Money price);
+    public abstract String wholeDays(String name, int numDays, Money price);
 
-    String couponTicketDesc(int numTickets, Money price);
+    public abstract String couponTicketDesc(int numTickets, Money price);
 
-    String travelResult(TravelResult travelResult);
+    public abstract String weekDayName(int day);
 
-    String ticket(Ticket ticket);
+    public String formatDay(int dayOrdinal) {
+        return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
+    }
 
-    String priceStructure(String body);
+    private String weekDay(int dayOrdinal) {
+        return weekDayName(Util.getDayOfWeek(dayOrdinal));
+    }
 
-    String tooManyColonsInTerm(String term);
-
-    String tooManyDashesInTerm(String term);
-
-    String ambiguousWeekDay(String input, WeekDays.WeekDayEnum match1, WeekDays.WeekDayEnum match2);
-
-    String weekDayName(int value);
-
-    String invalidWeekDay(String input);
-
-    String travelPlanDate(int dayOrdinal, int numTickets);
-
-    String mustSelectPeriod();
-
-    String formatDay(int dayOrdinal);
-
-    int firstDayOfWeek();
+    public abstract int firstDayOfWeek();
 }

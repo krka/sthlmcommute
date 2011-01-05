@@ -8,11 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class TravelResult {
-    private final TravelOptLocale locale;
     private final List<Ticket> tickets;
 
-    public TravelResult(TravelOptLocale locale, List<Ticket> tickets) {
-        this.locale = locale;
+    public TravelResult(List<Ticket> tickets) {
         this.tickets = Collections.unmodifiableList(new ArrayList<Ticket>(tickets));
 	}
 
@@ -28,14 +26,15 @@ public class TravelResult {
 		return tickets;
 	}
 
-	public String devToString() {
-        return EnglishLocale.INSTANCE.travelResult(this);
-	}
+    @Override
+	public String toString() {
+        return "Travel plan suggestion: " + getTotalCost() + "\n" + ticketsToString();
+    }
 
 	public String ticketsToString() {
 		StringBuilder builder = new StringBuilder();
 		for (Ticket ticket : tickets) {
-			builder.append(ticket.toString(locale)).append("\n");
+			builder.append(ticket.toString()).append("\n");
 		}
 		return builder.toString();
 	}
@@ -47,7 +46,6 @@ public class TravelResult {
 
         TravelResult that = (TravelResult) o;
 
-        if (!locale.equals(that.locale)) return false;
         if (!tickets.equals(that.tickets)) return false;
 
         return true;
@@ -55,8 +53,6 @@ public class TravelResult {
 
     @Override
     public int hashCode() {
-        int result = locale.hashCode();
-        result = 31 * result + tickets.hashCode();
-        return result;
+        return tickets.hashCode();
     }
 }
