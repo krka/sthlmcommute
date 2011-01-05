@@ -7,11 +7,7 @@ public class EnglishLocale implements TravelOptLocale {
     private EnglishLocale() {
     }
 
-    public String tooLongPeriodError() {
-        return "Travel plan can not be longer than two years.";
-    }
-
-    public String wholeDays(String name, int numDays, Money price) {
+	public String wholeDays(String name, int numDays, Money price) {
         return numDays + " days for " + price;
     }
 

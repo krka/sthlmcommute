@@ -7,11 +7,7 @@ public class SwedishLocale implements TravelOptLocale {
     private SwedishLocale() {
     }
 
-    public String tooLongPeriodError() {
-        return "Reseplanering kan inte göras för mer än två år.";
-    }
-
-    public String wholeDays(String name, int numDays, Money price) {
+	public String wholeDays(String name, int numDays, Money price) {
         return numDays + " dagar för " + price;
     }
 

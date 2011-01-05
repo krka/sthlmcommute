@@ -1,5 +1,6 @@
 package se.krka.travelopt;
 
+import se.krka.travelopt.localization.EnglishLocale;
 import se.krka.travelopt.localization.TravelOptLocale;
 
 import java.util.ArrayList;
@@ -27,9 +28,8 @@ public class TravelResult {
 		return tickets;
 	}
 
-	@Override
-	public String toString() {
-        return locale.travelResult(this);
+	public String devToString() {
+        return EnglishLocale.INSTANCE.travelResult(this);
 	}
 
 	public String ticketsToString() {

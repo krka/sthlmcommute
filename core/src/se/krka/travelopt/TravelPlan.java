@@ -83,8 +83,8 @@ public class TravelPlan {
         private Builder addPeriod(Date from, Date to, WeekDays weekDays) {
             int fromOrdinal = Util.toDayOrdinal(from);
             int toOrdinal = Util.toDayOrdinal(to);
-            if (toOrdinal - fromOrdinal > 2*365) {
-                throw new IllegalArgumentException(locale.tooLongPeriodError());
+            if (toOrdinal - fromOrdinal > 1000) {
+				throw new IllegalArgumentException();
             }
             for (int i = fromOrdinal; i <= toOrdinal; i++) {
                 addDay(i, weekDays);

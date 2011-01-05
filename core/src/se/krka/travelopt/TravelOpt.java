@@ -15,8 +15,8 @@ public class TravelOpt {
             return emptyResult(travelPlan);
         }
 
-        if (travelPlan.getNumDays() > 2*365) {
-            throw new IllegalArgumentException(travelPlan.getLocale().tooLongPeriodError());
+        if (travelPlan.getNumDays() > 1000) {
+            throw new IllegalArgumentException();
         }
 
         List<Purchase> purchases = new ArrayList<Purchase>();
