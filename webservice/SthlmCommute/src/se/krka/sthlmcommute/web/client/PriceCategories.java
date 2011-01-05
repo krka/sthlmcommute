@@ -41,7 +41,7 @@ public class PriceCategories extends Composite {
                 cellTable.addColumn(new TextColumn<TicketType>() {
                     @Override
                     public String getValue(TicketType ticketType) {
-                        return ticketType.description();
+                        return ticketType.description(locale);
                     }
                 }, clientConstants.description());
                 return cellTable;
@@ -59,7 +59,7 @@ public class PriceCategories extends Composite {
                 asyncWidget.runASAP(new AsyncWidgetUsage<CellTable<TicketType>>() {
                     @Override
                     public void run(CellTable<TicketType> widget) {
-                        widget.setRowData(Prices.getPriceCategory(getSelected(), locale).getTicketTypes());
+                        widget.setRowData(Prices.getPriceCategory(getSelected()).getTicketTypes());
                     }
                 });
 

@@ -1,7 +1,6 @@
 package se.krka.travelopt;
 
 import se.krka.travelopt.localization.EnglishLocale;
-import se.krka.travelopt.localization.TravelOptLocale;
 
 public class WeekDays {
     private final int[] coupons = new int[7];
@@ -18,10 +17,10 @@ public class WeekDays {
         System.arraycopy(coupons, 0, this.coupons, 0, 7);
     }
 
-    public WeekDays(TravelOptLocale locale, String s) {
+    public WeekDays(String s) {
         String[] terms = s.split(",");
 		for (String term : terms) {
-			processTerm(term, locale);
+			processTerm(term);
 		}
 	}
 
@@ -34,26 +33,26 @@ public class WeekDays {
 		return integer;
 	}
 
-	private void processTerm(String term, TravelOptLocale locale) {
+	private void processTerm(String term) {
 		String[] s = term.split(":");
 		if (s.length == 1) {
-			processRange(s[0], -1, locale);
+			processRange(s[0], -1);
 		} else if (s.length == 2) {
 			int numCoupons = Integer.parseInt(s[1].trim());
-			processRange(s[0], numCoupons, locale);
+			processRange(s[0], numCoupons);
 		} else {
             throw new IllegalArgumentException("Too many colons in " + term);
 		}
 	}
 
-	private void processRange(String term, int numCoupons, TravelOptLocale locale) {
+	private void processRange(String term, int numCoupons) {
         String[] s = term.split("-");
         if (s.length == 1) {
-            WeekDayEnum weekDayEnum = WeekDayEnum.parse(locale, s[0]);
+            WeekDayEnum weekDayEnum = WeekDayEnum.parse(s[0]);
             processWeekDay(weekDayEnum, numCoupons);
         } else if (s.length == 2) {
-            WeekDayEnum from = WeekDayEnum.parse(locale, s[0]);
-            WeekDayEnum to = WeekDayEnum.parse(locale, s[1]);
+            WeekDayEnum from = WeekDayEnum.parse(s[0]);
+            WeekDayEnum to = WeekDayEnum.parse(s[1]);
             processWeekDay(from, numCoupons);
             while (from != to) {
                 from = from.succ();
@@ -79,7 +78,7 @@ public class WeekDays {
 
 		private final static WeekDayEnum[] VALUES = values();
 
-		public static WeekDayEnum parse(TravelOptLocale locale, String s) {
+		public static WeekDayEnum parse(String s) {
             s = s.trim();
             String upper = s.toUpperCase();
 			WeekDayEnum match = null;

@@ -5,9 +5,11 @@ import se.krka.travelopt.localization.TravelOptLocale;
 public class Prices {
     public static final String FULL = "full";
     public static final String REDUCED = "reduced";
+    public static final PriceStructure SL_REDUCED_PRICE = createSLReducedPrice();
+    public static final PriceStructure SL_FULL_PRICE = createSLFullPrice();
 
-    private static PriceStructure createSLFullPrice(TravelOptLocale locale) {
-        PriceStructure.Builder builder = PriceStructure.builder(locale);
+    private static PriceStructure createSLFullPrice() {
+        PriceStructure.Builder builder = PriceStructure.builder();
 
         builder.addWholeDays("Årsbiljett", Money.parse("7280 SEK"), 365);
         builder.addWholeDays("90-dagarsbiljett", Money.parse("2010 SEK"), 90);
@@ -20,8 +22,8 @@ public class Prices {
         return builder.build();
     }
 
-    private static PriceStructure createSLReducedPrice(TravelOptLocale locale) {
-        PriceStructure.Builder builder = PriceStructure.builder(locale);
+    private static PriceStructure createSLReducedPrice() {
+        PriceStructure.Builder builder = PriceStructure.builder();
 
         builder.addWholeDays("Årsbiljett", Money.parse("4370 SEK"), 365);
         builder.addWholeDays("90-dagarsbiljett", Money.parse("1200 SEK"), 90);
@@ -34,10 +36,12 @@ public class Prices {
         return builder.build();
     }
 
-    public static PriceStructure getPriceCategory(String priceCategory, TravelOptLocale locale) {
+    public static PriceStructure getPriceCategory(String priceCategory) {
         if (priceCategory.equals(REDUCED)) {
-            return createSLReducedPrice(locale);
+            return SL_REDUCED_PRICE;
+        } else if (priceCategory.equals(FULL)) {
+            return SL_FULL_PRICE;
         }
-        return createSLFullPrice(locale);
+        throw new IllegalArgumentException();
     }
 }

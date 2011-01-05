@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class Util {
     private static final long DAY_IN_MILLIS = 86400000;
-    private static final int WEEKDAY_OFFSET = 3;
+    private static final long KNOWN_OFFSET = parseDate("2000-01-01").getTime() % DAY_IN_MILLIS;
+    private static final int WEEKDAY_OFFSET = 10 - parseDate("2000-01-01").getDay();
 
     public static Date parseDate(String s) {
         String[] split = s.split("-");
@@ -42,8 +43,6 @@ public class Util {
         }
         return s;
     }
-
-    private static final long KNOWN_OFFSET = parseDate("2000-01-01").getTime() % DAY_IN_MILLIS;
 
     public static int dayDifference(Date x, Date y) {
         return toDayOrdinal(x) - toDayOrdinal(y);

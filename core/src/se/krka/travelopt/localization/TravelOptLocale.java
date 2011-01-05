@@ -1,19 +1,22 @@
 package se.krka.travelopt.localization;
 
-import se.krka.travelopt.Money;
-import se.krka.travelopt.Ticket;
-import se.krka.travelopt.TravelResult;
-import se.krka.travelopt.WeekDays;
+import se.krka.travelopt.*;
 
-public interface TravelOptLocale {
+public abstract class TravelOptLocale {
 
-    String wholeDays(String name, int numDays, Money price);
+    public abstract String wholeDays(String name, int numDays, Money price);
 
-    String couponTicketDesc(int numTickets, Money price);
+    public abstract String couponTicketDesc(int numTickets, Money price);
 
-    String weekDayName(int day);
+    public abstract String weekDayName(int day);
 
-    String formatDay(int dayOrdinal);
+    public String formatDay(int dayOrdinal) {
+        return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
+    }
 
-    int firstDayOfWeek();
+    private String weekDay(int dayOrdinal) {
+        return weekDayName(Util.getDayOfWeek(dayOrdinal));
+    }
+
+    public abstract int firstDayOfWeek();
 }

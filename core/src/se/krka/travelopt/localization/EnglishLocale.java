@@ -2,7 +2,7 @@ package se.krka.travelopt.localization;
 
 import se.krka.travelopt.*;
 
-public class EnglishLocale implements TravelOptLocale {
+public class EnglishLocale extends TravelOptLocale {
     public static final EnglishLocale INSTANCE = new EnglishLocale();
     private EnglishLocale() {
     }
@@ -29,16 +29,8 @@ public class EnglishLocale implements TravelOptLocale {
     }
 
     @Override
-    public String formatDay(int dayOrdinal) {
-        return weekDay(dayOrdinal).substring(0, 3) + " " + Util.formatDay(dayOrdinal);
-    }
-
-    @Override
     public int firstDayOfWeek() {
         return 6;
     }
 
-    private String weekDay(int dayOrdinal) {
-        return weekDayName(Util.getDayOfWeek(dayOrdinal));
-    }
 }

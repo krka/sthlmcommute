@@ -1,22 +1,20 @@
 package se.krka.travelopt;
 
-import se.krka.travelopt.localization.TravelOptLocale;
+import se.krka.travelopt.localization.EnglishLocale;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PriceStructure {
-    private final TravelOptLocale locale;
 
     private final List<TicketType> ticketTypes = new ArrayList<TicketType>();
 
-    public PriceStructure(TravelOptLocale locale, Builder builder) {
-        this.locale = locale;
+    public PriceStructure(Builder builder) {
         ticketTypes.addAll(builder.ticketTypes);
 	}
 
-    static Builder builder(TravelOptLocale locale) {
-        return new Builder(locale);
+    static Builder builder() {
+        return new Builder();
     }
 
 	public List<TicketType> getTicketTypes() {
@@ -24,11 +22,9 @@ public class PriceStructure {
 	}
 
 	public static class Builder {
-        private final TravelOptLocale locale;
         private final List<TicketType> ticketTypes = new ArrayList<TicketType>();
 
-        public Builder(TravelOptLocale locale) {
-            this.locale = locale;
+        public Builder() {
         }
 
         public Builder addTicketType(TicketType ticketType) {
@@ -37,24 +33,24 @@ public class PriceStructure {
 		}
 
         public Builder addWholeDays(String name, Money price, int days) {
-            addTicketType(new WholeDays(locale, name, price, days));
+            addTicketType(new WholeDays(name, price, days));
             return this;
         }
 
         public Builder addCouponTicket(String name, Money price, int numTickets) {
-            addTicketType(new CouponTicket(locale, name, price, numTickets));
+            addTicketType(new CouponTicket(name, price, numTickets));
             return this;
         }
 
         public PriceStructure build() {
-            return new PriceStructure(locale, this);
+            return new PriceStructure(this);
         }
     }
 
-	public String devToString() {
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (TicketType ticketType : ticketTypes) {
-			builder.append(ticketType.name() + " " + ticketType.description()).append("\n");
+			builder.append(ticketType.name() + " " + ticketType.description(EnglishLocale.INSTANCE)).append("\n");
 		}
         return "Price list:\n" + builder.toString();
     }

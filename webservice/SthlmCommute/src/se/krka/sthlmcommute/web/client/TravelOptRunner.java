@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TravelOptRunner implements Runnable {
-    private final TravelOptLocale locale;
     private final ClientConstants clientConstants;
     private final Label errorLabel;
     private final AsyncWidget<CellTable<Ticket>> asyncTable;
@@ -32,7 +31,6 @@ public class TravelOptRunner implements Runnable {
     private final ScrollPanel scrollPanel;
 
     public TravelOptRunner(final TravelOptLocale locale, final ClientConstants clientConstants) {
-        this.locale = locale;
         this.clientConstants = clientConstants;
         errorLabel = new Label();
 
@@ -136,7 +134,7 @@ public class TravelOptRunner implements Runnable {
 
     public String optimize(List<ScheduleEntry> entries, OptimizeOptions optimizeOptions, String priceCategory) throws IllegalArgumentException {
         try {
-            TravelPlan.Builder builder = TravelPlan.builder(locale);
+            TravelPlan.Builder builder = TravelPlan.builder();
             if (entries.isEmpty()) {
                 return clientConstants.noEntries();
             }
@@ -156,7 +154,7 @@ public class TravelOptRunner implements Runnable {
                 return clientConstants.emptySchedule();
             }
 
-            TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory, locale));
+            TravelOpt travelOpt = new TravelOpt(Prices.getPriceCategory(priceCategory));
             TravelResult result = travelOpt.findOptimum(travelPlan);
             renderResult(result);
             notifyListeners(result);
@@ -185,7 +183,7 @@ public class TravelOptRunner implements Runnable {
 
     private void addTotal(List<Ticket> tickets, Money totalCost) {
         if (tickets.size() != 1) {
-            tickets.add(0, new Ticket(locale, totalCost, null, 0, 0));
+            tickets.add(0, new Ticket(totalCost, null, 0, 0));
         }
     }
 
@@ -200,7 +198,7 @@ public class TravelOptRunner implements Runnable {
                 if (sameType && adjacent) {
                     Money newCost = prev.getCost().add(ticket.getCost());
                     int numberOfTickets = prev.getNumberOfTickets() + ticket.getNumberOfTickets();
-                    prev = new Ticket(locale, newCost, prev.getTicketType(), prev.getStartDate(), ticket.getEndDate(), numberOfTickets);
+                    prev = new Ticket(newCost, prev.getTicketType(), prev.getStartDate(), ticket.getEndDate(), numberOfTickets);
                 } else {
                     tickets.add(prev);
                     prev = ticket;
