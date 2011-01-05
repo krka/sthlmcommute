@@ -2,7 +2,7 @@ package se.krka.sthlmcommute.web.client;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/home/krka/dev/sthlmcommute/webservice/SthlmCommute/src/se/krka/sthlmcommute/web/client/ClientConstants.properties'.
+ * 	'/home/krka/priv/sthlmcommute/webservice/SthlmCommute/src/se/krka/sthlmcommute/web/client/ClientConstants.properties'.
  */
 public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   
@@ -169,11 +169,11 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   String invalidEntries();
 
   /**
-   * Translated "Name".
+   * Translated "Namn".
    * 
-   * @return translated "Name"
+   * @return translated "Namn"
    */
-  @DefaultStringValue("Name")
+  @DefaultStringValue("Namn")
   @Key("name")
   String name();
 
@@ -205,11 +205,11 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   String numberOfTickets();
 
   /**
-   * Translated "Målsättning".
+   * Translated "Optimering".
    * 
-   * @return translated "Målsättning"
+   * @return translated "Optimering"
    */
-  @DefaultStringValue("Målsättning")
+  @DefaultStringValue("Optimering")
   @Key("optimizeOptions")
   String optimizeOptions();
 
@@ -241,11 +241,11 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   String optimizeOptionsHelp();
 
   /**
-   * Translated "Målsättningsinställning".
+   * Translated "Optimeringsinställningar".
    * 
-   * @return translated "Målsättningsinställning"
+   * @return translated "Optimeringsinställningar"
    */
-  @DefaultStringValue("Målsättningsinställning")
+  @DefaultStringValue("Optimeringsinställningar")
   @Key("optimizeSettings")
   String optimizeSettings();
 
@@ -257,15 +257,6 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   @DefaultStringValue("Pris")
   @Key("price")
   String price();
-
-  /**
-   * Translated "frågor".
-   * 
-   * @return translated "frågor"
-   */
-  @DefaultStringValue("frågor")
-  @Key("questions")
-  String questions();
 
   /**
    * Translated "Reducerat pris".
