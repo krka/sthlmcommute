@@ -23,6 +23,11 @@
 * try to remove TravelOptLocale to only have localization in one place.
 
 === IN QUEUE ====
+* IMPORTANT Weekdays from Util are different on home computer and work computer! Need to figure that out.
+* add introduction text
+* red highlight if something is wrong
+
+
 * rework overlap
 * unify WholeDays and SimpleTicket ?
 

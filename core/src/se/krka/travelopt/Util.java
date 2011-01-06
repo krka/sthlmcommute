@@ -3,16 +3,20 @@ package se.krka.travelopt;
 import java.util.Date;
 
 public class Util {
+    private static final long DATE_CORRECTION = new Date(0, 0, 0).getTime() + 2209075200000L;
+
     private static final long DAY_IN_MILLIS = 86400000;
     private static final long KNOWN_OFFSET = parseDate("2000-01-03").getTime() % DAY_IN_MILLIS;
-    private static final int WEEKDAY_OFFSET = 5 - parseDate("2000-01-03").getDay();
+    private static final int WEEKDAY_OFFSET = 3;
 
     public static Date parseDate(String s) {
         String[] split = s.split("-");
         int year = Integer.parseInt(split[0]);
         int month = Integer.parseInt(split[1]);
         int day = Integer.parseInt(split[2]);
-        return new Date(year - 1900, month - 1, day);
+        Date date = new Date(year - 1900, month - 1, day);
+        date.setTime(date.getTime() + DATE_CORRECTION);
+        return date;
     }
 
     public static int parseDay(String s) {
