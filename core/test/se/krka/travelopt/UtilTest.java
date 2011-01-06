@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 public class UtilTest {
     @Test
     public void testWeekday() {
+        assertEquals(3, Util.getDayOfWeek(Util.parseDay("1970-01-01")));
+
         assertEquals(0, Util.getDayOfWeek(Util.parseDay("2000-1-3")));
         assertEquals(1, Util.getDayOfWeek(Util.parseDay("2000-1-4")));
         assertEquals(2, Util.getDayOfWeek(Util.parseDay("2000-1-5")));

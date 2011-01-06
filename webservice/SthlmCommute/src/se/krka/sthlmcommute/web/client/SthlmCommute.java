@@ -9,6 +9,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import se.krka.sthlmcommute.web.client.persistance.ClientPersistance;
+import se.krka.travelopt.Util;
 import se.krka.travelopt.localization.Locales;
 import se.krka.travelopt.localization.TravelOptLocale;
 
@@ -41,6 +42,10 @@ public class SthlmCommute implements EntryPoint {
                 persistance.onExit();
             }
         });
+
+        Label debug = new Label("Debug: weekday of 2011-01-01 should be saturday (5): " + Util.getDayOfWeek(Util.parseDay("2011-01-01")));
+        debug.setVisible(false);
+        RootPanel.get().add(debug);
 
     }
 

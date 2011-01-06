@@ -3,11 +3,8 @@ package se.krka.travelopt;
 import java.util.Date;
 
 public class Util {
-    private static final long DATE_CORRECTION = new Date(0, 0, 0).getTime() + 2209075200000L;
-
     private static final long DAY_IN_MILLIS = 86400000;
-    private static final long KNOWN_OFFSET = parseDate("2000-01-03").getTime() % DAY_IN_MILLIS;
-    private static final int WEEKDAY_OFFSET = 3;
+    private static final long KNOWN_THURSDAY = parseDate("1970-01-01").getTime();
 
     public static Date parseDate(String s) {
         String[] split = s.split("-");
@@ -15,7 +12,6 @@ public class Util {
         int month = Integer.parseInt(split[1]);
         int day = Integer.parseInt(split[2]);
         Date date = new Date(year - 1900, month - 1, day);
-        date.setTime(date.getTime() + DATE_CORRECTION);
         return date;
     }
 
@@ -53,11 +49,11 @@ public class Util {
     }
 
     public static int toDayOrdinal(Date date) {
-        return WEEKDAY_OFFSET + (int) ((date.getTime() - KNOWN_OFFSET) / DAY_IN_MILLIS);
+        return (int) ((date.getTime() - KNOWN_THURSDAY) / DAY_IN_MILLIS);
     }
 
     public static Date fromDayOrdinal(int ordinal) {
-        return new Date((ordinal - WEEKDAY_OFFSET) * DAY_IN_MILLIS + KNOWN_OFFSET);
+        return new Date(ordinal * DAY_IN_MILLIS + KNOWN_THURSDAY);
     }
 
     public static boolean before(Date x, Date y) {
@@ -73,7 +69,7 @@ public class Util {
      * @return 0 for monday, 6 for sunday
      */
     public static int getDayOfWeek(int dayOrdinal) {
-        return dayOrdinal % 7;
+        return (3 + dayOrdinal) % 7;
     }
 
 }
