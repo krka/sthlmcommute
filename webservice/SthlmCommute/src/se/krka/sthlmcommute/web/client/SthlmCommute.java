@@ -42,11 +42,6 @@ public class SthlmCommute implements EntryPoint {
                 persistance.onExit();
             }
         });
-
-        Label debug = new Label("Debug: weekday of 2011-01-01 should be saturday (5): " + Util.getDayOfWeek(Util.parseDay("2011-01-01")));
-        debug.setVisible(true);
-        RootPanel.get().add(debug);
-
     }
 
     private void setupHTMLTexts(ClientConstants clientConstants, ClientMessages clientMessages) {
