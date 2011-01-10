@@ -160,6 +160,15 @@ public interface ClientConstants extends com.google.gwt.i18n.client.Constants {
   String incompleteDateSpan();
 
   /**
+   * Translated "STHLM commute är programmet för dig som regelbundet reser med SL och vill hitta den billigaste kombinationen av biljetter.".
+   * 
+   * @return translated "STHLM commute är programmet för dig som regelbundet reser med SL och vill hitta den billigaste kombinationen av biljetter."
+   */
+  @DefaultStringValue("STHLM commute är programmet för dig som regelbundet reser med SL och vill hitta den billigaste kombinationen av biljetter.")
+  @Key("introText")
+  String introText();
+
+  /**
    * Translated "Det finns fortfarande ofullständiga poster.".
    * 
    * @return translated "Det finns fortfarande ofullständiga poster."

@@ -44,7 +44,7 @@ public class SthlmCommute implements EntryPoint {
         });
 
         Label debug = new Label("Debug: weekday of 2011-01-01 should be saturday (5): " + Util.getDayOfWeek(Util.parseDay("2011-01-01")));
-        debug.setVisible(false);
+        debug.setVisible(true);
         RootPanel.get().add(debug);
 
     }
@@ -53,6 +53,7 @@ public class SthlmCommute implements EntryPoint {
         setElement("help", clientConstants.help());
         setElement("contact", clientConstants.contact());
         setElement("sendEmailTo", clientMessages.sendEmailTo("kristofer.karlsson@gmail.com"));
+        RootPanel.get("introtext").add(new HTML(SafeHtmlUtils.fromTrustedString(clientConstants.introText())));
     }
 
     private void setElement(String element, String value) {
