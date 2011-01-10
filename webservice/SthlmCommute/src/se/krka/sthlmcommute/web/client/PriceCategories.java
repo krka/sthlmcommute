@@ -24,6 +24,7 @@ public class PriceCategories extends Composite {
     private RadioGroup.Button lastSelected;
     private final AsyncWidget<CellTable<TicketType>> asyncWidget;
     private final ClientConstants clientConstants;
+    private final DisclosurePanel disclosurePanel;
 
     public PriceCategories(final ClientConstants clientConstants, final DelayedWork delayedWork, final TravelOptLocale locale) {
 
@@ -56,17 +57,20 @@ public class PriceCategories extends Composite {
         radioGroup.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                asyncWidget.runASAP(new AsyncWidgetUsage<CellTable<TicketType>>() {
-                    @Override
-                    public void run(CellTable<TicketType> widget) {
-                        widget.setRowData(Prices.getPriceCategory(getSelected()).getTicketTypes());
-                    }
-                });
+                if (getSelected() != null) {
+                    asyncWidget.runASAP(new AsyncWidgetUsage<CellTable<TicketType>>() {
+                        @Override
+                        public void run(CellTable<TicketType> widget) {
+                            widget.setRowData(Prices.getPriceCategory(getSelected()).getTicketTypes());
+                        }
+                    });
 
-                RadioGroup.Button newSelected = radioGroup.getSelected();
-                if (lastSelected != newSelected) {
-                    delayedWork.requestWork();
-                    lastSelected = newSelected;
+                    RadioGroup.Button newSelected = radioGroup.getSelected();
+                    if (lastSelected != newSelected) {
+                        delayedWork.requestWork();
+                        lastSelected = newSelected;
+                    }
+                    disclosurePanel.setVisible(true);
                 }
             }
         });
@@ -75,15 +79,13 @@ public class PriceCategories extends Composite {
         panel.setWidth("100%");
         panel.add(radioGroup);
         panel.setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant.endOf(HasDirection.Direction.DEFAULT));
-        DisclosurePanel disclosurePanel = createPricelist();
+
+        this.disclosurePanel = UIUtil.wrapDisclosure(this.clientConstants.ticketPriceList(), asyncWidget);
         disclosurePanel.setWidth("40em");
+        disclosurePanel.setVisible(false);
         panel.add(disclosurePanel);
 
         initWidget(UIUtil.wrapCaption(this.clientConstants.choosePriceCategory(), panel));
-    }
-
-    private DisclosurePanel createPricelist() {
-        return UIUtil.wrapDisclosure(clientConstants.ticketPriceList(), asyncWidget);
     }
 
     public String getSelected() {
