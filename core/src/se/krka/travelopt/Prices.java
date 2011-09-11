@@ -11,13 +11,13 @@ public class Prices {
     private static PriceStructure createSLFullPrice() {
         PriceStructure.Builder builder = PriceStructure.builder();
 
-        builder.addWholeDays("Årsbiljett", Money.parse("7280 SEK"), 365);
-        builder.addWholeDays("90-dagarsbiljett", Money.parse("2010 SEK"), 90);
-        builder.addWholeDays("30-dagarsbiljett", Money.parse("690 SEK"), 30);
-        builder.addWholeDays("7-dagarsbiljett", Money.parse("260 SEK"), 7);
-        builder.addWholeDays("72-timmarsbiljett", Money.parse("200 SEK"), 3);
-        builder.addWholeDays("24-timmarsbiljett", Money.parse("100 SEK"), 1);
-        builder.addCouponTicket("Förköpsremsa", Money.parse("180 SEK"), 16);
+        builder.addWholeDays("Årsbiljett", Money.parse("8300 SEK"), 365);
+        builder.addWholeDays("90-dagarsbiljett", Money.parse("2300 SEK"), 90);
+        builder.addWholeDays("30-dagarsbiljett", Money.parse("790 SEK"), 30);
+        builder.addWholeDays("7-dagarsbiljett", Money.parse("300 SEK"), 7);
+        builder.addWholeDays("72-timmarsbiljett", Money.parse("230 SEK"), 3);
+        builder.addWholeDays("24-timmarsbiljett", Money.parse("115 SEK"), 1);
+        builder.addCouponTicket("Förköpsremsa", Money.parse("200 SEK"), 16);
 
         return builder.build();
     }
@@ -25,13 +25,13 @@ public class Prices {
     private static PriceStructure createSLReducedPrice() {
         PriceStructure.Builder builder = PriceStructure.builder();
 
-        builder.addWholeDays("Årsbiljett", Money.parse("4370 SEK"), 365);
-        builder.addWholeDays("90-dagarsbiljett", Money.parse("1200 SEK"), 90);
-        builder.addWholeDays("30-dagarsbiljett", Money.parse("420 SEK"), 30);
-        builder.addWholeDays("7-dagarsbiljett", Money.parse("200 SEK"), 7);
-        builder.addWholeDays("72-timmarsbiljett", Money.parse("120 SEK"), 3);
-        builder.addWholeDays("24-timmarsbiljett", Money.parse("60 SEK"), 1);
-        builder.addCouponTicket("Förköpsremsa", Money.parse("110 SEK"), 16);
+        builder.addWholeDays("Årsbiljett", Money.parse("4990 SEK"), 365);
+        builder.addWholeDays("90-dagarsbiljett", Money.parse("1400 SEK"), 90);
+        builder.addWholeDays("30-dagarsbiljett", Money.parse("490 SEK"), 30);
+        builder.addWholeDays("7-dagarsbiljett", Money.parse("180 SEK"), 7);
+        builder.addWholeDays("72-timmarsbiljett", Money.parse("140 SEK"), 3);
+        builder.addWholeDays("24-timmarsbiljett", Money.parse("70 SEK"), 1);
+        builder.addCouponTicket("Förköpsremsa", Money.parse("120 SEK"), 16);
 
         return builder.build();
     }
